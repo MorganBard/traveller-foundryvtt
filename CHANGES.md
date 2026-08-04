@@ -1,5 +1,12 @@
 # Release Notes
 
+# 0.22.0.7 (BardMorgan custom build)
+
+* Added Computer/7 to the item Computer dropdown.
+* Traveller initiative is now rolled manually from the character sheet or combat tracker.
+* Added a detailed initiative chat card showing the dice, selected characteristic modifier,
+  total, target, and initiative effect.
+
 # 0.22.0 (Beta)
 
 Some new actor and item types are introduced in this release. These have been on a develop
