@@ -1,0 +1,38 @@
+<div class="mgt2e-chat-message initiative-box">
+    <h2>{{actor.name}}</h2>
+    <div class="mgt2e-chat-content">
+        <h3>Initiative</h3>
+        <table>
+            <tr>
+                <th>Dice</th>
+                <td>
+                    <ol class="dice-rolls initiative-dice">
+                        {{#each dice}}<li class="roll die d6 {{cssClass}}">{{result}}</li>{{/each}}
+                    </ol>
+                </td>
+            </tr>
+            <tr>
+                <th>Stat modifier ({{statName}})</th>
+                <td>{{numberFormat statModifier sign=true}}</td>
+            </tr>
+            {{#if bonusLabel}}
+                <tr>
+                    <th>{{bonusLabel}}</th>
+                    <td>{{numberFormat bonus sign=true}}</td>
+                </tr>
+            {{/if}}
+            <tr>
+                <th>Total roll</th>
+                <td>{{total}}</td>
+            </tr>
+            <tr>
+                <th>Target</th>
+                <td>8</td>
+            </tr>
+            <tr>
+                <th>Effect (initiative)</th>
+                <td><strong>{{numberFormat effect sign=true}}</strong></td>
+            </tr>
+        </table>
+    </div>
+</div>

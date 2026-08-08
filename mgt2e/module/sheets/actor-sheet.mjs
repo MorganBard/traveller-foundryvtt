@@ -19,6 +19,7 @@ import {
     sellCargoDialog
 } from "../helpers/spacecraft/spacecraft-utils.mjs";
 import {MgT2CharacteristicDamageApp} from "../helpers/dialogs/characteristic-damage.mjs";
+import {rollTravellerInitiative} from "../documents/combat.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -61,6 +62,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
         // Add the actor's data to context.data for easier access, as well as flags.
         context.system = actorData;
+        context.inCombat = (game.combat?.getCombatantsByActor(context.actor).length ?? 0) > 0;
         context.enrichedDescription = await foundry.applications.ux.TextEditor.enrichHTML(
             actorData.description,
             { secrets: ((context.actor.permission > 2)?true:false) }
@@ -1279,8 +1281,8 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             this._clearStatus(this.actor, 'inCover');
         });
         */
-        html.find('initRoll').click(ev => {
-            this._rollInit(this.actor);
+        html.find('.initRoll').click(ev => {
+            void this._rollInit(this.actor);
         });
 
     // Active Effect management
@@ -1669,8 +1671,15 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
         }
     }
 
-    _rollInit(actor) {
-        // Roll initiative and add to combat tracker.
+    async _rollInit(actor) {
+        const combat = game.combat;
+        const combatants = combat?.getCombatantsByActor(actor) ?? [];
+        if (!combatants.length) {
+            ui.notifications.warn("Add this character to combat before rolling initiative.");
+            return;
+        }
+
+        await rollTravellerInitiative(combat, actor, combatants);
     }
 
     _reloadWeapon(item) {

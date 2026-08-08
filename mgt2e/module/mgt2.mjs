@@ -27,6 +27,7 @@ import { MgT2eMacros } from "./helpers/chat/macros.mjs";
 import { printWeaponTraits, rollSkill } from "./helpers/dice-rolls.mjs";
 import { skillLabel } from "./helpers/dice-rolls.mjs";
 import {MgT2Effect} from "./documents/effect.mjs";
+import {MgT2Combat} from "./documents/combat.mjs";
 import { migrateWorld } from "./migration.mjs";
 import { NpcIdCard } from "./helpers/id-card.mjs";
 import {hasTrait} from "./helpers/dice-rolls.mjs";
@@ -307,6 +308,7 @@ Hooks.once('init', async function() {
   CONFIG.Actor.documentClass = MgT2Actor;
   CONFIG.Item.documentClass = MgT2Item;
   CONFIG.ActiveEffect.documentClass = MgT2Effect;
+  CONFIG.Combat.documentClass = MgT2Combat;
 
   //CONFIG.debug.hooks = true;
 
@@ -965,11 +967,16 @@ Hooks.once("ready", async function() {
 
 
 Hooks.on("createCombatant", (combatant, combat, id) => {
+   const actor = combatant.actor;
+   actor.sheet?.render(false);
+
    if (!game.user.isGM) {
        return;
    }
+   if (actor.type === "traveller") {
+       return;
+   }
     console.log("createCombatant:");
-    const actor = combatant.actor;
 
     let bonus = 0;
    if (actor.getEffect("surprised")) {
@@ -984,6 +991,10 @@ Hooks.on("createCombatant", (combatant, combat, id) => {
        combatant.update({"initiative": combatant.initiative});
    });
 
+});
+
+Hooks.on("deleteCombatant", combatant => {
+    combatant.actor?.sheet?.render(false);
 });
 
 Hooks.on("combatTurn", (combat, data, options) => {

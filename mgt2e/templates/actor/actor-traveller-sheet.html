@@ -111,8 +111,10 @@
                     <label for="system.rads" class="field-label">{{localize 'MGT2.TravellerSheet.Rads'}}</label>
                     <input class="field-value writable" type="text" name="system.rads" value="{{system.rads}}" data-dtype="Number"/>
                 </div>
-                <div class="resource flex-group-center">
+                <div class="resource flex-group-center {{#if inCombat}}initRoll{{/if}}"
+                     title="{{#if inCombat}}Click to roll initiative{{else}}Add to combat before rolling initiative{{/if}}">
                     <label for="system.initiative.value" class="field-label">
+                        {{#if inCombat}}<i class="fas fa-dice"></i>{{/if}}
                         {{localize 'MGT2.TravellerSheet.Init'}}
                     </label>
                     <input class="field-value" type="text" name="system.initiative.value"
