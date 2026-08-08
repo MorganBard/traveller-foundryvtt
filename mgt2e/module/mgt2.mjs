@@ -560,6 +560,62 @@ Hooks.on("preCreateActiveEffect", (effect, data, options, userId) => {
     }
 });
 
+// Condition icons drawn directly on a token in the scene are WebGL/PIXI
+// (token.effects, a Container of icon sprites), not DOM - CSS can't touch
+// them. Foundry lays them out as a single column, top to bottom, wrapping
+// into a new column once it runs out of vertical room on the token, using
+// a small fixed icon size. This overrides ONLY the final layout/size pass,
+// not Foundry's own effect-gathering/tinting/tooltip logic: we let the
+// core method do its normal work first (so anything it does with the
+// icons - textures, tint, overlay handling - still happens), then
+// reposition and resize whatever it produced into a chunkier NxN-ish grid.
+//
+// This relies on Token.prototype._refreshEffects's internal structure
+// (index 0 of token.effects.children is a background PIXI.Graphics, the
+// rest are icon sprites) - it's a private, undocumented method, so
+// re-verify this still works after any Foundry core update, especially a
+// major version bump.
+//
+// The background is drawn as a set of shapes sized for Foundry's own
+// single-column layout - just scaling its width/height stretches that
+// fixed drawing rather than fitting our new grid (looked wrong: narrow
+// mismatched squares behind each icon). It has to be cleared and redrawn
+// to match instead. The icons are square art with their own built-in
+// backdrop, so dropping the background entirely (rather than redrawing
+// it) is the cleaner look.
+//
+// Icon count per column is fixed at MGT2_EFFECT_ICON_ROWS regardless of
+// token size, so a 2x2 token shows the same layout as a 1x1 - just with
+// bigger, higher-resolution icons (icon size is derived from the token's
+// own pixel height), rather than cramming more icons into the same size.
+const MGT2_EFFECT_ICON_ROWS = 4;
+const TokenClass = foundry?.canvas?.placeables?.Token ?? Token;
+const baseRefreshEffects = TokenClass.prototype._refreshEffects;
+TokenClass.prototype._refreshEffects = function() {
+    baseRefreshEffects.call(this);
+
+    const children = this.effects?.children;
+    if (!children || children.length < 2) {
+        return;
+    }
+    const background = children[0];
+    const icons = children.slice(1);
+    const iconSize = Math.max(1, this.h / MGT2_EFFECT_ICON_ROWS);
+
+    icons.forEach((icon, i) => {
+        const column = Math.floor(i / MGT2_EFFECT_ICON_ROWS);
+        const row = i % MGT2_EFFECT_ICON_ROWS;
+        icon.x = column * iconSize;
+        icon.y = row * iconSize;
+        icon.width = iconSize;
+        icon.height = iconSize;
+    });
+
+    if (background && typeof background.clear === "function") {
+        background.clear();
+    }
+};
+
 async function openActorSheet(actorId) {
     let actor = await fromUuid(actorId);
     if (actor) {
