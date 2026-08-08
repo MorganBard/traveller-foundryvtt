@@ -58,6 +58,9 @@ export class MgT2DamageDialog extends Application {
         this.DEX = parseInt(data.characteristics.DEX.value) - this.DMG_DEX;
         this.END = parseInt(data.characteristics.END.value) - this.DMG_END;
 
+        // Traveller damage rules: END must be depleted before STR or DEX can take damage.
+        this.endDepleted = this.END <= 0;
+
         // For historical reasons 'laser' is the damage type.
         if (data.characteristics[this.laser]) {
             this.XXX = parseInt(data.characteristics[this.laser].value);
@@ -124,6 +127,7 @@ export class MgT2DamageDialog extends Application {
             "STR": this.STR,
             "DEX": this.DEX,
             "END": this.END,
+            "endDepleted": this.endDepleted,
             "XXX": this.XXX,
             "XXX_VALUE": this.XXX_VALUE,
             "DMG_STR": this.DMG_STR,
@@ -146,9 +150,6 @@ export class MgT2DamageDialog extends Application {
         super.activateListeners(html);
         const roll = html.find("button[class='damageDone']");
         roll.on("click", event => this.doneClick(event, html));
-
-        const str = html.find(".DMG_STR");
-        str.on("change", event => this.updateDamage(event, html));
 
         html.find(".apply-button").click(ev => {
            this.applyDamage(ev, html);
@@ -180,6 +181,25 @@ export class MgT2DamageDialog extends Application {
         this.setIntValue(html, ".DMG_"+cha, currentDmg);
         this.setIntValue(html, ".VAL_"+cha, currentScore);
         this.setIntValue(html, ".remaining", this.remainingDamage);
+
+        if (cha === "END") {
+            this.updateApplyButtonStates(html);
+        }
+    }
+
+    /**
+     * END must be depleted before STR or DEX can take damage. Called after
+     * END changes, since that's the only thing that can flip this.
+     */
+    updateApplyButtonStates(html) {
+        const endDepleted = this.getIntValue(html, ".VAL_END") <= 0;
+        const title = endDepleted ? "" : game.i18n.localize("MGT2.DamageDialog.EndFirst");
+
+        for (const cha of ["STR", "DEX"]) {
+            const button = html.find(`.apply-button[data-cha='${cha}']`);
+            button.prop("disabled", !endDepleted);
+            button.attr("title", title);
+        }
     }
 
     getIntValue(html, field) {
@@ -197,12 +217,6 @@ export class MgT2DamageDialog extends Application {
         if (html.find(field) && html.find(field)[0] && html.find(field)[0].value) {
             html.find(field)[0].value = value;
         }
-    }
-
-    updateDamage(event, html) {
-        let str = this.getIntValue(html, ".DMG_STR");
-        let dex = this.getIntValue(html, ".DMG_DEX");
-        let end = this.getIntValue(html, ".DMG_END");
     }
 
     async doneClick(event, html) {

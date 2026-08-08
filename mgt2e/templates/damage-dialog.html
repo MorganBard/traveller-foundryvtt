@@ -99,7 +99,6 @@
                 <th></th>
                 <th>Total</th>
                 <th>Current</th>
-                <th>Damage</th>
                 <th/>
             </tr>
             {{#unless stun}}
@@ -114,12 +113,9 @@
                                    value="{{XXX}}"
                                    data-dtype="Number" readonly/>
                         </td>
-                        <td class="value">
-                            <input class="damage-value DMG_{{laser}} DMG_XXX"
-                                   type="number" min="0" step="1"
-                                   name="DMG_{{laser}}" value="{{DMG_XXX}}"
-                                   data-dtype="Number"/>
-
+                        <td>
+                            <input type="hidden" class="damage-value DMG_{{laser}} DMG_XXX"
+                                   name="DMG_{{laser}}" value="{{DMG_XXX}}" data-dtype="Number"/>
                         </td>
                         <td><button class="apply-button" data-cha="{{laser}}" type="button">Apply</button></td>
                     </tr>
@@ -134,14 +130,11 @@
                                    value="{{STR}}"
                                    data-dtype="Number" readonly/>
                         </td>
-                        <td class="value">
-                            <input class="damage-value DMG_STR"
-                                   type="number" min="0" step="1"
-                                   name="DMG_STR" value="{{DMG_STR}}"
-                                   data-dtype="Number"/>
-
+                        <td>
+                            <input type="hidden" class="damage-value DMG_STR"
+                                   name="DMG_STR" value="{{DMG_STR}}" data-dtype="Number"/>
                         </td>
-                        <td><button class="apply-button" data-cha="STR" type="button">Apply</button></td>
+                        <td><button class="apply-button" data-cha="STR" type="button" {{#unless endDepleted}}disabled title="{{localize 'MGT2.DamageDialog.EndFirst'}}"{{/unless}}>Apply</button></td>
                     </tr>
                     <tr>
                         <td><label class="resource-label">{{localize "MGT2.DEX"}}</label></td>
@@ -153,14 +146,11 @@
                                    value="{{DEX}}"
                                    data-dtype="Number" readonly/>
                         </td>
-                        <td class="value">
-                            <input class="damage-value DMG_DEX"
-                                   type="number" min="0" step="1"
-                                   name="DMG_DEX" value="{{DMG_DEX}}"
-                                   data-dtype="Number"/>
-
+                        <td>
+                            <input type="hidden" class="damage-value DMG_DEX"
+                                   name="DMG_DEX" value="{{DMG_DEX}}" data-dtype="Number"/>
                         </td>
-                        <td><button class="apply-button" data-cha="DEX" type="button">Apply</button></td>
+                        <td><button class="apply-button" data-cha="DEX" type="button" {{#unless endDepleted}}disabled title="{{localize 'MGT2.DamageDialog.EndFirst'}}"{{/unless}}>Apply</button></td>
                     </tr>
                 {{/if}}
             {{/unless}}
@@ -175,12 +165,9 @@
                                value="{{END}}"
                                data-dtype="Number" readonly/>
                     </td>
-                    <td class="value">
-                        <input class="damage-value DMG_END"
-                               type="number" min="0" step="1"
-                               name="DMG_END" value="{{DMG_END}}"
-                               data-dtype="Number"/>
-
+                    <td>
+                        <input type="hidden" class="damage-value DMG_END"
+                               name="DMG_END" value="{{DMG_END}}" data-dtype="Number"/>
                     </td>
                     <td><button class="apply-button" data-cha="END" type="button">Apply</button></td>
                 </tr>
