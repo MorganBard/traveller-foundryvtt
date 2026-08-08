@@ -112,6 +112,14 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: true
     });
+    game.settings.register('mgt2e', 'useCoreStatusEffects', {
+        name: game.i18n.localize("MGT2.Settings.UseCoreStatusEffects.Name"),
+        hint: game.i18n.localize("MGT2.Settings.UseCoreStatusEffects.Hint"),
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: false
+    });
     game.settings.register('mgt2e', 'quickRolls', {
         name: game.i18n.localize("MGT2.Settings.QuickRolls.Name"),
         hint: game.i18n.localize("MGT2.Settings.QuickRolls.Hint"),
@@ -410,10 +418,42 @@ Hooks.once("init", function() {
         Tools.inlineUppRollSkill(name, data);
     })
 
+    if (!game.settings.get("mgt2e", "useCoreStatusEffects")) {
+        CONFIG.statusEffects = [];
+    }
+
+    // These four are relied on by actor.mjs (setDeadEffect, setUnconsciousEffect,
+    // setFearEffect, setProneEffect) but Foundry doesn't ship a system-agnostic
+    // default for all of them, and the useCoreStatusEffects setting may have just
+    // cleared the array above - register them explicitly so they always exist.
+    CONFIG.statusEffects.push({
+        id: "dead",
+        name: "EFFECT.Dead",
+        img: "icons/svg/skull.svg",
+        overlay: true
+    });
+    CONFIG.statusEffects.push({
+        id: "unconscious",
+        name: "EFFECT.Unconscious",
+        img: "systems/mgt2e/icons/effects/unconscious.svg",
+        overlay: true
+    });
+    CONFIG.statusEffects.push({
+        id: "fear",
+        name: "EFFECT.Fear",
+        img: "icons/svg/terror.svg"
+    });
+    CONFIG.statusEffects.push({
+        id: "prone",
+        name: "EFFECT.Prone",
+        img: "icons/svg/falling.svg"
+    });
+
     CONFIG.statusEffects.push({
         id: "destroyed",
         name: "EFFECT.Destroyed",
-        img: "systems/mgt2e/icons/effects/destroyed.svg"
+        img: "systems/mgt2e/icons/effects/destroyed.svg",
+        overlay: true
     });
     CONFIG.statusEffects.push({
         id: "injured",
@@ -506,6 +546,19 @@ Hooks.once("init", function() {
         img: "systems/mgt2e/icons/effects/initiative.svg"
     });
 })
+
+// The CONFIG.statusEffects "overlay" property isn't consulted by the token
+// HUD's own click handler, only by a few specific core code paths (e.g. the
+// combat tracker's "defeated" toggle). Force these statuses to render as a
+// full-token overlay however the ActiveEffect gets created, since our own
+// setDeadEffect()/setUnconsciousEffect()/setDestroyedEffect() already do this
+// via flags.core.overlay, and this makes HUD-picker clicks match that.
+Hooks.on("preCreateActiveEffect", (effect, data, options, userId) => {
+    const overlayStatuses = ["dead", "unconscious", "destroyed"];
+    if (data.statuses?.some(status => overlayStatuses.includes(status))) {
+        effect.updateSource({ "flags.core.overlay": true });
+    }
+});
 
 async function openActorSheet(actorId) {
     let actor = await fromUuid(actorId);
