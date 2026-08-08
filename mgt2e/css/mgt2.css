@@ -2606,3 +2606,21 @@ ol.actor-items li.item-status- {
 .hits-box input.hits-state-zero {
   background-color: #ffd0d0;
 }
+
+/*
+ * Foundry hardcodes the condition picker's grid to 5 fixed 24px columns
+ * (grid-template-columns: 24px 24px 24px 24px 24px) plus a fixed container
+ * width, both on #hud .status-effects itself - sizing the icons alone
+ * doesn't change the column count, since grid clamps item width to the
+ * column track regardless of the icon's own width. Both the column count
+ * and the container width have to be overridden together, or icons just
+ * get squashed/stretched instead of the grid reflowing.
+ */
+#hud .status-effects {
+  grid-template-columns: repeat(4, 64px);
+  width: 277px;
+}
+#hud .status-effects img.effect-control {
+  width: 64px;
+  height: 64px;
+}

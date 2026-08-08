@@ -429,121 +429,121 @@ Hooks.once("init", function() {
     CONFIG.statusEffects.push({
         id: "dead",
         name: "EFFECT.Dead",
-        img: "icons/svg/skull.svg",
+        img: "systems/mgt2e/icons/effects/condition-dead.webp",
         overlay: true
     });
     CONFIG.statusEffects.push({
         id: "unconscious",
         name: "EFFECT.Unconscious",
-        img: "systems/mgt2e/icons/effects/unconscious.svg",
+        img: "systems/mgt2e/icons/effects/condition-unconscious.webp",
         overlay: true
     });
     CONFIG.statusEffects.push({
         id: "fear",
         name: "EFFECT.Fear",
-        img: "icons/svg/terror.svg"
+        img: "systems/mgt2e/icons/effects/condition-fear.webp"
     });
     CONFIG.statusEffects.push({
         id: "prone",
         name: "EFFECT.Prone",
-        img: "icons/svg/falling.svg"
+        img: "systems/mgt2e/icons/effects/condition-prone.webp"
     });
 
     CONFIG.statusEffects.push({
         id: "destroyed",
         name: "EFFECT.Destroyed",
-        img: "systems/mgt2e/icons/effects/destroyed.svg",
+        img: "systems/mgt2e/icons/effects/condition-destroyed.webp",
         overlay: true
     });
     CONFIG.statusEffects.push({
         id: "injured",
         name: "EFFECT.Injured",
-        img: "systems/mgt2e/icons/effects/injured.svg"
+        img: "systems/mgt2e/icons/effects/condition-injured.webp"
     });
     CONFIG.statusEffects.push({
         id: "needsFirstAid",
         name: "EFFECT.FirstAid",
-        img: "systems/mgt2e/icons/effects/firstaid.svg"
+        img: "systems/mgt2e/icons/effects/condition-needs-first-aid.webp"
     });
     CONFIG.statusEffects.push({
         id: "needsSurgery",
         name: "EFFECT.Surgery",
-        img: "systems/mgt2e/icons/effects/surgery.svg"
+        img: "systems/mgt2e/icons/effects/condition-needs-surgery.webp"
     });
     CONFIG.statusEffects.push({
         id: "encumbered",
         name: "EFFECT.Encumbered",
-        img: "systems/mgt2e/icons/effects/encumbered.svg"
+        img: "systems/mgt2e/icons/effects/condition-encumbered.webp"
     });
     CONFIG.statusEffects.push({
         id: "vaccSuit",
         name: "EFFECT.VaccSuit",
-        img: "systems/mgt2e/icons/effects/vaccsuit.svg"
+        img: "systems/mgt2e/icons/effects/condition-vacc-suit.webp"
     });
     CONFIG.statusEffects.push({
         id: "surprised",
         name: "EFFECT.Surprised",
-        img: "systems/mgt2e/icons/effects/surprised.svg"
+        img: "systems/mgt2e/icons/effects/condition-surprised.webp"
     });
     CONFIG.statusEffects.push({
         id: "aware",
         name: "EFFECT.Aware",
-        img: "systems/mgt2e/icons/effects/aware.svg"
+        img: "systems/mgt2e/icons/effects/condition-aware.webp"
     });
     CONFIG.statusEffects.push({
         id: "reaction",
         name: "EFFECT.Reaction",
-        img: "systems/mgt2e/icons/effects/reaction.svg"
+        img: "systems/mgt2e/icons/effects/condition-reaction.webp"
     });
     CONFIG.statusEffects.push({
         id: "fatigued",
         name: "EFFECT.Fatigued",
-        img: "systems/mgt2e/icons/effects/fatigued.svg"
+        img: "systems/mgt2e/icons/effects/condition-fatigued.webp"
     });
     CONFIG.statusEffects.push({
         id: "physical",
         name: "EFFECT.Physical",
-        img: "systems/mgt2e/icons/effects/physical.svg"
+        img: "systems/mgt2e/icons/effects/condition-physical-dm.webp"
     });
     CONFIG.statusEffects.push({
         id: "melee",
         name: "EFFECT.Melee",
-        img: "systems/mgt2e/icons/effects/melee.svg"
+        img: "systems/mgt2e/icons/effects/condition-melee-dm.webp"
     });
     CONFIG.statusEffects.push({
         id: "gunCombat",
         name: "EFFECT.GunCombat",
-        img: "systems/mgt2e/icons/effects/guncombat.svg"
+        img: "systems/mgt2e/icons/effects/condition-gun-combat-dm.webp"
     });
     CONFIG.statusEffects.push({
         id: "armour",
         name: "EFFECT.Armour",
-        img: "systems/mgt2e/icons/effects/armour.svg"
+        img: "systems/mgt2e/icons/effects/condition-armour.webp"
     });
     CONFIG.statusEffects.push({
         id: "inCover",
         name: "EFFECT.InCover",
-        img: "systems/mgt2e/icons/effects/inCover.svg"
+        img: "systems/mgt2e/icons/effects/condition-in-cover.webp"
     });
     CONFIG.statusEffects.push({
         id: "hiding",
         name: "EFFECT.Hiding",
-        img: "systems/mgt2e/icons/effects/hiding.svg"
+        img: "systems/mgt2e/icons/effects/condition-hiding.webp"
     });
     CONFIG.statusEffects.push({
         id: "stunned",
         name: "EFFECT.Stunned",
-        img: "icons/svg/daze.svg"
+        img: "systems/mgt2e/icons/effects/condition-stunned.webp"
     });
     CONFIG.statusEffects.push({
         id: "tactics",
         name: "EFFECT.Tactics",
-        img: "systems/mgt2e/icons/effects/tactics.svg"
+        img: "systems/mgt2e/icons/effects/condition-tactics.webp"
     });
     CONFIG.statusEffects.push({
         id: "initiative",
         name: "EFFECT.Initiative",
-        img: "systems/mgt2e/icons/effects/initiative.svg"
+        img: "systems/mgt2e/icons/effects/condition-initiative.webp"
     });
 })
 
