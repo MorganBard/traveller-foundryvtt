@@ -9,6 +9,7 @@ import {MgT2SpacecraftAttackDialog } from "../helpers/spacecraft-attack-dialog.m
 import {MgT2SpacecraftRepairDialog } from "../helpers/spacecraft-repair-dialog.mjs";
 import {rollSkill} from "../helpers/dice-rolls.mjs";
 import {skillLabel} from "../helpers/dice-rolls.mjs";
+import {getSkillValue, hasTrait, getTraitValue} from "../helpers/dice-rolls.mjs";
 import {MgT2Item} from "../documents/item.mjs";
 import { MGT2 } from "../helpers/config.mjs";
 import {NpcIdCard} from "../helpers/id-card.mjs";
@@ -748,6 +749,9 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             }
         }
         this._calculateArmour(context);
+        const parry = this._calculateBestParryDM(activeWeapons);
+        this.actor.system.parryDM = parry.dm;
+        this.actor.parryDMBreakdown = parry.breakdown;
 
         this.actor.system.weightCarried = weight;
         this.actor.system.modifiers.encumbrance.auto = 0;
@@ -831,6 +835,60 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
         itemData.status = status;
         item.update({ "system.status": status });
+    }
+
+    /**
+     * The character's best available Parry DM: their skill score (plus
+     * characteristic DM) for whichever equipped melee weapon gives the
+     * highest result, including any weapon parry bonus and shield trait.
+     * Returns { dm: null, breakdown: "" } if no melee weapon is equipped,
+     * since there's nothing to parry with.
+     */
+    _calculateBestParryDM(activeWeapons) {
+        let best = null;
+        for (let weapon of activeWeapons) {
+            if (weapon.type !== "weapon" || !weapon.system.weapon) {
+                continue;
+            }
+            if (parseInt(weapon.system.weapon.range) > 0) {
+                continue;
+            }
+            const skillId = weapon.system.weapon.skill?.split(".")[0];
+            const specialityId = weapon.system.weapon.skill?.split(".")[1];
+            if (!skillId) {
+                continue;
+            }
+
+            const terms = [];
+            let score = parseInt(getSkillValue(this.actor, skillId, specialityId)) || 0;
+            terms.push(`${score}(${skillLabel(this.actor.system.skills[skillId], skillId)})`);
+
+            const cha = weapon.system.weapon.characteristic;
+            if (cha && this.actor.system.characteristics?.[cha]) {
+                const chaDm = parseInt(this.actor.system.characteristics[cha].dm) || 0;
+                score += chaDm;
+                terms.push(`${chaDm}(${cha})`);
+            }
+
+            const parryBonus = parseInt(weapon.system.weapon.parryBonus) || 0;
+            if (parryBonus !== 0) {
+                score += parryBonus;
+                terms.push(`${parryBonus}(${weapon.name})`);
+            }
+
+            if (hasTrait(weapon.system.weapon.traits, "shield")) {
+                const shieldBonus = parseInt(getTraitValue(weapon.system.weapon.traits, "shield")) || 0;
+                if (shieldBonus !== 0) {
+                    score += shieldBonus;
+                    terms.push(`${shieldBonus}(Shield)`);
+                }
+            }
+
+            if (best === null || score > best.dm) {
+                best = { dm: score, breakdown: terms.join(" + ") };
+            }
+        }
+        return best ?? { dm: null, breakdown: "" };
     }
 
     async _calculateArmour(context) {
@@ -1258,6 +1316,9 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
         html.find('.dodgeRoll').click(ev => {
             this._rollDodge(ev, this.actor);
         });
+        html.find('.parryRoll').click(ev => {
+            this._rollParry(ev, this.actor);
+        });
         /*
         html.find('.statusReaction').click(ev => {
             this._clearDodge(this.actor);
@@ -1626,29 +1687,76 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
 
     _rollDodge(event, actor) {
-        let dodge = 0;
         const dex = Math.max(0, parseInt(actor.system["DEX"]));
+        const skill = parseInt(actor.system.skills["athletics"].specialities["dexterity"].value);
+
+        let dodge = 0;
+        const terms = [];
         if (dex > 0) {
             dodge = dex;
+            terms.push(`${dex}(DEX)`);
         }
-        const skill = parseInt(actor.system.skills["athletics"].specialities["dexterity"].value);
         if (skill > 0) {
             dodge += skill;
+            terms.push(`${skill}(${skillLabel(actor.system.skills["athletics"], "athletics")})`);
         }
+
         if (dodge > 0) {
-            let effect = actor.getEffect("reaction");
-            if (!effect) {
-                actor.setReactionEffect(-1);
+            this._postReactionCard(actor, game.i18n.localize("MGT2.TravellerSheet.Dodge"),
+                game.i18n.localize("MGT2.Attack.DodgeDM"), dodge, terms.join(" + "));
+            this._useReaction(actor);
+        }
+    }
+
+    /**
+     * Each reaction (Dodge, Parry) used in a round makes subsequent
+     * reactions harder - tick the shared Reaction penalty down by 1.
+     */
+    _useReaction(actor) {
+        let effect = actor.getEffect("reaction");
+        if (!effect) {
+            actor.setReactionEffect(-1);
+        } else {
+            if (effect?.flags?.mgt2e?.effect) {
+                let value = parseInt(effect.flags.mgt2e.value);
+                value -= 1;
+                effect.setFlag("mgt2e", "value", value);
             } else {
-                if (effect?.flags?.mgt2e?.effect) {
-                    let value = parseInt(effect.flags.mgt2e.value);
-                    value -= 1;
-                    effect.setFlag("mgt2e", "value", value);
-                } else {
-                    effect.setFlag("mgt2e", "value", -1);
-                }
+                effect.setFlag("mgt2e", "value", -1);
             }
         }
+    }
+
+    _rollParry(event, actor) {
+        const parryDM = parseInt(actor.system.parryDM);
+        if (isNaN(parryDM)) {
+            ui.notifications.warn(game.i18n.localize("MGT2.Warn.NoParryWeapon"));
+            return;
+        }
+
+        this._postReactionCard(actor, game.i18n.localize("MGT2.TravellerSheet.Parry"),
+            game.i18n.localize("MGT2.Attack.ParryDM"), parryDM, actor.parryDMBreakdown);
+        this._useReaction(actor);
+    }
+
+    /**
+     * Posts a chat card for a Dodge/Parry reaction: the resulting DM, and a
+     * one-line breakdown of what it's made up of (e.g. "2(Melee) + 1(DEX)").
+     */
+    _postReactionCard(actor, title, dmLabel, dm, breakdown) {
+        const name = actor.token?.name ?? actor.name;
+        const content = `<div class="mgt2e-chat-message">
+            <h2>${name}</h2>
+            <div class="mgt2e-chat-content">
+                <h3>${title}</h3>
+                <p><b>${dmLabel}:</b> ${dm >= 0 ? "+" : ""}${dm}</p>
+                ${breakdown ? `<p class="reaction-breakdown">${breakdown}</p>` : ""}
+            </div>
+        </div>`;
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({actor}),
+            content: content
+        });
     }
 
     _clearDodge(actor) {

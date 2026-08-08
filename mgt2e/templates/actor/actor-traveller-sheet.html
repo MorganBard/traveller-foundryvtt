@@ -128,6 +128,14 @@
                     <input class="field-value" type="text" _name="system.dodge"
                            value="{{system.dodge}}" data-dtype="Number" readonly/>
                 </div>
+                <div class="resource flex-group-center parryRoll" title="Click to parry">
+                    <label for="system.parryDM" class="field-label">
+                        <i class="fas fa-shield-halved"></i>
+                        {{localize 'MGT2.TravellerSheet.Parry'}}
+                    </label>
+                    <input class="field-value" type="text" _name="system.parryDM"
+                           value="{{system.parryDM}}" data-dtype="Number" readonly/>
+                </div>
             </div>
 
             {{> "systems/mgt2e/templates/actor/parts/actor-status.html"}}
