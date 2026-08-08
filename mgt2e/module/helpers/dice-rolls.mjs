@@ -145,6 +145,68 @@ export function printWeaponTraits(traits) {
     return text;
 }
 
+/**
+ * Renders the individual die faces of an evaluated Roll as the same kind of
+ * pip strip used for initiative rolls, so players can see the full roll
+ * behind a total rather than just the total.
+ */
+export function diceBreakdownHtml(roll) {
+    if (!roll || !roll.dice) {
+        return "";
+    }
+    const faces = roll.dice.flatMap(die => die.results.map(result => {
+        const cssClass = result.result === die.faces ? "max" : (result.result === 1 ? "min" : "");
+        return `<li class="roll die d${die.faces} ${cssClass}">${result.result}</li>`;
+    }));
+    if (faces.length === 0) {
+        return "";
+    }
+    return `<ol class="dice-rolls dice-breakdown">${faces.join("")}</ol>`;
+}
+
+/**
+ * Checks whether a melee attack is legal to make: Traveller requires exactly
+ * one target, and that target must be adjacent (within one grid space).
+ *
+ * Returns null if the attack is legal, or an i18n key describing why it
+ * isn't. If there isn't enough token data to determine an attacker (nothing
+ * or multiple tokens selected, or not on a scene), this returns null so it
+ * doesn't block rolls it can't actually evaluate.
+ */
+export function getMeleeTargetError() {
+    if (!canvas || !canvas.ready || !canvas.tokens) {
+        return null;
+    }
+    const selected = canvas.tokens.controlled;
+    if (selected.length !== 1) {
+        return null;
+    }
+
+    const targets = game.user.targets;
+    if (targets.size < 1) {
+        return "MGT2.Attack.NoTarget";
+    }
+    if (targets.size > 1) {
+        return "MGT2.Attack.MultipleTargets";
+    }
+
+    const attacker = selected[0];
+    const target = targets.values().next().value;
+    // Allow up to a diagonal step within a single grid space, with a small
+    // epsilon for floating point rounding.
+    const meleeDistance = (canvas.grid.distance * Math.SQRT2) + 0.01;
+
+    const dx = Math.abs(attacker.center.x - target.center.x);
+    const dy = Math.abs(attacker.center.y - target.center.y);
+    const d = Math.sqrt(dx * dx + dy * dy);
+    const metres = (d / canvas.grid.size) * canvas.grid.distance;
+
+    if (metres > meleeDistance) {
+        return "MGT2.Attack.OutOfRange";
+    }
+    return null;
+}
+
 export async function rollAttack(actor, weapon, attackOptions) {
     const   system = actor?actor.system:null;
     let     content = "Attack";
@@ -157,6 +219,15 @@ export async function rollAttack(actor, weapon, attackOptions) {
     }
 
     let baseRange = weapon?weapon.system.weapon.range:0;
+
+    if (baseRange === 0 && !attackOptions.isParry) {
+        const meleeError = getMeleeTargetError();
+        if (meleeError) {
+            ui.notifications.error(game.i18n.localize(meleeError));
+            return;
+        }
+    }
+
     let rangeBand = null;
     let rangeDistance = baseRange;
     let rangeUnit = "m";
@@ -422,9 +493,9 @@ export async function rollAttack(actor, weapon, attackOptions) {
         let reducedTotal = (await new Roll(redDice, actor?actor.getRollData():null).evaluate()).total;
         let minimumTotal = (await new Roll(minDice, actor?actor.getRollData():null).evaluate()).total;
 
-        let effect = 0, attackTotal = 0;
+        let effect = 0, attackTotal = 0, attackRoll = null;
         if (actor) {
-            const attackRoll = await new Roll(dice, actor ? actor.getRollData() : null).evaluate();
+            attackRoll = await new Roll(dice, actor ? actor.getRollData() : null).evaluate();
             if (!roll) {
                 roll = attackRoll;
             }
@@ -556,6 +627,7 @@ export async function rollAttack(actor, weapon, attackOptions) {
 
             if (actor) {
                 content += `<b>${game.i18n.localize("MGT2.AttackRoll")}:</b> ${dice}<br/>`
+                content += diceBreakdownHtml(attackRoll);
                 content += `<span class="skill-roll inline-roll inline-result"><i class="fas fa-dice"> </i> ${attackTotal}</span> <span class="${effectClass}">${effectText}</span><br/>`;
             } else {
                 content += "<br/>";
@@ -570,6 +642,7 @@ export async function rollAttack(actor, weapon, attackOptions) {
                                 title="Click to roll damage"
                                 class="damage-roll-button">Roll Damage ${splitTitle}</button>`;
             } else {
+                content += diceBreakdownHtml(damageRoll);
                 content += `<div class="damage-message" data-damage="${damageEffect}" data-options='${json}'>`;
                 content += `<button data-damage="${damageEffect}" data-options='${json}'
                                 title="${titleText}"

@@ -1,6 +1,6 @@
 
 import {MgT2AttackDialog } from "../helpers/attack-dialog.mjs";
-import {rollAttack} from "../helpers/dice-rolls.mjs";
+import {rollAttack, getMeleeTargetError} from "../helpers/dice-rolls.mjs";
 import {getSkillValue} from "../helpers/dice-rolls.mjs";
 
 /**
@@ -142,6 +142,14 @@ export class MgT2Item extends Item {
             if (!quickRoll) {
                 new MgT2AttackDialog(this.actor, item).render(true);
             } else {
+                if (parseInt(item.system.weapon.range) === 0) {
+                    const meleeError = getMeleeTargetError();
+                    if (meleeError) {
+                        ui.notifications.error(game.i18n.localize(meleeError));
+                        return;
+                    }
+                }
+
                 let skillDM = getSkillValue(this.actor, item.system.weapon.skill, null);
                 let actorData = this.actor.system;
                 if (actorData.characteristics && actorData.characteristics[item.system.weapon.characteristic]) {

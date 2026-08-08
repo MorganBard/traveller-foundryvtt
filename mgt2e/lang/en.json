@@ -1453,6 +1453,8 @@
   "MGT2.Warn.ThisActorCannotBuy": "{actor} doesn't have enough cash to buy {item}",
   "MGT2.Error.NoStatus": "Unable to find status '{status}'",
   "MGT2.Attack.OutOfRange": "Selected target is out of range",
+  "MGT2.Attack.NoTarget": "Select a target before making a melee attack",
+  "MGT2.Attack.MultipleTargets": "Melee attacks can only be made against a single target",
 
   "MGT2.Role.isDepartment": "Role is a department",
   "MGT2.Role.RoleAssignment": "Role Assignment",

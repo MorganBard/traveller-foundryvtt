@@ -1,4 +1,4 @@
-import {rollAttack, hasTrait, getTraitValue, skillLabel} from "../helpers/dice-rolls.mjs";
+import {rollAttack, hasTrait, getTraitValue, skillLabel, getMeleeTargetError} from "../helpers/dice-rolls.mjs";
 import {getSkillValue} from "../helpers/dice-rolls.mjs";
 
 export class MgT2AttackDialog extends Application {
@@ -227,6 +227,14 @@ export class MgT2AttackDialog extends Application {
 
     async onRollClick(event, html) {
         event.preventDefault();
+
+        if (this.melee) {
+            const meleeError = getMeleeTargetError();
+            if (meleeError) {
+                ui.notifications.error(game.i18n.localize(meleeError));
+                return;
+            }
+        }
 
         let dm = parseInt(html.find("input[class='skillDialogDM']")[0].value);
         let rollType = html.find(".skillDialogRollType")[0].value;

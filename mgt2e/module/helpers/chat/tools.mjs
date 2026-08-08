@@ -1,4 +1,4 @@
-import {hasTrait, getTraitValue, skillLabel, getEffectLabel} from "../dice-rolls.mjs";
+import {hasTrait, getTraitValue, skillLabel, getEffectLabel, diceBreakdownHtml} from "../dice-rolls.mjs";
 import {Physics} from "./physics.mjs";
 import {MgT2DamageDialog} from "../damage-dialog.mjs";
 import {MgT2eMacros} from "./macros.mjs";
@@ -320,6 +320,7 @@ Tools.rollSplitDamage = async function(damageOptions) {
 
     content += `</div>`; // Message Content
 
+    content += diceBreakdownHtml(roll);
     content += `<div class="damage-message" data-damage="${damageEffect}" data-options='${json}'>`;
     content += `<button data-damage="${damageEffect}" data-options='${json}'
                                 title="${titleText}"

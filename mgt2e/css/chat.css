@@ -43,16 +43,19 @@
   background-color: transparent;
 }
 
-.initiative-box .initiative-dice {
+.initiative-box .initiative-dice,
+.dice-breakdown {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 1px;
-  margin: 0;
+  margin: 2px 0;
   padding: 0;
   list-style: none;
 }
 
-.initiative-box .initiative-dice .roll {
+.initiative-box .initiative-dice .roll,
+.dice-breakdown .roll {
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -66,12 +69,14 @@
   text-align: center;
 }
 
-.initiative-box .initiative-dice .roll.max {
+.initiative-box .initiative-dice .roll.max,
+.dice-breakdown .roll.max {
   color: #18520b;
   filter: sepia(0.5) hue-rotate(60deg);
 }
 
-.initiative-box .initiative-dice .roll.min {
+.initiative-box .initiative-dice .roll.min,
+.dice-breakdown .roll.min {
   color: #aa0200;
   filter: sepia(0.5) hue-rotate(-60deg);
 }
