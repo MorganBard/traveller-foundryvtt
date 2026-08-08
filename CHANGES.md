@@ -1,5 +1,27 @@
 # Release Notes
 
+# 0.22.0.8 (BardMorgan custom build)
+
+* Melee attacks now require exactly one adjacent target - blocked with a clear message
+  otherwise (no target, multiple targets, or out of range).
+* Attack and damage rolls now show the individual dice behind the total, matching the
+  initiative roller.
+* Fixed the VaccSuit armor non-proficiency penalty showing up mislabeled as `[Enc]` -
+  it now has its own `[Unskilled]` tag and modifier bucket, separate from real
+  encumbrance.
+* Fixed a race condition that could create duplicate "Vacc Suit" status effects.
+* Apply Damage dialog: removed the confusing editable-looking Damage fields (use the
+  Apply button instead); STR/DEX Apply buttons now stay disabled until END is depleted,
+  enforcing the correct damage order automatically.
+* Added a Parry button next to Dodge on the character sheet; both now post a chat card
+  showing the DM and a breakdown of what it's made of.
+* Added a "Use core status effects" world setting (off by default) to hide Foundry's
+  generic built-in conditions from the token HUD, leaving just this system's own.
+* Fixed dead/unconscious/fear/prone conditions, which were silently relying on Foundry's
+  core defaults instead of being registered by the system.
+* Condition icons drawn on tokens in the scene now use a size-aware grid layout instead
+  of Foundry's default single-column layout, and can use custom artwork.
+
 # 0.22.0.7 (BardMorgan custom build)
 
 * Added Computer/7 to the item Computer dropdown.
