@@ -81,6 +81,7 @@ export class MgT2EffectSheet extends foundry.applications.sheets.ActiveEffectCon
             context.targets["system.modifiers.physical." + prop] = "Physical DM";
             context.targets["system.modifiers.melee." + prop] = "Melee DM";
             context.targets["system.modifiers.guncombat." + prop] = "Gun Combat DM";
+            context.targets["system.modifiers.proficiency." + prop] = "Non-Proficiency DM";
             context.targets["system.modifiers.armour." + prop] = "Armour";
             context.targets["system.modifiers.initiative." + prop] = "Initiative";
         }
@@ -213,6 +214,7 @@ export class MgT2EffectSheet extends foundry.applications.sheets.ActiveEffectCon
                 context.targets["system.modifiers.physical." + prop] = game.i18n.localize("MGT2.Modifiers.Physical") || "Physical DM";
                 context.targets["system.modifiers.melee." + prop] = game.i18n.localize("MGT2.Modifiers.Melee") || "Melee DM";
                 context.targets["system.modifiers.guncombat." + prop] = game.i18n.localize("MGT2.Modifiers.GunCombat") || "Gun Combat DM";
+                context.targets["system.modifiers.proficiency." + prop] = game.i18n.localize("MGT2.Modifiers.Proficiency") || "Non-Proficiency DM";
                 context.targets["system.modifiers.armour." + prop] = game.i18n.localize("MGT2.Modifiers.Armour") || "Armour";
                 context.targets["system.modifiers.initiative." + prop] = game.i18n.localize("MGT2.Modifiers.Initiative") || "Initiative";
             }

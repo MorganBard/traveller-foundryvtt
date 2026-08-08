@@ -168,6 +168,23 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             }
             guncombat.dm = guncombat.custom + guncombat.auto + guncombat.effect;
 
+            let proficiency = actorData.modifiers.proficiency;
+            if (!proficiency) {
+                proficiency = { "dm": 0, "custom": 0, "auto": 0, "effect": 0 };
+                actorData.modifiers.proficiency = proficiency;
+            } else {
+                if (isNaN(proficiency.custom)) {
+                    proficiency.custom = 0;
+                }
+                if (isNaN(proficiency.auto)) {
+                    proficiency.auto = 0;
+                }
+                if (isNaN(proficiency.effect)) {
+                    proficiency.effect = 0;
+                }
+            }
+            proficiency.dm = proficiency.custom + proficiency.auto + proficiency.effect;
+
             context.selectEffects = {};
             context.selectEffects[""] = "-";
 
@@ -734,6 +751,10 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
         this.actor.system.weightCarried = weight;
         this.actor.system.modifiers.encumbrance.auto = 0;
+        if (!this.actor.system.modifiers.proficiency) {
+            this.actor.system.modifiers.proficiency = { "dm": 0, "custom": 0, "auto": 0, "effect": 0 };
+        }
+        this.actor.system.modifiers.proficiency.auto = 0;
 
         // If STR goes to zero, we get two rapid updates which result in two
         // encumbered effects being set. Try to lock this check to avoid it.
@@ -759,15 +780,24 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             if (vs && vs.trained) {
                 vaccSkill = parseInt(vs.value);
                 if (vaccSkill < skillNeeded) {
-                    this.actor.system.modifiers.encumbrance.auto -= (skillNeeded - vaccSkill);
+                    this.actor.system.modifiers.proficiency.auto -= (skillNeeded - vaccSkill);
                     isVaccSuit = true;
                 }
             } else {
-                this.actor.system.modifiers.encumbrance.auto += vaccSkill;
+                this.actor.system.modifiers.proficiency.auto += vaccSkill;
                 isVaccSuit = true;
             }
         }
-        this.actor.setVaccSuitEffect(isVaccSuit);
+        // Same rapid-update race as encumbrance above: guard against creating
+        // duplicate Vacc Suit effects when the sheet re-renders in quick succession.
+        if (!this.actor.vaccSuitLock) {
+            this.actor.vaccSuitLock = true;
+            try {
+                await this.actor.setVaccSuitEffect(isVaccSuit);
+            } finally {
+                delete this.actor.vaccSuitLock;
+            }
+        }
 
         // Assign and return
         context.gear = gear;

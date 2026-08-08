@@ -42,6 +42,12 @@
                 "effect": 0,
                 "dm": 0
             },
+            "proficiency": {
+                "custom": 0,
+                "auto": 0,
+                "effect": 0,
+                "dm": 0
+            },
             "speed":  {
                 "custom": 0,
                 "auto": 0,

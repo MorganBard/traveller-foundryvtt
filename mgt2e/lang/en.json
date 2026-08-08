@@ -365,6 +365,7 @@
   "MGT2.TravellerSheet.BackgroundOnly": "Background only",
   "MGT2.TravellerSheet.EncumbrancePenalty": "Enc",
   "MGT2.TravellerSheet.PhysicalPenalty": "Physical",
+  "MGT2.TravellerSheet.ProficiencyPenalty": "Unskilled",
   "MGT2.TravellerSheet.RollUntrained": "Roll untrained",
   "MGT2.TravellerSheet.Untrained": "untrained",
   "MGT2.TravellerSheet.Normal": "Normal",
@@ -842,6 +843,7 @@
   "MGT2.DamageDialog.Current": "Current",
   "MGT2.DamageDialog.Radiation": "RADIATION",
   "MGT2.DamageDialog.ArmourRads": "Rads",
+  "MGT2.DamageDialog.EndFirst": "END must be reduced to 0 before STR or DEX can take damage",
   "MGT2.DamageWound.Minor": "Minor Wound",
   "MGT2.DamageWound.Major": "Major Wound",
   "MGT2.DamageWound.Severe": "Severe Wound",
@@ -1040,6 +1042,7 @@
   "MGT2.TravellerSheet.PhysicalDM": "Physical DM",
   "MGT2.TravellerSheet.MeleeDM": "Melee DM",
   "MGT2.TravellerSheet.GunCombatDM": "Gun Combat DM",
+  "MGT2.TravellerSheet.ProficiencyDM": "Non-Proficiency DM",
   "MGT2.TravellerSheet.ArmourDM": "Armour DM",
   "MGT2.TravellerSheet.Custom": "Custom",
   "MGT2.TravellerSheet.Auto": "Auto",
@@ -1869,6 +1872,7 @@
   "MGT2.Modifiers.Physical": "Physical DM",
   "MGT2.Modifiers.Melee": "Melee DM",
   "MGT2.Modifiers.GunCombat": "Gun Combat DM",
+  "MGT2.Modifiers.Proficiency": "Non-Proficiency DM",
   "MGT2.Modifiers.Armour": "Armour",
   "MGT2.Modifiers.Initiative": "Initiative"
 }

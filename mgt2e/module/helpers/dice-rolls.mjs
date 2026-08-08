@@ -269,6 +269,9 @@ export async function rollAttack(actor, weapon, attackOptions) {
         if (system.modifiers && system.modifiers.encumbrance.dm !== 0) {
             dice += ` - ${Math.abs(parseInt(system.modifiers.encumbrance.dm))}[Enc]`;
         }
+        if (system.modifiers && system.modifiers.proficiency && system.modifiers.proficiency.dm !== 0) {
+            dice += ` - ${Math.abs(parseInt(system.modifiers.proficiency.dm))}[Unskilled]`;
+        }
         if (baseRange === 0) {
             if (system.modifiers && system.modifiers.melee.dm !== 0) {
                 if (system.modifiers.melee.dm > 0) {
@@ -1103,6 +1106,13 @@ export async function rollSkill(actor, skill, options) {
                 if (phyDm !== 0) {
                     dice += ` ${(phyDm >= 0) ? "+" : ""}${phyDm}[Phy]`;
                     skillNotes += ` (${phyDm}Phy)`;
+                }
+            }
+            if (data.modifiers.proficiency && data.modifiers.proficiency.dm) {
+                let profDm = parseInt(data.modifiers.proficiency.dm);
+                if (profDm !== 0) {
+                    dice += ` ${(profDm >= 0) ? "+" : ""}${profDm}[Unskilled]`;
+                    skillNotes += ` (${profDm}Unskilled)`;
                 }
             }
         }
