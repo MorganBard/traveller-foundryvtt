@@ -1,0 +1,45 @@
+<div class="mgt2e-chat-message initiative-box ship-initiative-box">
+    <h2>{{actor.name}}</h2>
+    <div class="mgt2e-chat-content">
+        <table class="ship-initiative-table">
+            <tr class="section-header"><th colspan="2">Tactics (Naval)</th></tr>
+            <tr>
+                <th>Dice</th>
+                <td>
+                    <ol class="dice-rolls initiative-dice compact-dice">
+                        {{#each dice}}<li class="roll die d6 {{cssClass}}">{{result}}</li>{{/each}}
+                    </ol>
+                </td>
+            </tr>
+            <tr>
+                <th>Skill mod / Target</th>
+                <td>{{numberFormat statModifier sign=true}} / 8</td>
+            </tr>
+            <tr>
+                <th>Total roll</th>
+                <td>{{total}}</td>
+            </tr>
+
+            <tr class="section-header"><th colspan="2">Ship Initiative</th></tr>
+            <tr>
+                <th>Rolled by</th>
+                <td>{{rollerName}}</td>
+            </tr>
+            {{#if baseWasSet}}
+                <tr>
+                    <th>Previous / Effect</th>
+                    <td>{{previousTotal}} / {{numberFormat effect sign=true}}</td>
+                </tr>
+            {{else}}
+                <tr>
+                    <th>Effect</th>
+                    <td>{{numberFormat effect sign=true}} <em>(pilot hasn't rolled the base initiative yet)</em></td>
+                </tr>
+            {{/if}}
+            <tr>
+                <th>Initiative</th>
+                <td><strong>{{newTotal}}</strong></td>
+            </tr>
+        </table>
+    </div>
+</div>

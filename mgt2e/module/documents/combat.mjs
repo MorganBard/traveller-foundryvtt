@@ -54,19 +54,24 @@ export async function rollTravellerInitiative(combat, actor, combatants) {
 }
 
 export async function rollShipInitiative(combat, actor, combatants) {
-    const tacticsDM = actor.getFlag("mgt2e-piggy", "shipInitiativeRoll");
-    const tacticsName = actor.getFlag("mgt2e-piggy", "shipInitiativeRoller");
+    const existingTotal = actor.getFlag("mgt2e-piggy", "shipInitiativeRoll");
+    const pilotName = actor.getFlag("mgt2e-piggy", "shipInitiativePilotName");
+    const tacticsName = actor.getFlag("mgt2e-piggy", "shipInitiativeTacticsName");
 
     for (const combatant of combatants) {
-        if (tacticsDM !== undefined && tacticsDM !== null) {
-            // The Captain's "Combat Tactics" role action already rolled this round's
-            // initiative - reuse it rather than rolling again.
-            await combat.setInitiative(combatant.id, tacticsDM);
+        if (existingTotal !== undefined && existingTotal !== null) {
+            // The Pilot's "Make Pilot" (and optionally the Captain's "Combat Tactics") role
+            // action already rolled this round's initiative - reuse it rather than rolling again.
+            await combat.setInitiative(combatant.id, existingTotal);
+            let rolledBy = pilotName ? `Pilot: ${pilotName}` : "";
+            if (tacticsName) {
+                rolledBy += (rolledBy ? ", " : "") + `Tactics: ${tacticsName}`;
+            }
             const chatData = {
                 user: game.user.id,
                 speaker: ChatMessage.getSpeaker({actor}),
-                content: `${actor.name} uses its already-rolled Tactics (Naval) initiative` +
-                    (tacticsName ? ` (rolled by ${tacticsName})` : "") + `: ${tacticsDM}`
+                content: `${actor.name} uses its already-rolled initiative` +
+                    (rolledBy ? ` (${rolledBy})` : "") + `: ${existingTotal}`
             };
             await ChatMessage.create(chatData);
             continue;
@@ -82,7 +87,7 @@ export async function rollShipInitiative(combat, actor, combatants) {
             {
                 actor,
                 dice,
-                statName: "Tactics (Naval) - not rolled",
+                statName: "Pilot + Thrust - not rolled",
                 statModifier: 0,
                 total: roll.total,
                 effect: roll.total
@@ -100,7 +105,7 @@ export async function rollShipInitiative(combat, actor, combatants) {
         await ChatMessage.create(messageData);
         await combat.setInitiative(combatant.id, roll.total);
         ui.notifications.warn(
-            `${actor.name} rolled a flat initiative - have the Captain use "Combat Tactics" for a proper roll.`
+            `${actor.name} rolled a flat initiative - have the pilot use "Make Pilot" for a proper roll.`
         );
     }
 }

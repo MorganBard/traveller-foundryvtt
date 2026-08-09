@@ -1,0 +1,28 @@
+<div class="mgt2e-chat-message initiative-box ship-initiative-box">
+    <h2>{{actor.name}}</h2>
+    <div class="mgt2e-chat-content">
+        <table class="ship-initiative-table">
+            <tr class="section-header"><th colspan="2">Ship Initiative</th></tr>
+            <tr>
+                <th>Dice</th>
+                <td>
+                    <ol class="dice-rolls initiative-dice compact-dice">
+                        {{#each dice}}<li class="roll die d6 {{cssClass}}">{{result}}</li>{{/each}}
+                    </ol>
+                </td>
+            </tr>
+            <tr>
+                <th>Pilot / Thrust</th>
+                <td>{{numberFormat pilotSkill sign=true}} / {{thrust}}</td>
+            </tr>
+            <tr>
+                <th>Rolled by</th>
+                <td>{{rollerName}}</td>
+            </tr>
+            <tr>
+                <th>Initiative</th>
+                <td><strong>{{total}}</strong></td>
+            </tr>
+        </table>
+    </div>
+</div>

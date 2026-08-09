@@ -1061,7 +1061,8 @@ Hooks.on("combatRound", (combat, data, options) => {
         if (actor.type === "spacecraft") {
             if (game.settings.get("mgt2e-piggy", "shipInitiativePerRound")) {
                 actor.unsetFlag("mgt2e-piggy", "shipInitiativeRoll");
-                actor.unsetFlag("mgt2e-piggy", "shipInitiativeRoller");
+                actor.unsetFlag("mgt2e-piggy", "shipInitiativePilotName");
+                actor.unsetFlag("mgt2e-piggy", "shipInitiativeTacticsName");
             }
             continue;
         }

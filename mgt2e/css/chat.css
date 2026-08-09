@@ -81,6 +81,39 @@
   filter: sepia(0.5) hue-rotate(-60deg);
 }
 
+.ship-initiative-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ship-initiative-table th,
+.ship-initiative-table td {
+  padding: 0 4px;
+  line-height: 1.3;
+}
+
+.ship-initiative-table tr.section-header th {
+  padding-top: 3px;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  color: #f1511b;
+  text-align: left;
+  border-bottom: 1px solid #f1511b;
+}
+
+.ship-initiative-table .compact-dice {
+  margin: 1px 0;
+  justify-content: flex-start;
+}
+
+.ship-initiative-table .compact-dice .roll {
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+  font-size: 12px;
+  line-height: 18px;
+}
+
 .mgt2e-chat-message h2 {
   font-size: large;
   font-family: "Roboto", sans-serif;

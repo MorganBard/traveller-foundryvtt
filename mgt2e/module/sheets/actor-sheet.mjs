@@ -1908,29 +1908,85 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             new MgT2SpacecraftAttackDialog(shipActor, actorCrew, weaponItem, dm).render(true);
         } else if (action.action === "special") {
             if (action.special === "pilot") {
-                let pilotDM = actorCrew.getSkillValue("pilot.spacecraft");
-                shipActor.setFlag("mgt2e-piggy", "initPilotDM", pilotDM);
-                shipActor.setFlag("mgt2e-piggy", "initPilotName", actorCrew.name);
-            } else if (action.special === "tacticsInit") {
-                let tacticsDM = actorCrew.getSkillValue("tactics.naval", { "addcha": true });
-                let roll = await new Roll("2D6 - 8 + " + tacticsDM).evaluate();
+                // Core rulebook: ship initiative is 2D + the pilot's Pilot skill + the ship's Thrust
+                // (M-Drive rating). This establishes the ship's base initiative for the round; the
+                // Captain's Combat Tactics check (below) adds its Effect on top of this.
+                let pilotSkill = actorCrew.getSkillValue("pilot.spacecraft");
+                let thrust = parseInt(shipActor.system.spacecraft.mdrive) || 0;
+                let roll = await new Roll("2D6 + " + pilotSkill + " + " + thrust).evaluate();
 
+                shipActor.setFlag("mgt2e-piggy", "initPilotDM", pilotSkill);
+                shipActor.setFlag("mgt2e-piggy", "initPilotName", actorCrew.name);
                 shipActor.setFlag("mgt2e-piggy", "shipInitiativeRoll", roll.total);
-                shipActor.setFlag("mgt2e-piggy", "shipInitiativeRoller", actorCrew.name);
+                shipActor.setFlag("mgt2e-piggy", "shipInitiativePilotName", actorCrew.name);
+                shipActor.unsetFlag("mgt2e-piggy", "shipInitiativeTacticsName");
 
                 const dice = roll.dice.flatMap(die => die.results.map(result => ({
                     result: result.result,
                     cssClass: result.result === 6 ? "max" : (result.result === 1 ? "min" : "")
                 })));
                 const content = await renderTemplate(
-                    "systems/mgt2e-piggy/templates/chat/initiative-roll.html",
+                    "systems/mgt2e-piggy/templates/chat/ship-pilot-initiative-roll.html",
                     {
                         actor: shipActor,
                         dice,
-                        statName: "Tactics (Naval)",
+                        pilotSkill,
+                        thrust,
+                        total: roll.total,
+                        rollerName: actorCrew.name
+                    }
+                );
+                const pilotSpeaker = {
+                    actor: actorCrew._id,
+                    alias: game.i18n.format("MGT2.Role.ChatAlias", {
+                        "actorName": actorCrew.name, "shipName": shipActor.name
+                    }),
+                    scene: game.scenes.current.id
+                };
+                const pilotMessageData = await roll.toMessage(
+                    {speaker: pilotSpeaker},
+                    {
+                        create: false,
+                        messageMode: game.settings.get("core", "rollMode")
+                    }
+                );
+                pilotMessageData.content = content;
+                await ChatMessage.create(pilotMessageData);
+
+                if (game.combat) {
+                    const combatant = game.combat.combatants.find(c => c.actor?.id === shipActor.id);
+                    if (combatant) {
+                        await game.combat.setInitiative(combatant.id, roll.total);
+                    }
+                }
+            } else if (action.special === "tacticsInit") {
+                let tacticsDM = actorCrew.getSkillValue("tactics.naval", { "addcha": true });
+                let roll = await new Roll("2D6 + " + tacticsDM).evaluate();
+                let effect = roll.total - 8;
+
+                let previousTotal = shipActor.getFlag("mgt2e-piggy", "shipInitiativeRoll");
+                let baseWasSet = previousTotal !== undefined && previousTotal !== null;
+                let newTotal = (baseWasSet ? previousTotal : 0) + effect;
+
+                shipActor.setFlag("mgt2e-piggy", "shipInitiativeRoll", newTotal);
+                shipActor.setFlag("mgt2e-piggy", "shipInitiativeTacticsName", actorCrew.name);
+
+                const dice = roll.dice.flatMap(die => die.results.map(result => ({
+                    result: result.result,
+                    cssClass: result.result === 6 ? "max" : (result.result === 1 ? "min" : "")
+                })));
+                const content = await renderTemplate(
+                    "systems/mgt2e-piggy/templates/chat/ship-initiative-roll.html",
+                    {
+                        actor: shipActor,
+                        dice,
                         statModifier: tacticsDM,
                         total: roll.total,
-                        effect: roll.total
+                        effect,
+                        previousTotal,
+                        baseWasSet,
+                        newTotal,
+                        rollerName: actorCrew.name
                     }
                 );
                 const speaker = {
@@ -1953,7 +2009,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
                 if (game.combat) {
                     const combatant = game.combat.combatants.find(c => c.actor?.id === shipActor.id);
                     if (combatant) {
-                        await game.combat.setInitiative(combatant.id, roll.total);
+                        await game.combat.setInitiative(combatant.id, newTotal);
                     }
                 }
 

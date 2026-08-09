@@ -3,11 +3,14 @@
     <label class="box-title">{{localize 'MGT2.TravellerSheet.Weapons'}}</label>
 
     <div class="ship-initiative">
-        {{#if actor.flags.[mgt2e-piggy].shipInitiativeRoller}}
+        {{#if actor.flags.[mgt2e-piggy].shipInitiativePilotName}}
             Initiative: {{actor.flags.[mgt2e-piggy].shipInitiativeRoll}}
-            (rolled by {{actor.flags.[mgt2e-piggy].shipInitiativeRoller}})
+            (Pilot: {{actor.flags.[mgt2e-piggy].shipInitiativePilotName}}{{~#if actor.flags.[mgt2e-piggy].shipInitiativeTacticsName~}}
+                , Tactics: {{actor.flags.[mgt2e-piggy].shipInitiativeTacticsName}}
+            {{~/if}})
         {{else}}
-            No initiative rolled - have your Captain use Combat Tactics
+            No initiative rolled - have your pilot use Make Pilot
+            (then optionally your Captain use Combat Tactics)
         {{/if}}
     </div>
 
