@@ -1,8 +1,8 @@
 {
-  "id": "mgt2e",
-  "title": "Mongoose Traveller 2e",
+  "id": "mgt2e-piggy",
+  "title": "Mongoose Traveller 2e (Piggy Build)",
   "description": "A system for Mongoose Traveller 2e. This includes rules specific to this version of Traveller.",
-  "version": "0.22.1.0",
+  "version": "0.22.1.1",
   "compatibility": {
     "minimum": 13,
     "verified": 14,
@@ -22,54 +22,54 @@
     "css/software.css", "css/world.css", "css/npc.css", "css/chat.css",
     "css/mgt2e.css"
   ],
-  "background": "systems/mgt2e/images/traveller.webp",
+  "background": "systems/mgt2e-piggy/images/traveller.webp",
   "scripts": [ ],
   "packs": [
     {
       "name": "base-items",
       "label": "MgT2e Base Items",
-      "system": "mgt2e",
-      "module": "mgt2e",
+      "system": "mgt2e-piggy",
+      "module": "mgt2e-piggy",
       "path": "packs/base-items",
       "type": "Item"
     },
     {
       "name": "base-actors",
       "label": "MgT2e Base Actors",
-      "system": "mgt2e",
-      "module": "mgt2e",
+      "system": "mgt2e-piggy",
+      "module": "mgt2e-piggy",
       "path": "packs/base-actors",
       "type": "Actor"
     },
     {
       "name": "traveller-docs",
       "label": "MgT2e Base Docs",
-      "system": "mgt2e",
-      "module": "mgt2e",
+      "system": "mgt2e-piggy",
+      "module": "mgt2e-piggy",
       "path": "packs/traveller-docs",
       "type": "JournalEntry"
     },
     {
       "name": "base-macros",
       "label": "MgT2e Base Macros",
-      "system": "mgt2e",
-      "module": "mgt2e",
+      "system": "mgt2e-piggy",
+      "module": "mgt2e-piggy",
       "path": "packs/base-macros",
       "type": "Macro"
     },
     {
       "name": "base-scenes",
       "label": "MgT2e Base Scenes",
-      "system": "mgt2e",
-      "module": "mgt2e",
+      "system": "mgt2e-piggy",
+      "module": "mgt2e-piggy",
       "path": "packs/base-scenes",
       "type": "Scene"
     },
     {
       "name": "base-tables",
       "label": "MgT2e Base Tables",
-      "system": "mgt2e",
-      "module": "mgt2e",
+      "system": "mgt2e-piggy",
+      "module": "mgt2e-piggy",
       "path": "packs/base-tables",
       "type": "RollTable"
     }
@@ -117,7 +117,7 @@
   "primaryTokenAttribute": "hits",
   "secondaryTokenAttribute": null,
   "url": "https://github.com/MorganBard/traveller-foundryvtt/",
-  "manifest": "https://github.com/MorganBard/traveller-foundryvtt/releases/download/v0.22.1.0/system.json",
-  "download": "https://github.com/MorganBard/traveller-foundryvtt/releases/download/v0.22.1.0/mongoose-traveller.zip",
-  "license": "https://github.com/MorganBard/traveller-foundryvtt/raw/v0.22.1.0/LICENSE.txt"
+  "manifest": "https://github.com/MorganBard/traveller-foundryvtt/releases/download/v0.22.1.1/system.json",
+  "download": "https://github.com/MorganBard/traveller-foundryvtt/releases/download/v0.22.1.1/mongoose-traveller.zip",
+  "license": "https://github.com/MorganBard/traveller-foundryvtt/raw/v0.22.1.1/LICENSE.txt"
 }
