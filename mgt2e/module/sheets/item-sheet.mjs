@@ -831,14 +831,18 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
             let tons = parseFloat(item.system.hardware.tons);
             let rating = parseFloat(item.system.hardware.rating);
 
-            if (powerPerTon < 1) {
-                item.system.hardware.powerPerTon = 1
-                item.update({"system.hardware.powerPerTon": 1});
-            } else {
-                if (parseFloat(rating / powerPerTon) !== tons) {
-                    tons = parseFloat(rating / powerPerTon);
-                    if (tons < 1) tons = 1;
-                }
+            if (item.system.hardware.tonnage?.tonCalc === "fixedTons") {
+                // A GM-chosen exact tonnage (e.g. matching a book design)
+                // overrides the rating/powerPerTon-derived value below.
+                tons = parseFloat(item.system.hardware.tonnage.tons);
+            } else if (powerPerTon < 1) {
+                // Only normalise the local value used for this calculation -
+                // getData() shouldn't persist changes as a side effect of
+                // merely rendering (see the weapon-mount pruning fix above).
+                powerPerTon = 1;
+            } else if (parseFloat(rating / powerPerTon) !== tons) {
+                tons = parseFloat(rating / powerPerTon);
+                if (tons < 1) tons = 1;
             }
             let cost = item.system.hardware.tonnage.cost * tons;
             let advancement = item.system.hardware.advancement
