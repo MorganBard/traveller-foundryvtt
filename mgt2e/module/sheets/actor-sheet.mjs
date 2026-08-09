@@ -308,6 +308,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             };
             context.selectRoleTypes = {
                 "": "",
+                "captain": game.i18n.localize("MGT2.Role.BuiltIn.Name.Captain"),
                 "navigator": game.i18n.localize("MGT2.Role.BuiltIn.Name.Navigator"),
                 "broker": game.i18n.localize("MGT2.Role.BuiltIn.Name.Broker"),
                 "engineer": game.i18n.localize("MGT2.Role.BuiltIn.Name.Engineer"),
@@ -2740,7 +2741,18 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
         let img = null;
 
         let t = Date.now();
-        if (roleType === "gunner") {
+        if (roleType === "captain") {
+            itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Captain");
+            img = "systems/mgt2e-piggy/icons/items/roles/captain.svg";
+            system.role.actions[(t++).toString(36)] = {
+                "title": game.i18n.localize("MGT2.Role.Special.CombatTactics"),
+                "action": "special", "special": "tacticsInit"
+            }
+            system.role.actions[(t++).toString(36)] = {
+                "title": game.i18n.localize("MGT2.Role.Special.ImproveInitiative"),
+                "action": "special", "special": "improveInit"
+            }
+        } else if (roleType === "gunner") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Gunner");
             img = "systems/mgt2e-piggy/icons/items/roles/gunner.svg";
             system.role.actions[(t++).toString(36)]= {

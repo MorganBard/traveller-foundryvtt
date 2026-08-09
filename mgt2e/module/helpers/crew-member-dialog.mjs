@@ -28,6 +28,7 @@ export class MgT2CrewMemberDialog extends Application {
 
         this.selectRoleTypes = {
             "": "",
+            "captain": game.i18n.localize("MGT2.Role.BuiltIn.Name.Captain"),
             "pilot": game.i18n.localize("MGT2.Role.BuiltIn.Name.Pilot"),
             "gunner": game.i18n.localize("MGT2.Role.BuiltIn.Name.Gunner"),
             "engineer": game.i18n.localize("MGT2.Role.BuiltIn.Name.Engineer"),
