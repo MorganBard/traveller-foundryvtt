@@ -457,12 +457,12 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
                 }
             } else if (i.type === "role") {
                 roles.push(i);
-                if (i.system.role.department) {
+                if (i.system.role?.department) {
                     departments.push(i);
                 }
             } else if (i.type === "software") {
                 software.push(i);
-                if (parseInt(i.system.software.bandwidth) > 0 && i.system.status === MgT2Item.RUNNING) {
+                if (parseInt(i.system.software?.bandwidth) > 0 && i.system.status === MgT2Item.RUNNING) {
                     bandwidthUsed += parseInt(i.system.software.bandwidth);
                 }
             } else if (i.type === 'hardware') {

@@ -860,9 +860,15 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
                     if (wpn) {
                         activeWeapons.push(wpn);
                     } else {
-                        console.log(`Weapon [${wpnId}] does not exist in [${item.name}]`);
-                        delete item.system.hardware.weapons[wpnId];
-                        item.update({"system.hardware.weapons": item.system.hardware.weapons});
+                        // Don't self-heal by deleting here: getData()/render should be
+                        // read-only. A weapon can appear briefly "missing" from a stale
+                        // or not-yet-settled items collection reference on ship (e.g.
+                        // right after other embedded documents were just updated), and
+                        // persisting a delete on a false positive silently un-mounts a
+                        // weapon the player never removed. Just skip it for display;
+                        // truly orphaned entries (from an actually-deleted weapon) are
+                        // harmless left in the data and can be cleaned up explicitly.
+                        console.log(`Weapon [${wpnId}] not found on [${item.name}]'s parent - skipping display, not deleting the link.`);
                     }
                 }
             }
