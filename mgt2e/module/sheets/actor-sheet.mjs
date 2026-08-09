@@ -34,7 +34,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["mgt2", "sheet", "actor"],
-            template: "systems/mgt2e/templates/actor/actor-sheet.html",
+            template: "systems/mgt2e-piggy/templates/actor/actor-sheet.html",
             width: 720,
             height: 600,
             tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
@@ -43,7 +43,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     /** @override */
     get template() {
-        return `systems/mgt2e/templates/actor/actor-${this.actor.type}-sheet.html`;
+        return `systems/mgt2e-piggy/templates/actor/actor-${this.actor.type}-sheet.html`;
     }
 
     /* -------------------------------------------- */
@@ -1947,13 +1947,13 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
         let decks = null;
         if (!this.actor?.system?.spacecraft?.deckplans) {
             decks = {
-                1: "systems/mgt2e/images/deck-plan.svg"
+                1: "systems/mgt2e-piggy/images/deck-plan.svg"
             };
         } else {
             decks = this.actor.system.spacecraft.deckplans;
             let keys = Object.keys(decks);
             let n = keys.length + 1;
-            decks[n] = "systems/mgt2e/images/deck-plan.svg";
+            decks[n] = "systems/mgt2e-piggy/images/deck-plan.svg";
         }
         this.actor.update({"system.spacecraft.deckplans": decks });
     }
@@ -2544,7 +2544,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             fuelCost: cost,
             fuelNeeded: needed
         }
-        const content = await renderTemplate("systems/mgt2e/templates/dialogs/buy-fuel.html", contentData);
+        const content = await renderTemplate("systems/mgt2e-piggy/templates/dialogs/buy-fuel.html", contentData);
 
         const buy = await foundry.applications.api.DialogV2.confirm({
             window: {
@@ -2742,7 +2742,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
         let t = Date.now();
         if (roleType === "gunner") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Gunner");
-            img = "systems/mgt2e/icons/items/roles/gunner.svg";
+            img = "systems/mgt2e-piggy/icons/items/roles/gunner.svg";
             system.role.actions[(t++).toString(36)]= {
                 "title": "Gunner",
                 "action": "weapon",
@@ -2751,7 +2751,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             };
         } else if (roleType === "pilot") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Pilot");
-            img = "systems/mgt2e/icons/items/roles/pilot.svg";
+            img = "systems/mgt2e-piggy/icons/items/roles/pilot.svg";
             let skill = "pilot.spacecraft";
             if (this.actor.system.spacecraft.dtons < 100) {
                 skill = "pilot.smallCraft";
@@ -2780,7 +2780,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             }
         } else if (roleType === "engineer") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Engineer");
-            img = "systems/mgt2e/icons/items/roles/engineer.svg";
+            img = "systems/mgt2e-piggy/icons/items/roles/engineer.svg";
             system.role.actions[(t++).toString(36)] = {
                 "title": "Activate Jump",
                 "action": "skill", "cha": "EDU", "skill": "engineer.jDrive",
@@ -2805,7 +2805,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             }
         } else if (roleType === "sensors") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Sensors");
-            img = "systems/mgt2e/icons/items/roles/sensors.svg";
+            img = "systems/mgt2e-piggy/icons/items/roles/sensors.svg";
             system.role.actions[(t++).toString(36)] = {
                 "title": "Sensors",
                 "action": "skill", "cha": "INT", "skill": "electronics.sensors", "target": 8, "dm": 0
@@ -2816,7 +2816,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             }
         } else if (roleType === "navigator") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Navigator");
-            img = "systems/mgt2e/icons/items/roles/navigator.svg";
+            img = "systems/mgt2e-piggy/icons/items/roles/navigator.svg";
             system.role.actions[(t++).toString(36)] = {
                 "title": "Jump-1",
                 "action": "skill", "cha": "EDU", "skill": "astrogation", "target": 4, "dm": -1
@@ -2827,28 +2827,28 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             }
         } else if (roleType === "broker") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Broker");
-            img = "systems/mgt2e/icons/items/roles/broker.svg";
+            img = "systems/mgt2e-piggy/icons/items/roles/broker.svg";
             system.role.actions[(t++).toString(36)] = {
                 "title": "Broker",
                 "action": "skill", "cha": "INT", "skill": "broker", "target": 8, "dm": 0
             }
         } else if (roleType === "medic") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Medic");
-            img = "systems/mgt2e/icons/items/roles/medic.svg";
+            img = "systems/mgt2e-piggy/icons/items/roles/medic.svg";
             system.role.actions[(t++).toString(36)] = {
                 "title": "Medic",
                 "action": "skill", "cha": "INT", "skill": "medic", "target": 8, "dm": 0
             }
         } else if (roleType === "steward") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Steward");
-            img = "systems/mgt2e/icons/items/roles/steward.svg";
+            img = "systems/mgt2e-piggy/icons/items/roles/steward.svg";
             system.role.actions[(t++).toString(36)] = {
                 "title": "Steward",
                 "action": "skill", "cha": "INT", "skill": "steward", "target": 8, "dm": 0
             }
         } else if (roleType === "mechanic") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Mechanic");
-            img = "systems/mgt2e/icons/items/roles/maintenance.svg";
+            img = "systems/mgt2e-piggy/icons/items/roles/maintenance.svg";
             system.role.actions[(t++).toString(36)] = {
                 "title": "Mechanic",
                 "action": "skill", "cha": "INT", "skill": "mechanic", "target": 8, "dm": 0
@@ -2906,64 +2906,64 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
         let img = null;
         if (systemType === "general") {
             itemName = "Hardware";
-            img = "systems/mgt2e/icons/hardware/hardware.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/hardware.svg";
             system.tl = 9;
         } else if (systemType === "j-drive") {
             itemName = "J-Drive";
-            img = "systems/mgt2e/icons/hardware/j-drive.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/j-drive.svg";
             system.tl = 9;
             system.hardware.rating = 1;
         } else if (systemType === "m-drive") {
             itemName = "M-Drive";
-            img = "systems/mgt2e/icons/hardware/m-drive.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/m-drive.svg";
             system.tl = 9;
             system.hardware.rating = 1;
         } else if (systemType === "r-drive") {
             itemName = "R-Drive";
-            img = "systems/mgt2e/icons/hardware/r-drive.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/r-drive.svg";
             system.tl = 7;
             system.hardware.rating = 1;
         } else if (systemType === "power") {
             itemName = "Fusion Reactor (TL8)";
-            img = "systems/mgt2e/icons/hardware/fusion_reactor.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/fusion_reactor.svg";
             system.tl = 8;
             system.hardware.rating = 40;
             system.hardware.tonnage.cost = 0.5;
             system.hardware.powerPerTon = 10;
         } else if (systemType === "armour") {
             itemName = "Crystaliron Armour";
-            img = "systems/mgt2e/icons/hardware/armour_crystaliron.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/armour_crystaliron.svg";
             system.tl = 10;
             system.hardware.rating = 2;
             system.hardware.tonnage.percent = 1.25;
             system.hardware.tonnage.cost = 0.2;
         } else if (systemType === "fuel") {
             itemName = "Fuel Tanks";
-            img = "systems/mgt2e/icons/hardware/fuel_tank.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/fuel_tank.svg";
             system.tl = 7;
             system.hardware.rating = 10;
         } else if (systemType === "cargo") {
             itemName = "Cargo Hold";
-            img = "systems/mgt2e/icons/hardware/cargo_hold.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/cargo_hold.svg";
             system.tl = 7;
             system.hardware.rating = 10;
         } else if (systemType === "dock") {
             itemName = "Docking Bay";
-            img = "systems/mgt2e/icons/hardware/cargo_hold.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/cargo_hold.svg";
             system.tl = 7;
             system.hardware.rating = 20;
         } else if (systemType === "weapon") {
             itemName = "Turret";
-            img = "systems/mgt2e/icons/hardware/turret.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/turret.svg";
             system.tl = 7;
             system.hardware.tonnage.tons = 1;
         } else if (systemType === "computer") {
             itemName = "Computer";
-            img = "systems/mgt2e/icons/hardware/computer.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/computer.svg";
             system.tl = this.actor.system.spacecraft.tl;
         } else if (systemType === "bridge") {
             itemName = "Bridge";
-            img = "systems/mgt2e/icons/hardware/bridge.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/bridge.svg";
             system.hardware.system = "bridge";
             if (this.actor.system.spacecraft.dtons <= 50) {
                 system.hardware.tonnage.tons = 5;
@@ -2983,14 +2983,14 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             system.hardware.tonnage.cost = Math.ceil(this.actor.system.spacecraft.dtons / 100) * 0.5;
         } else if (systemType === "stateroom") {
             itemName = "Stateroom";
-            img = "systems/mgt2e/icons/hardware/stateroom.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/stateroom.svg";
             system.hardware.system = "stateroom";
             system.hardware.tonnage.tons = 4;
             system.hardware.rating = 1;
             system.cost = 0.5;
         } else if (systemType === "common") {
             itemName = "Common Area";
-            img = "systems/mgt2e/icons/hardware/common_area.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/common_area.svg";
             system.hardware.system = "common";
             system.hardware.tonnage.tons = 1;
             system.hardware.rating = 1;
@@ -2998,7 +2998,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             system.cost = 0.1;
         } else if (systemType === "sensor") {
             itemName = "Basic Sensors";
-            img = "systems/mgt2e/icons/hardware/sensor.svg";
+            img = "systems/mgt2e-piggy/icons/hardware/sensor.svg";
             system.tl = 8;
             system.hardware.system = "sensor";
             system.hardware.tonnage.tons = 0;
@@ -3148,7 +3148,7 @@ export class MgT2CreatureActorSheet extends MgT2ActorSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["mgt2e", "sheet", "actor"],
-            template: "systems/mgt2e/templates/actor/actor-sheet.html",
+            template: "systems/mgt2e-piggy/templates/actor/actor-sheet.html",
             width: 600,
             height: 600,
             tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]

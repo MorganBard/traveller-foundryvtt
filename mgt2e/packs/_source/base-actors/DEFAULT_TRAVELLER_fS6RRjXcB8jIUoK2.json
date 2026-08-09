@@ -1,7 +1,7 @@
 {
   "name": "DEFAULT TRAVELLER",
   "type": "traveller",
-  "img": "systems/mgt2e/icons/actors/traveller-red.svg",
+  "img": "systems/mgt2e-piggy/icons/actors/traveller-red.svg",
   "system": {
     "speed": {
       "base": 6,
@@ -203,7 +203,7 @@
         "requires": "INT",
         "id": "admin",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/admin.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/admin.svg",
         "trained": false
       },
       "advocate": {
@@ -211,7 +211,7 @@
         "requires": "INT",
         "id": "advocate",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/advocate.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/advocate.svg",
         "trained": false
       },
       "animals": {
@@ -237,7 +237,7 @@
         },
         "id": "animals",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/animals.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/animals.svg",
         "trained": false
       },
       "art": {
@@ -268,7 +268,7 @@
         },
         "id": "art",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/art.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/art.svg",
         "trained": false
       },
       "astrogation": {
@@ -276,7 +276,7 @@
         "requires": "INT",
         "id": "astrogation",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/astrogation.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/astrogation.svg",
         "trained": false
       },
       "athletics": {
@@ -305,7 +305,7 @@
         },
         "id": "athletics",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/athletics.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/athletics.svg",
         "trained": false
       },
       "broker": {
@@ -313,7 +313,7 @@
         "requires": "INT",
         "id": "broker",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/broker.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/broker.svg",
         "trained": false
       },
       "carouse": {
@@ -322,7 +322,7 @@
         "requires": "INT",
         "id": "carouse",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/carouse.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/carouse.svg",
         "trained": false
       },
       "deception": {
@@ -331,7 +331,7 @@
         "creature": true,
         "id": "deception",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/deception.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/deception.svg",
         "trained": false
       },
       "diplomat": {
@@ -339,7 +339,7 @@
         "requires": "INT",
         "id": "diplomat",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/diplomat.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/diplomat.svg",
         "trained": false
       },
       "drive": {
@@ -370,7 +370,7 @@
         },
         "id": "drive",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/drive.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/drive.svg",
         "trained": false
       },
       "electronics": {
@@ -397,7 +397,7 @@
         },
         "id": "electronics",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/electronics.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/electronics.svg",
         "trained": false
       },
       "engineer": {
@@ -423,7 +423,7 @@
         },
         "id": "engineer",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/engineer.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/engineer.svg",
         "trained": false
       },
       "explosives": {
@@ -432,7 +432,7 @@
         "combat": true,
         "id": "explosives",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/explosives.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/explosives.svg",
         "trained": false
       },
       "flyer": {
@@ -463,7 +463,7 @@
         },
         "id": "flyer",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/flyer.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/flyer.svg",
         "trained": false
       },
       "gambler": {
@@ -471,7 +471,7 @@
         "requires": "INT",
         "id": "gambler",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/gambler.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/gambler.svg",
         "trained": false
       },
       "gunner": {
@@ -502,7 +502,7 @@
         },
         "id": "gunner",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/gunner.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/gunner.svg",
         "trained": false
       },
       "guncombat": {
@@ -528,7 +528,7 @@
         },
         "id": "guncombat",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/guncombat.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/guncombat.svg",
         "trained": false
       },
       "heavyweapons": {
@@ -553,7 +553,7 @@
         },
         "id": "heavyweapons",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/heavyweapons.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/heavyweapons.svg",
         "trained": false
       },
       "independence": {
@@ -561,14 +561,14 @@
         "requires": "TER",
         "id": "independence",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/independence.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/independence.svg"
       },
       "investigate": {
         "default": "INT",
         "requires": "INT",
         "id": "investigate",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/investigate.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/investigate.svg",
         "trained": false
       },
       "jackofalltrades": {
@@ -576,7 +576,7 @@
         "requires": "INT",
         "id": "jackofalltrades",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/jackofalltrades.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/jackofalltrades.svg",
         "trained": false
       },
       "language": {
@@ -611,7 +611,7 @@
         },
         "id": "language",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/language.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/language.svg",
         "trained": false
       },
       "leadership": {
@@ -619,7 +619,7 @@
         "requires": "INT",
         "id": "leadership",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/leadership.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/leadership.svg",
         "trained": false
       },
       "mechanic": {
@@ -628,7 +628,7 @@
         "requires": "INT",
         "id": "mechanic",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/mechanic.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/mechanic.svg",
         "trained": false
       },
       "medic": {
@@ -637,7 +637,7 @@
         "requires": "INT",
         "id": "medic",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/medic.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/medic.svg",
         "trained": false
       },
       "melee": {
@@ -668,7 +668,7 @@
         },
         "id": "melee",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/melee.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/melee.svg",
         "trained": false
       },
       "navigation": {
@@ -676,7 +676,7 @@
         "requires": "INT",
         "id": "navigation",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/navigation.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/navigation.svg",
         "trained": false
       },
       "persuade": {
@@ -685,7 +685,7 @@
         "creature": true,
         "id": "persuade",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/persuade.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/persuade.svg",
         "trained": false
       },
       "pilot": {
@@ -707,7 +707,7 @@
         },
         "id": "pilot",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/pilot.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/pilot.svg",
         "trained": false
       },
       "profession": {
@@ -747,7 +747,7 @@
         },
         "id": "profession",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/profession.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/profession.svg",
         "trained": false
       },
       "recon": {
@@ -756,7 +756,7 @@
         "creature": true,
         "id": "recon",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/recon.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/recon.svg",
         "trained": false
       },
       "science": {
@@ -839,7 +839,7 @@
         },
         "id": "science",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/science.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/science.svg",
         "trained": false
       },
       "seafarer": {
@@ -866,7 +866,7 @@
         },
         "id": "seafarer",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/seafarer.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/seafarer.svg",
         "trained": false
       },
       "stealth": {
@@ -875,7 +875,7 @@
         "creature": true,
         "id": "stealth",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/stealth.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/stealth.svg",
         "trained": false
       },
       "steward": {
@@ -883,7 +883,7 @@
         "requires": "INT",
         "id": "steward",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/steward.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/steward.svg",
         "trained": false
       },
       "streetwise": {
@@ -892,7 +892,7 @@
         "requires": "INT",
         "id": "streetwise",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/streetwise.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/streetwise.svg",
         "trained": false
       },
       "survival": {
@@ -902,7 +902,7 @@
         "creature": true,
         "id": "survival",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/survival.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/survival.svg",
         "trained": false
       },
       "tactics": {
@@ -920,7 +920,7 @@
         },
         "id": "tactics",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/tactics.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/tactics.svg",
         "trained": false
       },
       "vaccsuit": {
@@ -929,14 +929,14 @@
         "requires": "INT",
         "id": "vaccsuit",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/vaccsuit.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/vaccsuit.svg",
         "trained": false
       },
       "telepathy": {
         "default": "PSI",
         "requires": "PSI",
         "trait": "psionic",
-        "icon": "systems/mgt2e/icons/skills/psi.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/psi.svg",
         "id": "telepathy",
         "value": 0
       },
@@ -944,7 +944,7 @@
         "default": "PSI",
         "requires": "PSI",
         "trait": "psionic",
-        "icon": "systems/mgt2e/icons/skills/psi.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/psi.svg",
         "id": "clairvoyance",
         "value": 0
       },
@@ -952,7 +952,7 @@
         "default": "PSI",
         "requires": "PSI",
         "trait": "psionic",
-        "icon": "systems/mgt2e/icons/skills/psi.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/psi.svg",
         "id": "telekinesis",
         "value": 0
       },
@@ -960,7 +960,7 @@
         "default": "PSI",
         "requires": "PSI",
         "trait": "psionic",
-        "icon": "systems/mgt2e/icons/skills/psi.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/psi.svg",
         "id": "awareness",
         "value": 0
       },
@@ -968,7 +968,7 @@
         "default": "PSI",
         "requires": "PSI",
         "trait": "psionic",
-        "icon": "systems/mgt2e/icons/skills/psi.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/psi.svg",
         "id": "teleportation",
         "value": 0
       },
@@ -977,7 +977,7 @@
         "requires": "XXX",
         "id": "untrained",
         "value": 0,
-        "icon": "systems/mgt2e/icons/skills/untrained.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/untrained.svg"
       }
     },
     "damage": {
@@ -1047,7 +1047,7 @@
     "width": 1,
     "height": 1,
     "texture": {
-      "src": "systems/mgt2e/icons/actors/traveller-red.svg",
+      "src": "systems/mgt2e-piggy/icons/actors/traveller-red.svg",
       "anchorX": 0.5,
       "anchorY": 0.5,
       "offsetX": 0,

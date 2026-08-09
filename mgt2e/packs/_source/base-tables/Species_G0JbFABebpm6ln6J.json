@@ -1,7 +1,7 @@
 {
   "folder": "a0DEGnaZ8vNn1WHn",
   "name": "Species",
-  "img": "systems/mgt2e/icons/misc/text.svg",
+  "img": "systems/mgt2e-piggy/icons/misc/text.svg",
   "description": "<p>Random list of species.</p>",
   "results": [
     {
@@ -13,7 +13,7 @@
       ],
       "drawn": false,
       "_id": "NQyLjsOFlA5ehVgJ",
-      "img": "systems/mgt2e/icons/misc/2D6/11.svg",
+      "img": "systems/mgt2e-piggy/icons/misc/2D6/11.svg",
       "flags": {},
       "_stats": {
         "coreVersion": "13.351",
@@ -39,7 +39,7 @@
       ],
       "drawn": false,
       "_id": "lNuAqmUpUzWOrAWd",
-      "img": "systems/mgt2e/icons/misc/2D6/12.svg",
+      "img": "systems/mgt2e-piggy/icons/misc/2D6/12.svg",
       "flags": {},
       "_stats": {
         "coreVersion": "13.351",

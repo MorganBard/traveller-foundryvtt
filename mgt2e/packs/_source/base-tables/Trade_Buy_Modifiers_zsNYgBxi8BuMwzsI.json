@@ -1,6 +1,6 @@
 {
   "name": "Trade Buy Modifiers",
-  "img": "systems/mgt2e/icons/misc/2D6.svg",
+  "img": "systems/mgt2e-piggy/icons/misc/2D6.svg",
   "description": "<p>This table can be used to modify the speculative trade system. To use it, copy it into your world.</p><p>Whenever the <strong>Buy Price</strong> of a speculative trade good is calculated, this table will be rolled on, and the result used to modify the buy price roll.</p><p>Negative numbers are bad for players (they increase the buy price). Positive numbers are good (they decrease the buy price).</p><p>This example table is 2D6, but it doesn't have to be. It could be 1D6, or even 1D1 with a single entry if you just want to apply a fixed modifier to everything. It's designed to make the speculative trade system harder, with a chance of some goods being unexpectadly more expensive to buy.</p><p>Why you might want to use it is left up to the Referee.</p>",
   "results": [
     {

@@ -1,7 +1,7 @@
 {
   "name": "Vehicles",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/vehicles.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/vehicles.svg",
   "system": {
     "cargo": {
       "price": 15000,

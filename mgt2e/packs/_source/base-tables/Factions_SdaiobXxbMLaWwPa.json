@@ -2,7 +2,7 @@
   "folder": "iSwBLLghzu3fo1Bz",
   "name": "Factions",
   "_id": "SdaiobXxbMLaWwPa",
-  "img": "systems/mgt2e/icons/misc/D66.svg",
+  "img": "systems/mgt2e-piggy/icons/misc/D66.svg",
   "description": "<p>Random factions, for use with the world faction generator. This is just a set of examples to use as a base. If you want to expand it, copy the <em>Faction Generator</em> folder into your world, and start editing.</p><p>Note that you can create other tables \"Factions X\" where X is the government code of the faction. These will be used instead of this table if they exist.</p>",
   "results": [
     {

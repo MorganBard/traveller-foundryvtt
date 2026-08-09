@@ -2,7 +2,7 @@
   "name": "2D6",
   "type": "chat",
   "command": "/r 2D6 # 2D6",
-  "img": "systems/mgt2e/icons/misc/2D6.svg",
+  "img": "systems/mgt2e-piggy/icons/misc/2D6.svg",
   "author": "mhUjqDVicnwIUaiq",
   "scope": "global",
   "folder": null,

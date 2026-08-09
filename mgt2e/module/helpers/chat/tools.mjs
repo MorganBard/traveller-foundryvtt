@@ -720,7 +720,7 @@ Tools.inlineUppRollSkill = async function(actorName, skillData) {
         skillText: "<b>Average</b> skill check",
         effectLabel: getEffectLabel(roll.total - 8)
     }
-    const html = await foundry.applications.handlebars.renderTemplate("systems/mgt2e/templates/chat/skill-roll.html", contentData);
+    const html = await foundry.applications.handlebars.renderTemplate("systems/mgt2e-piggy/templates/chat/skill-roll.html", contentData);
 
     roll.toMessage({
             flavor: html},
@@ -816,7 +816,7 @@ Tools.packageInlineDisplay = async function(a, actor) {
     let contentData = {
         actor: actor
     }
-    let html = await renderTemplate("systems/mgt2e/templates/journal/actor-package.html", contentData);
+    let html = await renderTemplate("systems/mgt2e-piggy/templates/journal/actor-package.html", contentData);
 
     a.innerHTML = html;
     return a;

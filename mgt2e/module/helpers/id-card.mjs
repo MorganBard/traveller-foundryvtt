@@ -7,7 +7,7 @@ export class NpcIdCard extends Application {
         foundry.utils.mergeObject(options, {
             editable: false,
             resizable: false,
-            template: "systems/mgt2e/templates/actor/actor-id-card.html",
+            template: "systems/mgt2e-piggy/templates/actor/actor-id-card.html",
             popOut: true,
             shareable: true,
             width: 600,

@@ -1,7 +1,7 @@
 {
   "name": "Spices",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/spices.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/spices.svg",
   "system": {
     "cargo": {
       "price": 6000,

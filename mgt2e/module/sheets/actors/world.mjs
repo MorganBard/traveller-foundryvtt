@@ -19,7 +19,7 @@ export class MgT2WorldActorSheet extends MgT2ActorSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             classes: [ "mgt2", "sheet", "actor"],
-            template: "systems/mgt2e/templates/actor/actor-world-sheet.html",
+            template: "systems/mgt2e-piggy/templates/actor/actor-world-sheet.html",
             width: 720,
             height: 600,
             tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
@@ -211,9 +211,9 @@ export class MgT2WorldActorSheet extends MgT2ActorSheet {
             context.BROKER_SELECT[i] = i;
         }
 
-        context.brokerActorImg = "systems/mgt2e/icons/misc/drop-target.svg";
+        context.brokerActorImg = "systems/mgt2e-piggy/icons/misc/drop-target.svg";
         context.brokerActorName = "";
-        context.streetwiseActorImg = "systems/mgt2e/icons/misc/drop-target.svg";
+        context.streetwiseActorImg = "systems/mgt2e-piggy/icons/misc/drop-target.svg";
         context.streetwiseActorName = "";
 
         if (context.world.meta.brokerActorId) {
@@ -494,7 +494,7 @@ export class MgT2WorldActorSheet extends MgT2ActorSheet {
                 passengerName: passenger.name,
                 passengerList: list
             }
-            const content = await renderTemplate("systems/mgt2e/templates/dialogs/disembark-passengers.html", contentData);
+            const content = await renderTemplate("systems/mgt2e-piggy/templates/dialogs/disembark-passengers.html", contentData);
 
             const disembark = await foundry.applications.api.DialogV2.confirm({
                 window: {

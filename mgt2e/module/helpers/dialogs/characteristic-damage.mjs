@@ -24,7 +24,7 @@ export class MgT2CharacteristicDamageApp extends HandlebarsApplicationMixin(Appl
 
     static PARTS = {
         form: {
-            template: "systems/mgt2e/templates/dialogs/characteristic-damage.html"
+            template: "systems/mgt2e-piggy/templates/dialogs/characteristic-damage.html"
         },
         footer: {
             template: "templates/generic/form-footer.hbs"

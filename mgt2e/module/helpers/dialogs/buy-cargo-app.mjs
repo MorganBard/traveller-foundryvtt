@@ -32,7 +32,7 @@ export class MgT2BuyCargoApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
     static PARTS = {
         form: {
-            template: "systems/mgt2e/templates/dialogs/buy-speculative.html"
+            template: "systems/mgt2e-piggy/templates/dialogs/buy-speculative.html"
         },
         footer: {
             template: "templates/generic/form-footer.hbs"

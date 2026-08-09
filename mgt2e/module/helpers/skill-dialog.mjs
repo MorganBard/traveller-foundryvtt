@@ -5,7 +5,7 @@ import {MGT2} from "./config.mjs";
 export class MgT2SkillDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.template = "systems/mgt2e/templates/skill-dialog.html";
+        options.template = "systems/mgt2e-piggy/templates/skill-dialog.html";
         options.width = "auto";
         options.height = "auto";
         options.title = "Make a roll";

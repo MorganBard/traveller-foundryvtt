@@ -714,7 +714,7 @@ export async function rollAttack(actor, weapon, attackOptions) {
         useChatIcons: game.settings.get("mgt2e", "useChatIcons"),
     }
 
-    const html = await renderTemplate("systems/mgt2e/templates/chat/attack-roll.html", contentData);
+    const html = await renderTemplate("systems/mgt2e-piggy/templates/chat/attack-roll.html", contentData);
     roll.toMessage({
         speaker: ChatMessage.getSpeaker({actor: actor}),
         flavor: html,
@@ -1445,7 +1445,7 @@ export async function rollSkill(actor, skill, options) {
         let contentData = {
             actor: actor,
             agent: options.agent,
-            skillIcon: skill?`systems/mgt2e/icons/skills/${skill.id}.svg`:"",
+            skillIcon: skill?`systems/mgt2e-piggy/icons/skills/${skill.id}.svg`:"",
             skillFqn: skillFqn,
             label: label,
             skillTitle: title,
@@ -1464,7 +1464,7 @@ export async function rollSkill(actor, skill, options) {
             options: JSON.stringify(options)
         }
 
-        const html = await foundry.applications.handlebars.renderTemplate("systems/mgt2e/templates/chat/skill-roll.html", contentData);
+        const html = await foundry.applications.handlebars.renderTemplate("systems/mgt2e-piggy/templates/chat/skill-roll.html", contentData);
         roll.toMessage({
             speaker: ChatMessage.getSpeaker({actor: actor}),
             flavor: html},

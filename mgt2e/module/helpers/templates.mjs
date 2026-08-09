@@ -6,24 +6,24 @@
 export const preloadHandlebarsTemplates = async function() {
     return foundry.applications.handlebars.loadTemplates([
         // Actor partials.
-        "systems/mgt2e/templates/actor/parts/actor-items.html",
-        "systems/mgt2e/templates/actor/parts/actor-items-categorised.html",
-        "systems/mgt2e/templates/actor/parts/actor-combat.html",
-        "systems/mgt2e/templates/actor/parts/actor-status.html",
-        "systems/mgt2e/templates/actor/parts/actor-effects.html",
-        "systems/mgt2e/templates/actor/parts/actor-skills.html",
-        "systems/mgt2e/templates/actor/parts/actor-weapons.html",
-        "systems/mgt2e/templates/actor/parts/actor-terms.html",
-        "systems/mgt2e/templates/actor/parts/actor-settings.html",
-        "systems/mgt2e/templates/actor/parts/actor-starship-bays.html",
-        "systems/mgt2e/templates/actor/parts/actor-starship-crew.html",
-        "systems/mgt2e/templates/actor/parts/actor-starship-combat.html",
-        "systems/mgt2e/templates/actor/parts/actor-starship-hardware.html",
-        "systems/mgt2e/templates/item/parts/item-general.html",
-        "systems/mgt2e/templates/item/parts/item-effects.html",
-        "systems/mgt2e/templates/item/parts/item-computer.html",
-        "systems/mgt2e/templates/item/parts/item-links.html",
-        "systems/mgt2e/templates/item/parts/item-software.html",
-        "systems/mgt2e/templates/item/parts/item-techLevel.html"
+        "systems/mgt2e-piggy/templates/actor/parts/actor-items.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-items-categorised.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-combat.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-status.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-effects.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-skills.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-weapons.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-terms.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-settings.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-starship-bays.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-starship-crew.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-starship-combat.html",
+        "systems/mgt2e-piggy/templates/actor/parts/actor-starship-hardware.html",
+        "systems/mgt2e-piggy/templates/item/parts/item-general.html",
+        "systems/mgt2e-piggy/templates/item/parts/item-effects.html",
+        "systems/mgt2e-piggy/templates/item/parts/item-computer.html",
+        "systems/mgt2e-piggy/templates/item/parts/item-links.html",
+        "systems/mgt2e-piggy/templates/item/parts/item-software.html",
+        "systems/mgt2e-piggy/templates/item/parts/item-techLevel.html"
     ]);
 };

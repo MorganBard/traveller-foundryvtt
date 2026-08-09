@@ -46,7 +46,7 @@ export class MgT2VehicleDamageApp extends HandlebarsApplicationMixin(Application
 
     static PARTS = {
         form: {
-            template: "systems/mgt2e/templates/dialogs/vehicle-damage.html"
+            template: "systems/mgt2e-piggy/templates/dialogs/vehicle-damage.html"
         },
         footer: {
             template: "templates/generic/form-footer.hbs"

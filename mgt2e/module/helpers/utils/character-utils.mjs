@@ -128,7 +128,7 @@ export function copySkills(actorData) {
                 }
             }
             if (!actorData.system.skills[s].icon) {
-                actorData.system.skills[s].icon = `systems/mgt2e/icons/skills/${s}.svg`;
+                actorData.system.skills[s].icon = `systems/mgt2e-piggy/icons/skills/${s}.svg`;
             }
         }
     }

@@ -3,7 +3,7 @@
   "name": "Intellect",
   "type": "software",
   "_id": "pCFl4KSmPoTd5hdn",
-  "img": "systems/mgt2e/icons/items/software.svg",
+  "img": "systems/mgt2e-piggy/icons/items/software.svg",
   "system": {
     "quantity": 1,
     "tl": "11",

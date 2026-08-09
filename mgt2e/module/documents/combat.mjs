@@ -27,7 +27,7 @@ export async function rollTravellerInitiative(combat, actor, combatants) {
             cssClass: result.result === 6 ? "max" : (result.result === 1 ? "min" : "")
         })));
         const content = await renderTemplate(
-            "systems/mgt2e/templates/chat/initiative-roll.html",
+            "systems/mgt2e-piggy/templates/chat/initiative-roll.html",
             {
                 actor,
                 dice,

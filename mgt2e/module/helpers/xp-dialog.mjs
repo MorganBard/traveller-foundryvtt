@@ -4,7 +4,7 @@ import {MgT2AddSkillDialog} from "./add-skill-dialog.mjs";
 export class MgT2XPDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.template = "systems/mgt2e/templates/xp-dialog.html";
+        options.template = "systems/mgt2e-piggy/templates/xp-dialog.html";
         options.width = "auto";
         options.height = "auto";
         options.title = "Make a roll";

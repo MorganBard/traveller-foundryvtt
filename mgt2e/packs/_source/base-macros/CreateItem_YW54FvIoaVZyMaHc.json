@@ -2,7 +2,7 @@
   "name": "CreateItem",
   "type": "script",
   "command": "/**\n * CreateItem Macro\n *\n * To embed this in a Journal, or an Item or Actor description,\n * use the following:\n * \n * [[/mgMacro CreateItem name=\"Glass of Wine\"]]{Take a drink}\n */\nlet itemName = \"New Item\";\nlet itemType = \"item\";\n\nif (scope.name) {\n  itemName = scope.name;\n}\nif (scope.type) {\n  itemType = scope.type;\n}\n\n// Add item to token\nfor (let t of canvas.tokens.controlled) {\n    let actor = t.actor;\n    if (actor) {\n       const itemData = {\n         \"name\": itemName,\n         \"img\": \"\",\n         \"type\": itemType\n       }\n       Item.create(itemData, { parent: actor });\n    }\n}",
-  "img": "systems/mgt2e/icons/macros/add-item.svg",
+  "img": "systems/mgt2e-piggy/icons/macros/add-item.svg",
   "author": "mhUjqDVicnwIUaiq",
   "scope": "global",
   "folder": null,

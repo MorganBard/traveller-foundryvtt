@@ -783,7 +783,7 @@ export class MgT2Actor extends Actor {
                   actor: this,
                   damage: damage
               }
-              const content = await renderTemplate("systems/mgt2e/templates/dialogs/apply-damage-check.html", contentData);
+              const content = await renderTemplate("systems/mgt2e-piggy/templates/dialogs/apply-damage-check.html", contentData);
 
               let confirmed = false;
               try {
@@ -979,7 +979,7 @@ export class MgT2Actor extends Actor {
               actor: this,
               text: text
           }
-          const content = await renderTemplate("systems/mgt2e/templates/chat/damage-update.html", contentData);
+          const content = await renderTemplate("systems/mgt2e-piggy/templates/chat/damage-update.html", contentData);
           if (text.length > 0) {
               let chatData = {
                   user: game.user.id,
@@ -1083,7 +1083,7 @@ export class MgT2Actor extends Actor {
         actor: this,
         text: text
       }
-      const content = await renderTemplate("systems/mgt2e/templates/chat/damage-update.html", contentData);
+      const content = await renderTemplate("systems/mgt2e-piggy/templates/chat/damage-update.html", contentData);
       if (text.length > 0) {
         let chatData = {
           user: game.user.id,
@@ -1407,12 +1407,12 @@ export class MgT2Actor extends Actor {
   getSkillIcon(skillId) {
       let skill = this.system.skills[skillId.replaceAll(/\..*/g, "")];
       if (!skill) {
-          return "systems/mgt2e/icons/skills/untrained.svg";
+          return "systems/mgt2e-piggy/icons/skills/untrained.svg";
       }
       if (skill.icon) {
           return skill.icon;
       }
-      return `systems/mgt2e/icons/skills/${skillId}.svg`;
+      return `systems/mgt2e-piggy/icons/skills/${skillId}.svg`;
   }
 
   getSkillLabel(skill, showValue) {

@@ -1,7 +1,7 @@
 {
   "name": "Common Consumables",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/common_consumables.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/common_consumables.svg",
   "system": {
     "cargo": {
       "price": 500,

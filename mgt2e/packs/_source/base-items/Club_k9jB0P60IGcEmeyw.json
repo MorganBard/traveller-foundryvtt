@@ -3,7 +3,7 @@
   "name": "Club",
   "type": "weapon",
   "_id": "k9jB0P60IGcEmeyw",
-  "img": "systems/mgt2e/icons/items/melee-bludgeon.svg",
+  "img": "systems/mgt2e-piggy/icons/items/melee-bludgeon.svg",
   "system": {
     "tl": "0",
     "weight": 1,

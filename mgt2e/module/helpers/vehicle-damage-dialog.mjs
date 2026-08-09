@@ -4,7 +4,7 @@ import { MGT2 } from "../helpers/config.mjs";
 export class MgT2VehicleDamageDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.template = "systems/mgt2e/templates/vehicle-damage-dialog.html";
+        options.template = "systems/mgt2e-piggy/templates/vehicle-damage-dialog.html";
         options.width = "auto";
         options.height = "auto";
         options.title = game.i18n.localize("MGT2.VehicleDamageDialog.Title");

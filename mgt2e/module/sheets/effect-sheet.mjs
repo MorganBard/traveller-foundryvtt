@@ -20,7 +20,7 @@ export class MgT2EffectSheet extends foundry.applications.sheets.ActiveEffectCon
 
     /** @override */
     get template() {
-        const path = "systems/mgt2e/templates";
+        const path = "systems/mgt2e-piggy/templates";
         return `${path}/active-effect-config.html`;
     }
 
@@ -128,7 +128,7 @@ export class MgT2EffectSheet extends foundry.applications.sheets.ActiveEffectCon
         tabs: {template: "templates/generic/tab-navigation.hbs"},
         details: {template: "templates/sheets/active-effect/details.hbs"},
         duration: {template: "templates/sheets/active-effect/duration.hbs"},
-        changes: {template: "systems/mgt2e/templates/effect/changes.html"}
+        changes: {template: "systems/mgt2e-piggy/templates/effect/changes.html"}
     }
     // V13
     static TABS = {

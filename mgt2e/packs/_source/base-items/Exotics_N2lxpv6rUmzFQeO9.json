@@ -1,7 +1,7 @@
 {
   "name": "Exotics",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/exotics.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/exotics.svg",
   "system": {
     "cargo": {
       "price": 1000000,

@@ -1,7 +1,7 @@
 {
   "name": "Precious Metals",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/precious_metals.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/precious_metals.svg",
   "system": {
     "cargo": {
       "price": 50000,

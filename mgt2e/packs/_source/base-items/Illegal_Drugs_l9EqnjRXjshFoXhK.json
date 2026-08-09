@@ -1,7 +1,7 @@
 {
   "name": "Illegal Drugs",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/illegal_drugs.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/illegal_drugs.svg",
   "system": {
     "cargo": {
       "price": 100000,

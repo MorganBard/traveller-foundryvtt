@@ -1,5 +1,13 @@
 # Release Notes
 
+# 0.22.1.1 (BardMorgan custom build)
+
+* Renamed the system id from `mgt2e` to `mgt2e-piggy` to stop this custom build being
+  confused with (and overridden by) the officially-listed Mongoose Traveller 2e system on
+  hosts that resolve installed systems by id. No functional changes - existing actor data,
+  settings, and flags are untouched, since those are stored under separate namespaces that
+  don't depend on the system id.
+
 # 0.22.1 (Beta)
 
 * Vehicle shipping value is now automatically calculated.

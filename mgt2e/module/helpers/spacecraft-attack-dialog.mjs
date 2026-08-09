@@ -7,7 +7,7 @@ import {Tools} from "./chat/tools.mjs";
 export class MgT2SpacecraftAttackDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.template = "systems/mgt2e/templates/spacecraft-attack-dialog.html";
+        options.template = "systems/mgt2e-piggy/templates/spacecraft-attack-dialog.html";
         options.width = "auto";
         options.height = "auto";
         options.title = "Attack";

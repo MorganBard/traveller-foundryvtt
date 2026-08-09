@@ -497,7 +497,7 @@ export async function buyCargoDialog(worldActor, shipActor, item) {
             "totalPrice": parseInt(item.system.quantity) * parseInt(item.system.cargo.price)
         };
 
-        const content = await renderTemplate("systems/mgt2e/templates/dialogs/transfer-freight.html", data);
+        const content = await renderTemplate("systems/mgt2e-piggy/templates/dialogs/transfer-freight.html", data);
         const transferCargo = await foundry.applications.api.DialogV2.confirm({
             window: {
                 title: "Transfer Freight?"

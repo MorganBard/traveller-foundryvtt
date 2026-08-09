@@ -1,7 +1,7 @@
 {
   "name": "Illegal Weapons",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/illegal_weapons.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/illegal_weapons.svg",
   "system": {
     "cargo": {
       "price": 150000,

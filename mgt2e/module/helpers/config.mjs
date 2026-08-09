@@ -49,7 +49,7 @@ MGT2.ALPHABET = [ "Alfa", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf"
                   "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey",
                   "Xray", "Yankee", "Zulu" ];
 
-MGT2.DEFAULT_ITEM_ICON = "systems/mgt2e/icons/items/item.svg";
+MGT2.DEFAULT_ITEM_ICON = "systems/mgt2e-piggy/icons/items/item.svg";
 
 MGT2.SHIP_HARDWARE = {
     "j-drive": {
@@ -1301,11 +1301,11 @@ MGT2.SKILLS = {
     "survival": { "default": "EDU", "background": true, "requires": "INT", "creature": true },
     "tactics": { "default": "EDU",  "requires": "INT", "specialities": { "military": { }, "naval": { } } },
     "vaccsuit": { "default": "DEX", "background": true, "requires": "INT" },
-    "telepathy": { "default": "PSI", "requires": "PSI", "trait": "psionic", "icon": "systems/mgt2e/icons/skills/psi.svg"    },
-    "clairvoyance": { "default": "PSI", "requires": "PSI", "trait": "psionic", "icon": "systems/mgt2e/icons/skills/psi.svg"    },
-    "telekinesis": { "default": "PSI", "requires": "PSI", "trait": "psionic", "icon": "systems/mgt2e/icons/skills/psi.svg"    },
-    "awareness": { "default": "PSI", "requires": "PSI", "trait": "psionic", "icon": "systems/mgt2e/icons/skills/psi.svg"    },
-    "teleportation": { "default": "PSI", "requires": "PSI", "trait": "psionic", "icon": "systems/mgt2e/icons/skills/psi.svg"    },
+    "telepathy": { "default": "PSI", "requires": "PSI", "trait": "psionic", "icon": "systems/mgt2e-piggy/icons/skills/psi.svg"    },
+    "clairvoyance": { "default": "PSI", "requires": "PSI", "trait": "psionic", "icon": "systems/mgt2e-piggy/icons/skills/psi.svg"    },
+    "telekinesis": { "default": "PSI", "requires": "PSI", "trait": "psionic", "icon": "systems/mgt2e-piggy/icons/skills/psi.svg"    },
+    "awareness": { "default": "PSI", "requires": "PSI", "trait": "psionic", "icon": "systems/mgt2e-piggy/icons/skills/psi.svg"    },
+    "teleportation": { "default": "PSI", "requires": "PSI", "trait": "psionic", "icon": "systems/mgt2e-piggy/icons/skills/psi.svg"    },
     "untrained": { "default": "INT", "requires": "XXX" }
 };
 

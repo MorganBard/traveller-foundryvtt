@@ -1,7 +1,7 @@
 {
   "name": "Uncommon Raw Materials",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/uncommon_raw_materials.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/uncommon_raw_materials.svg",
   "system": {
     "cargo": {
       "price": 20000,

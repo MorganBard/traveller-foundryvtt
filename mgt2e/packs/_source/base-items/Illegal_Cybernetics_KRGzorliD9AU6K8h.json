@@ -1,7 +1,7 @@
 {
   "name": "Illegal Cybernetics",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/illegal_cybernetics.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/illegal_cybernetics.svg",
   "system": {
     "cargo": {
       "price": 250000,

@@ -37,7 +37,7 @@ export class MgT2EmbarkPassengerApp extends HandlebarsApplicationMixin(Applicati
 
     static PARTS = {
         form: {
-            template: "systems/mgt2e/templates/dialogs/embark-passengers.html"
+            template: "systems/mgt2e-piggy/templates/dialogs/embark-passengers.html"
         },
         footer: {
             template: "templates/generic/form-footer.hbs"

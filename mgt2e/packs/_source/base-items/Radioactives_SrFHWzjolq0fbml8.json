@@ -1,7 +1,7 @@
 {
   "name": "Radioactives",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/radioactives.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/radioactives.svg",
   "system": {
     "cargo": {
       "price": 1000000,

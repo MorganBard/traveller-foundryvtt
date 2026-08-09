@@ -3,7 +3,7 @@
   "name": "Library",
   "type": "software",
   "_id": "EX9sxKi5tfSUyDUg",
-  "img": "systems/mgt2e/icons/items/software.svg",
+  "img": "systems/mgt2e-piggy/icons/items/software.svg",
   "system": {
     "quantity": 1,
     "tl": "8",

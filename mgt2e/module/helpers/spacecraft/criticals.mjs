@@ -381,7 +381,7 @@ async function applyCargoCritical(actor, effects, level) {
                         // If scrap is destroyed, it is completely destroyed.
                         const itemData = {
                             "name": "Scrap",
-                            "img": "systems/mgt2e/icons/cargo/cargo.svg",
+                            "img": "systems/mgt2e-piggy/icons/cargo/cargo.svg",
                             "type": "cargo",
                             "system": {
                                 "quantity": lost,
@@ -645,7 +645,7 @@ async function applyCrewCritical(actor, effects, level) {
             criticalText: game.i18n.format("MGT2.Spacecraft.Critical.crew." + level),
             victims: results
         }
-        const content = await renderTemplate("systems/mgt2e/templates/chat/spaceship-critical.html", contentData);
+        const content = await renderTemplate("systems/mgt2e-piggy/templates/chat/spaceship-critical.html", contentData);
 
         let chatData = {
             content: content
@@ -676,7 +676,7 @@ async function criticalToChat(actor, level, title, text, options) {
         items: options.items,
         actors: options.actors
     }
-    const html = await renderTemplate("systems/mgt2e/templates/chat/spaceship-critical.html", contentData);
+    const html = await renderTemplate("systems/mgt2e-piggy/templates/chat/spaceship-critical.html", contentData);
     let chatData = {
         content: html
     }

@@ -18,7 +18,7 @@
                     {{/each}}
                 </div>
             </div>
-            {{> "systems/mgt2e/templates/actor/parts/actor-combat.html"}}
+            {{> "systems/mgt2e-piggy/templates/actor/parts/actor-combat.html"}}
         </div>
 
         <div class="character-right">
@@ -138,7 +138,7 @@
                 </div>
             </div>
 
-            {{> "systems/mgt2e/templates/actor/parts/actor-status.html"}}
+            {{> "systems/mgt2e-piggy/templates/actor/parts/actor-status.html"}}
 
             <div class="shadow">
                 <nav class="sheet-tabs tabs" data-group="primary">
@@ -159,7 +159,7 @@
                 <div class="sheet-body">
                     {{!-- Skills Tab --}}
                     <div class="tab skills" data-group="primary" data-tab="skills">
-                        {{> "systems/mgt2e/templates/actor/parts/actor-skills.html"}}
+                        {{> "systems/mgt2e-piggy/templates/actor/parts/actor-skills.html"}}
                     </div>
 
                     <div class="tab finance" data-group="primary" data-tab="finance">
@@ -234,7 +234,7 @@
                     {{#if (isObserver .)}}
                     <div class="tab history" data-group="primary" data-tab="history">
                         <section>
-                            {{> "systems/mgt2e/templates/actor/parts/actor-terms.html"}}
+                            {{> "systems/mgt2e-piggy/templates/actor/parts/actor-terms.html"}}
                         </section>
                     </div>
                     {{/if}}
@@ -243,9 +243,9 @@
                         {{!-- Owned Items Tab --}}
                         <div class="tab items" data-group="primary" data-tab="items">
                             {{#if system.settings.sortByCategory}}
-                                {{> "systems/mgt2e/templates/actor/parts/actor-items-categorised.html"}}
+                                {{> "systems/mgt2e-piggy/templates/actor/parts/actor-items-categorised.html"}}
                             {{else}}
-                                {{> "systems/mgt2e/templates/actor/parts/actor-items.html"}}
+                                {{> "systems/mgt2e-piggy/templates/actor/parts/actor-items.html"}}
                             {{/if}}
                         </div>
                     {{/if}}
@@ -253,7 +253,7 @@
                     {{!-- Settings Tab --}}
                     {{#if (isOwner .)}}
                         <section class="tab settings flexcol" data-group="primary" data-tab="settings">
-                            {{> "systems/mgt2e/templates/actor/parts/actor-settings.html"}}
+                            {{> "systems/mgt2e-piggy/templates/actor/parts/actor-settings.html"}}
                         </section>
                     {{/if}}
                 </div>

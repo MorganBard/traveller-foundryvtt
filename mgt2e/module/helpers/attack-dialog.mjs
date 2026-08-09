@@ -4,7 +4,7 @@ import {getSkillValue} from "../helpers/dice-rolls.mjs";
 export class MgT2AttackDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.template = "systems/mgt2e/templates/attack-dialog.html";
+        options.template = "systems/mgt2e-piggy/templates/attack-dialog.html";
         options.width = "auto";
         options.height = "auto";
         options.title = "Attack";

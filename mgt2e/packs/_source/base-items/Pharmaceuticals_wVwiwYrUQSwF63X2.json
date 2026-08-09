@@ -1,7 +1,7 @@
 {
   "name": "Pharmaceuticals",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/pharmaceuticals.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/pharmaceuticals.svg",
   "system": {
     "cargo": {
       "price": 100000,

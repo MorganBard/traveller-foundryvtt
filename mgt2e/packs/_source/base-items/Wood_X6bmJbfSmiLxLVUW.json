@@ -1,7 +1,7 @@
 {
   "name": "Wood",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/wood.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/wood.svg",
   "system": {
     "cargo": {
       "price": 1000,

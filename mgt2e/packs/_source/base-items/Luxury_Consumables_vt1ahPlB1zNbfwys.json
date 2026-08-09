@@ -1,7 +1,7 @@
 {
   "name": "Luxury Consumables",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/luxury_consumables.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/luxury_consumables.svg",
   "system": {
     "cargo": {
       "price": 20000,

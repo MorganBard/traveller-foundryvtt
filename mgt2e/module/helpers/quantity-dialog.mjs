@@ -3,7 +3,7 @@ import {MgT2Item} from "../documents/item.mjs";
 export class MgT2QuantityDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.template = "systems/mgt2e/templates/quantity-dialog.html";
+        options.template = "systems/mgt2e-piggy/templates/quantity-dialog.html";
         options.width = "400";
         options.height = "auto";
         options.title = "Move Items";

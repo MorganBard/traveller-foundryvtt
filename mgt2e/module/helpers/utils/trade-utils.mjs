@@ -345,7 +345,7 @@ export function createPassengers(name, passage, worldActor, destinationWorld, nu
     }
     const itemData = {
         "name": name,
-        "img": `systems/mgt2e/icons/cargo/passenger-${passage}.svg`,
+        "img": `systems/mgt2e-piggy/icons/cargo/passenger-${passage}.svg`,
         "type": "worlddata",
         "system": {
             "quantity": number,
@@ -367,7 +367,7 @@ export function createPassengers(name, passage, worldActor, destinationWorld, nu
 export function createFreight(name, worldActor, destinationWorld, tonnage, price, parsecs) {
     const itemData = {
         "name": name,
-        "img": "systems/mgt2e/icons/cargo/cargo.svg",
+        "img": "systems/mgt2e-piggy/icons/cargo/cargo.svg",
         "type": "cargo",
         "system": {
             "quantity": tonnage,
@@ -721,7 +721,7 @@ export async function createSpeculativeGoods(worldActor, illegal) {
     if (tonnes > 0) {
         const sparePartsData = {
             "name": "Spare Parts",
-            "img": "systems/mgt2e/icons/cargo/spare_parts.svg",
+            "img": "systems/mgt2e-piggy/icons/cargo/spare_parts.svg",
             "type": "cargo",
             "system": {
                 "quantity": tonnes,
@@ -929,7 +929,7 @@ export async function tradeEmbarkPassengerHandler(queryData) {
         let npcData = {
             "type": "npc",
             "name": "Passenger",
-            "img": `systems/mgt2e/icons/cargo/passenger-${passengerItem.system.world.passage}.svg`,
+            "img": `systems/mgt2e-piggy/icons/cargo/passenger-${passengerItem.system.world.passage}.svg`,
             "folder": npcFolder._id,
             "ownership": {
                 default: 2

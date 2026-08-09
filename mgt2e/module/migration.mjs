@@ -48,7 +48,7 @@ async function migrateActorData(actor, fromVersion) {
                 let itemName = "Hardware";
                 const itemData = {
                     "name": "Computer",
-                    "img": "systems/mgt2e/icons/hardware/computer.svg",
+                    "img": "systems/mgt2e-piggy/icons/hardware/computer.svg",
                     "type": "hardware",
                     "system": system
                 };

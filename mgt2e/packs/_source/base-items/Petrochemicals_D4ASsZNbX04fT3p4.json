@@ -1,7 +1,7 @@
 {
   "name": "Petrochemicals",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/petrochemicals.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/petrochemicals.svg",
   "system": {
     "cargo": {
       "price": 10000,

@@ -4,7 +4,7 @@ import { skillLabel } from "./dice-rolls.mjs";
 export class MgT2AddSkillDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.template = "systems/mgt2e/templates/add-skill-dialog.html";
+        options.template = "systems/mgt2e-piggy/templates/add-skill-dialog.html";
         options.width = "auto";
         options.height = "auto";
         options.title = "Add Skill";
@@ -70,7 +70,7 @@ export class MgT2AddSkillDialog extends Application {
             this.isCombat = false;
             this.isIndividual = false;
             this.isDeleted = false;
-            this.icon = "systems/mgt2e/icons/skills/new.svg";
+            this.icon = "systems/mgt2e-piggy/icons/skills/new.svg";
             this.parentId = "";
             this.parentLabel = "";
 

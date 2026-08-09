@@ -3,7 +3,7 @@
   "name": "Manoeuvre",
   "type": "software",
   "_id": "sY0q0A4I5hcrxTil",
-  "img": "systems/mgt2e/icons/items/software.svg",
+  "img": "systems/mgt2e-piggy/icons/items/software.svg",
   "system": {
     "quantity": 1,
     "tl": "8",

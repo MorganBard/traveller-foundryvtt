@@ -449,7 +449,7 @@ MgT2eMacros.skillCheck = async function(args, ask) {
         let json = JSON.stringify(jsonData);
 
         let contentData = {
-            skillIcon: skill?`systems/mgt2e/icons/skills/${skill.id}.svg`:"",
+            skillIcon: skill?`systems/mgt2e-piggy/icons/skills/${skill.id}.svg`:"",
             skillTitle: title,
             skillFqn: skillFqn,
             json: json,
@@ -457,7 +457,7 @@ MgT2eMacros.skillCheck = async function(args, ask) {
             description: args.text,
         }
 
-        const content = await renderTemplate("systems/mgt2e/templates/chat/skill-request.html", contentData);
+        const content = await renderTemplate("systems/mgt2e-piggy/templates/chat/skill-request.html", contentData);
         let chatData = {
             content: content,
             rollMode: game.settings.get("core", "rollMode")

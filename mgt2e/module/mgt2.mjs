@@ -429,121 +429,121 @@ Hooks.once("init", function() {
     CONFIG.statusEffects.push({
         id: "dead",
         name: "EFFECT.Dead",
-        img: "systems/mgt2e/icons/effects/condition-dead.webp",
+        img: "systems/mgt2e-piggy/icons/effects/condition-dead.webp",
         overlay: true
     });
     CONFIG.statusEffects.push({
         id: "unconscious",
         name: "EFFECT.Unconscious",
-        img: "systems/mgt2e/icons/effects/condition-unconscious.webp",
+        img: "systems/mgt2e-piggy/icons/effects/condition-unconscious.webp",
         overlay: true
     });
     CONFIG.statusEffects.push({
         id: "fear",
         name: "EFFECT.Fear",
-        img: "systems/mgt2e/icons/effects/condition-fear.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-fear.webp"
     });
     CONFIG.statusEffects.push({
         id: "prone",
         name: "EFFECT.Prone",
-        img: "systems/mgt2e/icons/effects/condition-prone.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-prone.webp"
     });
 
     CONFIG.statusEffects.push({
         id: "destroyed",
         name: "EFFECT.Destroyed",
-        img: "systems/mgt2e/icons/effects/condition-destroyed.webp",
+        img: "systems/mgt2e-piggy/icons/effects/condition-destroyed.webp",
         overlay: true
     });
     CONFIG.statusEffects.push({
         id: "injured",
         name: "EFFECT.Injured",
-        img: "systems/mgt2e/icons/effects/condition-injured.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-injured.webp"
     });
     CONFIG.statusEffects.push({
         id: "needsFirstAid",
         name: "EFFECT.FirstAid",
-        img: "systems/mgt2e/icons/effects/condition-needs-first-aid.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-needs-first-aid.webp"
     });
     CONFIG.statusEffects.push({
         id: "needsSurgery",
         name: "EFFECT.Surgery",
-        img: "systems/mgt2e/icons/effects/condition-needs-surgery.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-needs-surgery.webp"
     });
     CONFIG.statusEffects.push({
         id: "encumbered",
         name: "EFFECT.Encumbered",
-        img: "systems/mgt2e/icons/effects/condition-encumbered.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-encumbered.webp"
     });
     CONFIG.statusEffects.push({
         id: "vaccSuit",
         name: "EFFECT.VaccSuit",
-        img: "systems/mgt2e/icons/effects/condition-vacc-suit.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-vacc-suit.webp"
     });
     CONFIG.statusEffects.push({
         id: "surprised",
         name: "EFFECT.Surprised",
-        img: "systems/mgt2e/icons/effects/condition-surprised.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-surprised.webp"
     });
     CONFIG.statusEffects.push({
         id: "aware",
         name: "EFFECT.Aware",
-        img: "systems/mgt2e/icons/effects/condition-aware.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-aware.webp"
     });
     CONFIG.statusEffects.push({
         id: "reaction",
         name: "EFFECT.Reaction",
-        img: "systems/mgt2e/icons/effects/condition-reaction.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-reaction.webp"
     });
     CONFIG.statusEffects.push({
         id: "fatigued",
         name: "EFFECT.Fatigued",
-        img: "systems/mgt2e/icons/effects/condition-fatigued.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-fatigued.webp"
     });
     CONFIG.statusEffects.push({
         id: "physical",
         name: "EFFECT.Physical",
-        img: "systems/mgt2e/icons/effects/condition-physical-dm.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-physical-dm.webp"
     });
     CONFIG.statusEffects.push({
         id: "melee",
         name: "EFFECT.Melee",
-        img: "systems/mgt2e/icons/effects/condition-melee-dm.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-melee-dm.webp"
     });
     CONFIG.statusEffects.push({
         id: "gunCombat",
         name: "EFFECT.GunCombat",
-        img: "systems/mgt2e/icons/effects/condition-gun-combat-dm.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-gun-combat-dm.webp"
     });
     CONFIG.statusEffects.push({
         id: "armour",
         name: "EFFECT.Armour",
-        img: "systems/mgt2e/icons/effects/condition-armour.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-armour.webp"
     });
     CONFIG.statusEffects.push({
         id: "inCover",
         name: "EFFECT.InCover",
-        img: "systems/mgt2e/icons/effects/condition-in-cover.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-in-cover.webp"
     });
     CONFIG.statusEffects.push({
         id: "hiding",
         name: "EFFECT.Hiding",
-        img: "systems/mgt2e/icons/effects/condition-hiding.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-hiding.webp"
     });
     CONFIG.statusEffects.push({
         id: "stunned",
         name: "EFFECT.Stunned",
-        img: "systems/mgt2e/icons/effects/condition-stunned.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-stunned.webp"
     });
     CONFIG.statusEffects.push({
         id: "tactics",
         name: "EFFECT.Tactics",
-        img: "systems/mgt2e/icons/effects/condition-tactics.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-tactics.webp"
     });
     CONFIG.statusEffects.push({
         id: "initiative",
         name: "EFFECT.Initiative",
-        img: "systems/mgt2e/icons/effects/condition-initiative.webp"
+        img: "systems/mgt2e-piggy/icons/effects/condition-initiative.webp"
     });
 })
 
@@ -785,23 +785,23 @@ Hooks.on("chatMessage", function(chatlog, message, chatData) {
 Hooks.on("createItem", (item) => {
     if (item.img === "icons/svg/item-bag.svg") {
         if (item.type === "weapon") {
-            item.img = "systems/mgt2e/icons/items/gun-slug.svg";
+            item.img = "systems/mgt2e-piggy/icons/items/gun-slug.svg";
         } else if (item.type === "armour") {
-            item.img = "systems/mgt2e/icons/items/armour-light.svg";
+            item.img = "systems/mgt2e-piggy/icons/items/armour-light.svg";
         } else if (item.type === "augment") {
-            item.img = "systems/mgt2e/icons/items/cybernetic.svg";
+            item.img = "systems/mgt2e-piggy/icons/items/cybernetic.svg";
         } else if (item.type === "cargo") {
-            item.img = "systems/mgt2e/icons/cargo/cargo.svg";
+            item.img = "systems/mgt2e-piggy/icons/cargo/cargo.svg";
         } else if (item.type === "term") {
-            item.img = "systems/mgt2e/icons/misc/career.svg";
+            item.img = "systems/mgt2e-piggy/icons/misc/career.svg";
         } else if (item.type === "role") {
-            item.img = "systems/mgt2e/icons/items/crew_role.svg";
+            item.img = "systems/mgt2e-piggy/icons/items/crew_role.svg";
         } else if (item.type === "software") {
-            item.img = "systems/mgt2e/icons/items/software.svg";
+            item.img = "systems/mgt2e-piggy/icons/items/software.svg";
         } else if (item.type === "option") {
-            item.img = "systems/mgt2e/icons/items/option.svg";
+            item.img = "systems/mgt2e-piggy/icons/items/option.svg";
         } else {
-            item.img = "systems/mgt2e/icons/items/item.svg";
+            item.img = "systems/mgt2e-piggy/icons/items/item.svg";
         }
         item.safeUpdate({ "img": item.img });
     }
@@ -890,7 +890,7 @@ Hooks.on("createActor", (actor, data, userId) => {
                 }
             }
             if (!actor.system.skills[s].icon) {
-                actor.system.skills[s].icon = `systems/mgt2e/icons/skills/${s}.svg`;
+                actor.system.skills[s].icon = `systems/mgt2e-piggy/icons/skills/${s}.svg`;
             }
         }
         actor.update({ "system.skills": actor.system.skills });
@@ -899,25 +899,25 @@ Hooks.on("createActor", (actor, data, userId) => {
     if (actor.img === "icons/svg/mystery-man.svg") {
         let colours = [ "white", "blue", "gold", "green", "red" ];
         if (actor.type === "creature") {
-            actor.img = `systems/mgt2e/icons/actors/creature-${colours[colours.length * Math.random() | 0]}.svg`;
+            actor.img = `systems/mgt2e-piggy/icons/actors/creature-${colours[colours.length * Math.random() | 0]}.svg`;
         } else if (actor.type === "traveller" || actor.type === "npc") {
-            actor.img = `systems/mgt2e/icons/actors/traveller-${colours[colours.length * Math.random() | 0]}.svg`;
+            actor.img = `systems/mgt2e-piggy/icons/actors/traveller-${colours[colours.length * Math.random() | 0]}.svg`;
         } else if (actor.type === "package") {
-            actor.img = `systems/mgt2e/icons/actors/traveller-grey.svg`;
+            actor.img = `systems/mgt2e-piggy/icons/actors/traveller-grey.svg`;
         } else if (actor.type === "robot") {
-            actor.img = `systems/mgt2e/icons/actors/robot.svg`;
+            actor.img = `systems/mgt2e-piggy/icons/actors/robot.svg`;
         } else if (actor.type === "spacecraft") {
-            actor.img = `systems/mgt2e/images/tokens/spacecraft/white/far_trader.webp`;
+            actor.img = `systems/mgt2e-piggy/images/tokens/spacecraft/white/far_trader.webp`;
         } else if (actor.type === "vehicle") {
-            actor.img = `systems/mgt2e/images/tokens/vehicles/white/jeep.webp`;
+            actor.img = `systems/mgt2e-piggy/images/tokens/vehicles/white/jeep.webp`;
         } else if (actor.type === "swarm") {
             let colours = [ "white", "grey", "gold", "blue", "red", "green" ];
             let c = colours[colours.length * Math.random() | 0];
-            actor.img = `systems/mgt2e/icons/actors/squadron-${c}.svg`;
+            actor.img = `systems/mgt2e-piggy/icons/actors/squadron-${c}.svg`;
         } else if (actor.type === "world") {
-            actor.img = `systems/mgt2e/icons/actors/world.svg`;
+            actor.img = `systems/mgt2e-piggy/icons/actors/world.svg`;
         } else {
-            actor.img = "systems/mgt2e/icons/actors/traveller-red.svg";
+            actor.img = "systems/mgt2e-piggy/icons/actors/traveller-red.svg";
         }
         actor.update({ "img": actor.img });
     }
@@ -1775,7 +1775,7 @@ Handlebars.registerHelper('skillBlock', function(data, skillId, skill, key) {
         // Some old actors might not have an id set on the skill object.
         skillId = Object.keys(data.skills)[key];
         skill.id = skillId;
-        skill.icon = skill.icon?skill.icon:`systems/mgt2e/icons/skills/${skillId}.svg`;
+        skill.icon = skill.icon?skill.icon:`systems/mgt2e-piggy/icons/skills/${skillId}.svg`;
     }
     if (!skillId) {
         console.log("Skill has no ID set");
@@ -2981,7 +2981,7 @@ Handlebars.registerHelper("weaponBlock", function(item, action) {
     const system = item.system;
     html += `<h4>
         ${item.name}
-        <img src="systems/mgt2e/icons/misc/scale-${system.weapon.scale}.svg" class="weapon-scale"/>
+        <img src="systems/mgt2e-piggy/icons/misc/scale-${system.weapon.scale}.svg" class="weapon-scale"/>
     </h4>`;
     let damage = system.weapon.damage;
     const destructive = hasTrait(system.weapon.traits, "destructive")?"destructive":"";
@@ -3047,7 +3047,7 @@ Handlebars.registerHelper("weaponMountBlock", function(mount) {
 
     let html = `<li class="item-block vehicle-weapon"><h4>${mountItem.name}</h4>`;
     if (weaponItem) {
-        html += `<img src="systems/mgt2e/icons/misc/scale-${weaponItem.system.weapon.scale}.svg" class="weapon-scale"/>`;
+        html += `<img src="systems/mgt2e-piggy/icons/misc/scale-${weaponItem.system.weapon.scale}.svg" class="weapon-scale"/>`;
     }
     html += `</h4>`;
 

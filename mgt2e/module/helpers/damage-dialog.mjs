@@ -3,7 +3,7 @@ import {hasTrait} from "../helpers/dice-rolls.mjs";
 export class MgT2DamageDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.template = "systems/mgt2e/templates/damage-dialog.html";
+        options.template = "systems/mgt2e-piggy/templates/damage-dialog.html";
         options.width = "auto";
         options.height = "auto";
         options.title = game.i18n.localize("MGT2.DamageDialog.Title");

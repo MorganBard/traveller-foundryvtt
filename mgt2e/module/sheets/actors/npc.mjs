@@ -8,7 +8,7 @@ export class MgT2NpcActorSheet extends MgT2ActorSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["mgt2", "sheet", "actor"],
-            template: "systems/mgt2e/templates/actor/actor-simple-npc-sheet.html",
+            template: "systems/mgt2e-piggy/templates/actor/actor-simple-npc-sheet.html",
             width: 720,
             height: 500,
             tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
@@ -16,7 +16,7 @@ export class MgT2NpcActorSheet extends MgT2ActorSheet {
     }
 
     get template() {
-        return "systems/mgt2e/templates/actor/actor-simple-npc-sheet.html";
+        return "systems/mgt2e-piggy/templates/actor/actor-simple-npc-sheet.html";
     }
 
     prepareBaseData() {

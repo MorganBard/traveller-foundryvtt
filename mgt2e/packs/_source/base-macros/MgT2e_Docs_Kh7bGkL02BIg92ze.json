@@ -1,7 +1,7 @@
 {
   "name": "MgT2e Docs",
   "type": "script",
-  "img": "systems/mgt2e/icons/macros/mgt2e-docs.svg",
+  "img": "systems/mgt2e-piggy/icons/macros/mgt2e-docs.svg",
   "command": "await Hotbar.toggleDocumentSheet(\"Compendium.mgt2e.traveller-docs.JournalEntry.83nkkP7aeGF22kG6\");",
   "author": "Zj6ESAn9IiciiMCF",
   "scope": "global",

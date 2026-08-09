@@ -31,7 +31,7 @@ export class MgT2eAttackApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
     static PARTS = {
         form: {
-            template: "systems/mgt2e/templates/dialogs/attack-dialog.html"
+            template: "systems/mgt2e-piggy/templates/dialogs/attack-dialog.html"
         },
         footer: {
             template: "templates/generic/form-footer.hbs"

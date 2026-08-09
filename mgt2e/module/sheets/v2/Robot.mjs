@@ -66,7 +66,7 @@ export class MgT2eRobotSheet extends MgT2eActorV2 {
 
     static PARTS = {
         main: {
-            template: "systems/mgt2e/templates/actor/v2/robot/robot.html",
+            template: "systems/mgt2e-piggy/templates/actor/v2/robot/robot.html",
             scrollable: ['']
         },
         tabs: {
@@ -74,28 +74,28 @@ export class MgT2eRobotSheet extends MgT2eActorV2 {
             scrollable: [""]
         },
         description: {
-            template: "systems/mgt2e/templates/actor/v2/robot/description.html",
+            template: "systems/mgt2e-piggy/templates/actor/v2/robot/description.html",
             scrollable: ['']
         },
         design: {
-            template: "systems/mgt2e/templates/actor/v2/robot/design.html",
+            template: "systems/mgt2e-piggy/templates/actor/v2/robot/design.html",
             scrollable: [""],
             classes: ["vehicle-design-tab"],
         },
         combat: {
-            template: "systems/mgt2e/templates/actor/v2/robot/combat.html",
+            template: "systems/mgt2e-piggy/templates/actor/v2/robot/combat.html",
             scrollable: ['']
         },
         skills: {
-            template: "systems/mgt2e/templates/actor/v2/robot/skills.html",
+            template: "systems/mgt2e-piggy/templates/actor/v2/robot/skills.html",
             scrollable: ['']
         },
         equipment: {
-            template: "systems/mgt2e/templates/actor/v2/robot/equipment.html",
+            template: "systems/mgt2e-piggy/templates/actor/v2/robot/equipment.html",
             scrollable: ['']
         },
         footer: {
-            template: "systems/mgt2e/templates/actor/v2/footer.html"
+            template: "systems/mgt2e-piggy/templates/actor/v2/footer.html"
         }
     };
 

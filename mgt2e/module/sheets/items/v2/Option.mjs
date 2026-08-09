@@ -29,34 +29,34 @@ export class MgT2eOptionSheet extends MgT2eItemV2 {
 
     static PARTS = {
         main: {
-            template: "systems/mgt2e/templates/item/v2/item-option.html",
+            template: "systems/mgt2e-piggy/templates/item/v2/item-option.html",
             scrollable: ['']
         },
         tabs: {
             template: "templates/generic/tab-navigation.hbs"
         },
         description: {
-            template: "systems/mgt2e/templates/item/v2/description.html",
+            template: "systems/mgt2e-piggy/templates/item/v2/description.html",
             scrollable: ['']
         },
         "manipulators": {
-            template: "systems/mgt2e/templates/item/v2/option/robot-manipulators.html",
+            template: "systems/mgt2e-piggy/templates/item/v2/option/robot-manipulators.html",
             scrollable: [''],
         },
         "armour": {
-            template: "systems/mgt2e/templates/item/v2/option/armour.html",
+            template: "systems/mgt2e-piggy/templates/item/v2/option/armour.html",
             scrollable: [''],
         },
         "weapon": {
-            template: "systems/mgt2e/templates/item/v2/option/weapon.html",
+            template: "systems/mgt2e-piggy/templates/item/v2/option/weapon.html",
             scrollable: [''],
         },
         effects: {
-            template: "systems/mgt2e/templates/item/v2/effects.html",
+            template: "systems/mgt2e-piggy/templates/item/v2/effects.html",
             scrollable: ['']
         },
         footer: {
-            template: "systems/mgt2e/templates/actor/v2/footer.html"
+            template: "systems/mgt2e-piggy/templates/actor/v2/footer.html"
         }
     };
 
@@ -112,7 +112,7 @@ export class MgT2eOptionSheet extends MgT2eItemV2 {
             {
                 label: "Effect",
                 name: "Vehicle Effect",
-                icon: "systems/mgt2e/icons/items/option.svg",
+                icon: "systems/mgt2e-piggy/icons/items/option.svg",
                 disabled: false,
                 transfer: true,
                 system: {

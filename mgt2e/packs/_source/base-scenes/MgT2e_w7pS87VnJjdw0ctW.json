@@ -3,7 +3,7 @@
   "backgroundColor": "#404040",
   "background": {
     "fit": "fill",
-    "src": "systems/mgt2e/images/default_background.webp",
+    "src": "systems/mgt2e-piggy/images/default_background.webp",
     "anchorX": 0,
     "anchorY": 0,
     "offsetX": 0,
@@ -32,7 +32,7 @@
   "navName": "",
   "foreground": null,
   "foregroundElevation": 6,
-  "thumb": "systems/mgt2e/assets/scenes/w7pS87VnJjdw0ctW-thumb.webp",
+  "thumb": "systems/mgt2e-piggy/assets/scenes/w7pS87VnJjdw0ctW-thumb.webp",
   "initial": {
     "x": null,
     "y": null,
@@ -126,7 +126,7 @@
   "tiles": [
     {
       "texture": {
-        "src": "systems/mgt2e/images/traveller-sunburst.svg",
+        "src": "systems/mgt2e-piggy/images/traveller-sunburst.svg",
         "anchorX": 0.5,
         "anchorY": 0.5,
         "offsetX": 0,

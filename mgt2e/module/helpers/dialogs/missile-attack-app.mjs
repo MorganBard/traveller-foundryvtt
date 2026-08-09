@@ -32,7 +32,7 @@ export class MgT2MissileAttackApp extends HandlebarsApplicationMixin(Application
 
     static PARTS = {
         form: {
-            template: "systems/mgt2e/templates/dialogs/missile-attack.html"
+            template: "systems/mgt2e-piggy/templates/dialogs/missile-attack.html"
         },
         footer: {
             template: "templates/generic/form-footer.hbs"

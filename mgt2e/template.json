@@ -308,7 +308,7 @@
     "world": {
       "description": "",
       "world": {
-        "map": "systems/mgt2e/images/world-map.svg",
+        "map": "systems/mgt2e-piggy/images/world-map.svg",
         "location": {
           "sector": "",
           "sectorX": 0,

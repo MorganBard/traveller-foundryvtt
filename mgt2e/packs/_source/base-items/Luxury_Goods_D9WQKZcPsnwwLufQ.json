@@ -1,7 +1,7 @@
 {
   "name": "Luxury Goods",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/luxury_goods.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/luxury_goods.svg",
   "system": {
     "cargo": {
       "price": 200000,

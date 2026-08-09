@@ -1,7 +1,7 @@
 {
   "name": "Common Industrial Goods",
   "type": "cargo",
-  "img": "systems/mgt2e/icons/cargo/common_industrial_goods.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/common_industrial_goods.svg",
   "system": {
     "cargo": {
       "price": 10000,

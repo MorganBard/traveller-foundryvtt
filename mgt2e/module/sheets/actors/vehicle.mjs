@@ -5,7 +5,7 @@ export class MgT2VehicleActorSheet extends MgT2ActorSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             classes: [ "mgt2", "sheet", "actor"],
-            template: "systems/mgt2e/templates/actor/actor-vehicle-sheet.html",
+            template: "systems/mgt2e-piggy/templates/actor/actor-vehicle-sheet.html",
             width: 720,
             height: 600,
             tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]

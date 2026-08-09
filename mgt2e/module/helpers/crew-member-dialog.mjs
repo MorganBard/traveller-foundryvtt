@@ -4,7 +4,7 @@ import {rollSkill} from "../helpers/dice-rolls.mjs";
 export class MgT2CrewMemberDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.template = "systems/mgt2e/templates/crew-member-dialog.html";
+        options.template = "systems/mgt2e-piggy/templates/crew-member-dialog.html";
         options.width = "600px";
         options.height = "auto";
         options.title = "Crew Member";

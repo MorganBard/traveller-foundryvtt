@@ -3,7 +3,7 @@
   "name": "Spare Parts",
   "type": "cargo",
   "_id": "xeK8FQNfbi6Qpapz",
-  "img": "systems/mgt2e/icons/cargo/spare_parts.svg",
+  "img": "systems/mgt2e-piggy/icons/cargo/spare_parts.svg",
   "system": {
     "cargo": {
       "price": 100000,

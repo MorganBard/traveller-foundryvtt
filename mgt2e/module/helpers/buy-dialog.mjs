@@ -4,7 +4,7 @@ import {MgT2Item} from "../documents/item.mjs";
 export class MgT2BuyDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
-        options.template = "systems/mgt2e/templates/buy-dialog.html";
+        options.template = "systems/mgt2e-piggy/templates/buy-dialog.html";
         options.width = "400";
         options.height = "auto";
         options.title = "Buy Item";

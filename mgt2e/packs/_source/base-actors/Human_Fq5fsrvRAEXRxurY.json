@@ -1,7 +1,7 @@
 {
   "name": "Human",
   "type": "package",
-  "img": "systems/mgt2e/icons/actors/traveller-grey.svg",
+  "img": "systems/mgt2e-piggy/icons/actors/traveller-grey.svg",
   "system": {
     "speed": {
       "base": 6,
@@ -205,7 +205,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/admin.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/admin.svg"
       },
       "advocate": {
         "label": "Advocate",
@@ -213,7 +213,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/advocate.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/advocate.svg"
       },
       "animals": {
         "label": "Animals",
@@ -222,7 +222,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/animals.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/animals.svg",
         "specialities": {
           "handling": {
             "label": "Handling",
@@ -248,7 +248,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/art.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/art.svg",
         "specialities": {
           "performer": {
             "label": "Performer",
@@ -278,7 +278,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/astrogation.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/astrogation.svg"
       },
       "athletics": {
         "label": "Athletics",
@@ -288,7 +288,7 @@
         "background": true,
         "creature": true,
         "requires": "DEX",
-        "icon": "systems/mgt2e/icons/skills/athletics.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/athletics.svg",
         "specialities": {
           "dexterity": {
             "label": "Dexterity",
@@ -315,7 +315,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/broker.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/broker.svg"
       },
       "carouse": {
         "label": "Carouse",
@@ -324,7 +324,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/carouse.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/carouse.svg"
       },
       "deception": {
         "label": "Deception",
@@ -333,7 +333,7 @@
         "trained": false,
         "requires": "INT",
         "creature": true,
-        "icon": "systems/mgt2e/icons/skills/deception.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/deception.svg"
       },
       "diplomat": {
         "label": "Diplomat",
@@ -341,7 +341,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/diplomat.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/diplomat.svg"
       },
       "drive": {
         "label": "Drive",
@@ -350,7 +350,7 @@
         "trained": false,
         "background": true,
         "requires": "DEX",
-        "icon": "systems/mgt2e/icons/skills/drive.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/drive.svg",
         "specialities": {
           "hovercraft": {
             "label": "Hovercraft",
@@ -381,7 +381,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/electronics.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/electronics.svg",
         "specialities": {
           "comms": {
             "label": "Comms",
@@ -407,7 +407,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/engineer.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/engineer.svg",
         "specialities": {
           "mDrive": {
             "label": "M-drive",
@@ -434,7 +434,7 @@
         "trained": false,
         "requires": "INT",
         "combat": true,
-        "icon": "systems/mgt2e/icons/skills/explosives.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/explosives.svg"
       },
       "flyer": {
         "label": "Flyer",
@@ -443,7 +443,7 @@
         "trained": false,
         "background": true,
         "requires": "DEX",
-        "icon": "systems/mgt2e/icons/skills/flyer.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/flyer.svg",
         "specialities": {
           "airship": {
             "label": "Airship",
@@ -473,7 +473,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/gambler.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/gambler.svg"
       },
       "gunner": {
         "label": "Gunner",
@@ -481,7 +481,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/gunner.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/gunner.svg",
         "specialities": {
           "turret": {
             "label": "Turret",
@@ -513,7 +513,7 @@
         "trained": false,
         "requires": "DEX",
         "creature": true,
-        "icon": "systems/mgt2e/icons/skills/guncombat.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/guncombat.svg",
         "specialities": {
           "archaic": {
             "label": "Archaic",
@@ -538,7 +538,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/heavyweapons.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/heavyweapons.svg",
         "specialities": {
           "artillery": {
             "label": "Artillery",
@@ -563,7 +563,7 @@
         "value": 0,
         "trained": false,
         "requires": "TER",
-        "icon": "systems/mgt2e/icons/skills/independence.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/independence.svg"
       },
       "investigate": {
         "label": "Investigate",
@@ -571,7 +571,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/investigate.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/investigate.svg"
       },
       "jackofalltrades": {
         "label": "Jack-of-All-Trades",
@@ -579,7 +579,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/jackofalltrades.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/jackofalltrades.svg"
       },
       "language": {
         "label": "Language",
@@ -588,7 +588,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/language.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/language.svg",
         "specialities": {
           "galanglic": {
             "label": "Galanglic",
@@ -622,7 +622,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/leadership.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/leadership.svg"
       },
       "mechanic": {
         "label": "Mechanic",
@@ -631,7 +631,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/mechanic.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/mechanic.svg"
       },
       "medic": {
         "label": "Medic",
@@ -640,7 +640,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/medic.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/medic.svg"
       },
       "melee": {
         "label": "Melee",
@@ -649,7 +649,7 @@
         "trained": false,
         "requires": "DEX",
         "creature": true,
-        "icon": "systems/mgt2e/icons/skills/melee.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/melee.svg",
         "specialities": {
           "unarmed": {
             "label": "Unarmed",
@@ -679,7 +679,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/navigation.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/navigation.svg"
       },
       "persuade": {
         "label": "Persuade",
@@ -688,7 +688,7 @@
         "trained": false,
         "requires": "INT",
         "creature": true,
-        "icon": "systems/mgt2e/icons/skills/persuade.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/persuade.svg"
       },
       "pilot": {
         "label": "Pilot",
@@ -696,7 +696,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/pilot.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/pilot.svg",
         "specialities": {
           "smallCraft": {
             "label": "Small Craft",
@@ -720,7 +720,7 @@
         "background": true,
         "requires": "INT",
         "individual": true,
-        "icon": "systems/mgt2e/icons/skills/profession.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/profession.svg",
         "specialities": {
           "belter": {
             "label": "Belter",
@@ -766,7 +766,7 @@
         "trained": false,
         "requires": "INT",
         "creature": true,
-        "icon": "systems/mgt2e/icons/skills/recon.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/recon.svg"
       },
       "science": {
         "label": "Science",
@@ -775,7 +775,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/science.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/science.svg",
         "specialities": {
           "archaeology": {
             "label": "Archaeology",
@@ -858,7 +858,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/seafarer.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/seafarer.svg",
         "specialities": {
           "oceanShips": {
             "label": "Ocean Ships",
@@ -885,7 +885,7 @@
         "trained": false,
         "requires": "INT",
         "creature": true,
-        "icon": "systems/mgt2e/icons/skills/stealth.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/stealth.svg"
       },
       "steward": {
         "label": "Steward",
@@ -893,7 +893,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/steward.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/steward.svg"
       },
       "streetwise": {
         "label": "Streetwise",
@@ -902,7 +902,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/streetwise.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/streetwise.svg"
       },
       "survival": {
         "label": "Survival",
@@ -912,7 +912,7 @@
         "background": true,
         "requires": "INT",
         "creature": true,
-        "icon": "systems/mgt2e/icons/skills/survival.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/survival.svg"
       },
       "tactics": {
         "label": "Tactics",
@@ -920,7 +920,7 @@
         "value": 0,
         "trained": false,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/tactics.svg",
+        "icon": "systems/mgt2e-piggy/icons/skills/tactics.svg",
         "specialities": {
           "military": {
             "label": "Military",
@@ -939,7 +939,7 @@
         "trained": false,
         "background": true,
         "requires": "INT",
-        "icon": "systems/mgt2e/icons/skills/vaccsuit.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/vaccsuit.svg"
       },
       "telepathy": {
         "label": "Telepathy",
@@ -947,7 +947,7 @@
         "value": 0,
         "trained": false,
         "requires": "PSI",
-        "icon": "systems/mgt2e/icons/skills/psi.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/psi.svg"
       },
       "clairvoyance": {
         "label": "Clairvoyance",
@@ -955,7 +955,7 @@
         "value": 0,
         "trained": false,
         "requires": "PSI",
-        "icon": "systems/mgt2e/icons/skills/psi.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/psi.svg"
       },
       "telekinesis": {
         "label": "Telekinesis",
@@ -963,7 +963,7 @@
         "value": 0,
         "trained": false,
         "requires": "PSI",
-        "icon": "systems/mgt2e/icons/skills/psi.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/psi.svg"
       },
       "awareness": {
         "label": "Awareness",
@@ -971,7 +971,7 @@
         "value": 0,
         "trained": false,
         "requires": "PSI",
-        "icon": "systems/mgt2e/icons/skills/psi.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/psi.svg"
       },
       "teleportation": {
         "label": "Teleportation",
@@ -979,7 +979,7 @@
         "value": 0,
         "trained": false,
         "requires": "PSI",
-        "icon": "systems/mgt2e/icons/skills/psi.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/psi.svg"
       },
       "untrained": {
         "label": "Untrained",
@@ -987,7 +987,7 @@
         "value": 0,
         "trained": false,
         "requires": "XXX",
-        "icon": "systems/mgt2e/icons/skills/new.svg"
+        "icon": "systems/mgt2e-piggy/icons/skills/new.svg"
       }
     },
     "sophont": {
@@ -1011,7 +1011,7 @@
     "appendNumber": false,
     "prependAdjective": false,
     "texture": {
-      "src": "systems/mgt2e/icons/actors/traveller-grey.svg",
+      "src": "systems/mgt2e-piggy/icons/actors/traveller-grey.svg",
       "scaleX": 1,
       "scaleY": 1,
       "offsetX": 0,
@@ -1114,7 +1114,7 @@
         "description": "<p>A human.</p>"
       },
       "_id": "9C4weE30XWGOwGG6",
-      "img": "systems/mgt2e/icons/actors/traveller-grey.svg",
+      "img": "systems/mgt2e-piggy/icons/actors/traveller-grey.svg",
       "effects": [],
       "folder": null,
       "sort": 0,
@@ -1140,7 +1140,7 @@
       "_id": "EKeeioF23WiBgczK",
       "name": "Unarmed",
       "type": "weapon",
-      "img": "systems/mgt2e/icons/items/melee-unarmed.svg",
+      "img": "systems/mgt2e-piggy/icons/items/melee-unarmed.svg",
       "effects": [],
       "folder": "bXGbV4AjDY6AJGxk",
       "sort": 200000,
