@@ -84,16 +84,17 @@ export class MgT2eVehicleSheet extends MgT2eActorV2 {
     }
 
     static async #addFeature(event, target) {
-        console.log("addFeature:");
-
         let feature = event.target.value;
 
+        if (!feature || feature.length === 0) {
+            return;
+        }
         if (this.document.system.vehicle.features === "") {
             this.document.system.vehicle.features = feature;
-        } else {
+        } else if (this.document.system.vehicle.features.indexOf(feature) === -1) {
             this.document.system.vehicle.features += "," + feature;
         }
-        this.document.update({"system.vehicle.features": this.document.system.vehicle.features});
+        await this.document.update({"system.vehicle.features": this.document.system.vehicle.features});
     }
 
     static async #removeFeature(event, target) {
@@ -155,15 +156,19 @@ export class MgT2eVehicleSheet extends MgT2eActorV2 {
             await this.document.update({"system.vehicle.traits": traits});
         }
 
-        const hull = Math.max(1, parseInt(typeConfig.hull * this.document.system.vehicle.spaces));
+        const spaces = parseInt(this.document.system.vehicle.spaces) || 0;
+        const hull = Math.max(1, parseInt(typeConfig.hull * spaces));
         if (hull !== parseInt(this.document.system.hits.hull)) {
-            console.log("UPDATING HITS FOR VEHICLE");
             const HITS = this.document.system.hits;
             HITS.hull = hull;
             HITS.structure = Math.ceil(HITS.hull / 10);
             HITS.max = 10;
             HITS.value = HITS.max - HITS.damage;
             await this.document.update({"system.hits": HITS});
+        }
+        const shipping = parseInt(Math.ceil(typeConfig.shipping * spaces));
+        if (shipping !== parseInt(this.document.system.vehicle.shipping)) {
+            await this.document.update({"system.vehicle.shipping": shipping});
         }
     }
 
@@ -265,20 +270,15 @@ export class MgT2eVehicleSheet extends MgT2eActorV2 {
                 weapon: null,
                 quantity: 0
             }
-            console.log("MOUNT ITEM");
-            console.log(mountItem);
             if (mountItem.system.option.weapon.weaponId) {
                 const weaponItem = await this.document.items.get(mountItem.system.option.weapon.weaponId);
                 if (weaponItem) {
-                    console.log(weaponItem);
                     mount.weapon = weaponItem;
                     mount.quantity = mountItem.system.option.weapon.quantity;
                 }
             }
-            console.log(mount);
             context.MOUNTS.push(mount);
         }
-
 
         // Work out Armour
         let assigned = 0;
@@ -448,7 +448,6 @@ export class MgT2eVehicleSheet extends MgT2eActorV2 {
         } catch (err) {
             return false;
         }
-        console.log(data);
         switch (data.type) {
             case "Item":
                 await this._onDropItem(event, data);
@@ -480,26 +479,20 @@ export class MgT2eVehicleSheet extends MgT2eActorV2 {
     }
 
     async _onDropActor(event, data) {
-        console.log("ADD ACTOR AS CREW:");
         const actor = await Actor.fromDropData(data);
-        console.log(actor);
 
         if (["traveller", "npc", "robot"].includes(actor.type)) {
-            console.log("Adding " + actor.type);
             // Can be added as a passenger.
             // TODO: What about creatures?
             if (!this.document.system.crewed) {
                 this.document.system.crewed = { crew: {}, passengers: {}, roles: []};
             }
-            console.log(this.document.system);
             await this.document.update({[`system.crewed.passengers.${actor._id}`]: {roles: ["NONE"]}});
         }
         return false;
     }
 
     async _onDropDamage(event, data) {
-        console.log("DAMAGE:");
-
         const damageOptions = JSON.parse(data.options);
         this.applyDamageToVehicle(damageOptions);
     }

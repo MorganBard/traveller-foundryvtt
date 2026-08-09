@@ -1,5 +1,14 @@
 # Release Notes
 
+# 0.22.1 (Beta)
+
+* Vehicle shipping value is now automatically calculated.
+* CSS fix for non-square item images
+* Allow embedded computers to go up to 7
+* Safety rails around possible null value if components are taken off an actor sheet.
+* General improvements to vehicles, adding hints and guides for players.
+* Better default icons for options and robots.
+
 # 0.22.0.8 (BardMorgan custom build)
 
 * Melee attacks now require exactly one adjacent target - blocked with a clear message
@@ -50,7 +59,6 @@ are therefore appreciated.
   and also uses API v2. This is also WIP, so be careful in how it is used. This is accessible
   by selecting "Vehicle Sheet 2" as the sheet type for a vehicle.
 
-
 # 0.21.6 (Beta)
 
 * Added Psionic as a damage type for weapons and armour.
@@ -92,7 +100,6 @@ are therefore appreciated.
 * Fix some labelling issues with starship criticals
 * Selecting a target when making spacecraft attack now automatically changes the
   range when a new target is selected.
->>>>>>> main
 
 # 0.21.1 (Beta)
 
