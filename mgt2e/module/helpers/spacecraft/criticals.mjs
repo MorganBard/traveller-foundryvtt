@@ -11,17 +11,17 @@ export async function setSpacecraftCriticalLevel(actor, critical, level) {
     if (actor.type === "spacecraft") {
         level = Math.min(parseInt(level), 6);
         if (level < 1) {
-            actor.unsetFlag("mgt2e", "crit_" + critical);
+            actor.unsetFlag("mgt2e-piggy", "crit_" + critical);
             let hasCrits = false;
             for (let c in MGT2.SPACECRAFT_CRITICALS) {
-                if (c != critical && actor.flags.mgt2e["crit_"+c]) {
+                if (c != critical && actor.flags["mgt2e-piggy"]["crit_"+c]) {
                     hasCrits = true;
                     break;
                 }
             }
-            await actor.setFlag("mgt2e", "hasCrits", hasCrits);
+            await actor.setFlag("mgt2e-piggy", "hasCrits", hasCrits);
         } else if (MGT2.SPACECRAFT_CRITICALS[critical]) {
-            let currentLevel = actor.getFlag("mgt2e", "crit_" + critical);
+            let currentLevel = actor.getFlag("mgt2e-piggy", "crit_" + critical);
             if (!currentLevel) {
                 currentLevel = 0;
             } else if (currentLevel === 6) {
@@ -33,8 +33,8 @@ export async function setSpacecraftCriticalLevel(actor, critical, level) {
             if (level <= currentLevel) {
                 level = Math.min(6, currentLevel + 1);
             }
-            await actor.setFlag("mgt2e", "crit_" + critical, level);
-            await actor.setFlag("mgt2e", "hasCrits", true);
+            await actor.setFlag("mgt2e-piggy", "crit_" + critical, level);
+            await actor.setFlag("mgt2e-piggy", "hasCrits", true);
 
             if (MGT2.SPACECRAFT_CRITICALS[critical][level-1]) {
                 let effects = MGT2.SPACECRAFT_CRITICALS[critical][level-1];
@@ -113,7 +113,7 @@ async function applyHullCritical(actor, effects, level) {
             const e = MGT2.SPACECRAFT_CRITICALS["hull"][Math.max(6, level + l) - 1];
             await applyHullCritical(actor, e, level + l);
         }
-        actor.setFlag("mgt2e", "crit_hull", level + levels);
+        actor.setFlag("mgt2e-piggy", "crit_hull", level + levels);
     }
 }
 
@@ -123,13 +123,13 @@ async function applyArmourCritical(actor, effects, level) {
         const roll = await new Roll(armourDamage, null).evaluate();
         let dmg = roll.total;
 
-        let currentDmg = actor.getFlag("mgt2e", "damage_armour");
+        let currentDmg = actor.getFlag("mgt2e-piggy", "damage_armour");
         if (!currentDmg) {
             currentDmg = 0;
         }
         dmg = Math.min(actor.system.spacecraft.armour, dmg + currentDmg);
-        actor.setFlag("mgt2e", "damage_armour", dmg);
-        actor.setFlag("mgt2e", "damageSev_armour", level);
+        actor.setFlag("mgt2e-piggy", "damage_armour", dmg);
+        actor.setFlag("mgt2e-piggy", "damageSev_armour", level);
 
         let title = game.i18n.format("MGT2.Spacecraft.Critical.armour.Title", { "severity": level });
         let text = game.i18n.format("MGT2.Spacecraft.Critical.armour." + level);
@@ -145,8 +145,8 @@ async function applyArmourCritical(actor, effects, level) {
 async function applySensorCritical(actor, effects, level) {
     if (effects["sensorDM"]) {
         const dm = parseInt(effects["sensorDM"]);
-        actor.setFlag("mgt2e", "damage_sensorDM", dm);
-        actor.setFlag("mgt2e", "damageSev_sensorDM", level);
+        actor.setFlag("mgt2e-piggy", "damage_sensorDM", dm);
+        actor.setFlag("mgt2e-piggy", "damageSev_sensorDM", level);
         ui.notifications.info(game.i18n.format("MGT2.Spacecraft.CriticalEffects.SensorDM",
             {"name": actor.name, "dm": dm }));
 
@@ -156,8 +156,8 @@ async function applySensorCritical(actor, effects, level) {
     }
     if (effects["sensorMax"]) {
         const maxRange = effects["sensorMax"];
-        actor.setFlag("mgt2e", "damage_sensorMax", maxRange);
-        actor.setFlag("mgt2e", "damageSev_sensorMax", level);
+        actor.setFlag("mgt2e-piggy", "damage_sensorMax", maxRange);
+        actor.setFlag("mgt2e-piggy", "damageSev_sensorMax", level);
         ui.notifications.info(game.i18n.format("MGT2.Spacecraft.CriticalEffects.SensorMax",
             {"name": actor.name, "range": maxRange }));
 
@@ -194,8 +194,8 @@ async function applyPowerPlantCritical(actor, effects, level) {
     const reduction = parseInt(effects["powerReduction"]);
     console.log(`Reduce power by ${reduction}%`);
     const powerAt = reduction;
-    actor.setFlag("mgt2e", "damage_powerPlant", powerAt);
-    actor.setFlag("mgt2e", "damageSev_powerPlant", level);
+    actor.setFlag("mgt2e-piggy", "damage_powerPlant", powerAt);
+    actor.setFlag("mgt2e-piggy", "damageSev_powerPlant", level);
     ui.notifications.info(game.i18n.format("MGT2.Spacecraft.CriticalEffects.Power",
         {"name": actor.name, "power": reduction }));
 
@@ -423,14 +423,14 @@ async function applyFuelCritical(actor, effects, level) {
         const rate = effects["fuelLeak"];
         if (rate === "hour") {
             console.log(`Fuel loss is ${rate} losing hourly`);
-            actor.setFlag("mgt2e", "damage_fuelHour", "1D6");
-            actor.setFlag("mgt2e", "damageSev_fuelHour", level);
+            actor.setFlag("mgt2e-piggy", "damage_fuelHour", "1D6");
+            actor.setFlag("mgt2e-piggy", "damageSev_fuelHour", level);
             ui.notifications.info(game.i18n.format("MGT2.Spacecraft.CriticalEffects.FuelLeakHour",
                 {"name": actor.name }));
         } else {
             console.log(`Fuel loss is ${rate} losing rounds`);
-            actor.setFlag("mgt2e", "damage_fuelRound", "1D6");
-            actor.setFlag("mgt2e", "damageSev_fuelRound", level);
+            actor.setFlag("mgt2e-piggy", "damage_fuelRound", "1D6");
+            actor.setFlag("mgt2e-piggy", "damageSev_fuelRound", level);
             ui.notifications.info(game.i18n.format("MGT2.Spacecraft.CriticalEffects.FuelLeakRound",
                 {"name": actor.name }));
         }
@@ -501,13 +501,13 @@ async function applyMDriveCritical(actor, effects, level) {
 
     if (effects["pilotDM"]) {
         // Penalty to piloting check.
-        actor.setFlag("mgt2e", "damage_pilotDM", parseInt(effects["pilotDM"]));
-        actor.setFlag("mgt2e", "damageSev_pilotDM", level);
+        actor.setFlag("mgt2e-piggy", "damage_pilotDM", parseInt(effects["pilotDM"]));
+        actor.setFlag("mgt2e-piggy", "damageSev_pilotDM", level);
     }
     if (effects["thrust"]) {
         // Penalty to maximum thrust.
-        actor.setFlag("mgt2e", "damage_thrust", parseInt(effects["thrust"]));
-        actor.setFlag("mgt2e", "damageSev_thrust", level);
+        actor.setFlag("mgt2e-piggy", "damage_thrust", parseInt(effects["thrust"]));
+        actor.setFlag("mgt2e-piggy", "damageSev_thrust", level);
     }
     if (effects["disabled"] || true) {
         // Thrust goes to zero. Disable mdrive.
@@ -534,8 +534,8 @@ async function applyJDriveCritical(actor, effects, level) {
 
     if (effects["jumpDM"]) {
         // Penalty to jump engineering check.
-        actor.setFlag("mgt2e", "damage_jumpDM", parseInt(effects["jumpDM"]));
-        actor.setFlag("mgt2e", "damageSev_jumpDM", level);
+        actor.setFlag("mgt2e-piggy", "damage_jumpDM", parseInt(effects["jumpDM"]));
+        actor.setFlag("mgt2e-piggy", "damageSev_jumpDM", level);
     }
     if (effects["disabled"]) {
         // Jump drive disabled.

@@ -68,21 +68,21 @@ Hooks.once('init', async function() {
         generateText
     };
 
-    game.settings.register("mgt2e", "systemSchemaVersion", {
+    game.settings.register("mgt2e-piggy", "systemSchemaVersion", {
         config: false,
         scope: "world",
         type: Number,
         default: 0
     });
 
-    game.settings.register("mgt2e", "lastVersionReported", {
+    game.settings.register("mgt2e-piggy", "lastVersionReported", {
         config: false,
         scope: "world",
         type: String,
         default: "0.0.0"
     });
 
-    game.settings.register('mgt2e', 'verboseSkillRolls', {
+    game.settings.register('mgt2e-piggy', 'verboseSkillRolls', {
         name: game.i18n.localize("MGT2.Settings.Verbose.Name"),
         hint: game.i18n.localize("MGT2.Settings.Verbose.Hint"),
         scope: 'world',
@@ -93,7 +93,7 @@ Hooks.once('init', async function() {
             console.log(`Setting verboseSkillRolls to ${value}`)
         }
     });
-    game.settings.register('mgt2e', 'useChatIcons', {
+    game.settings.register('mgt2e-piggy', 'useChatIcons', {
         name: game.i18n.localize("MGT2.Settings.ChatIcons.Name"),
         hint: game.i18n.localize("MGT2.Settings.ChatIcons.Hint"),
         scope: 'world',
@@ -104,7 +104,7 @@ Hooks.once('init', async function() {
             console.log(`Setting iconsInChat to ${value}`)
         }
     });
-    game.settings.register('mgt2e', 'useEncumbrance', {
+    game.settings.register('mgt2e-piggy', 'useEncumbrance', {
         name: game.i18n.localize("MGT2.Settings.UseEncumbrance.Name"),
         hint: game.i18n.localize("MGT2.Settings.UseEncumbrance.Hint"),
         scope: 'world',
@@ -112,7 +112,7 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: true
     });
-    game.settings.register('mgt2e', 'useCoreStatusEffects', {
+    game.settings.register('mgt2e-piggy', 'useCoreStatusEffects', {
         name: game.i18n.localize("MGT2.Settings.UseCoreStatusEffects.Name"),
         hint: game.i18n.localize("MGT2.Settings.UseCoreStatusEffects.Hint"),
         scope: 'world',
@@ -120,7 +120,7 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: false
     });
-    game.settings.register('mgt2e', 'quickRolls', {
+    game.settings.register('mgt2e-piggy', 'quickRolls', {
         name: game.i18n.localize("MGT2.Settings.QuickRolls.Name"),
         hint: game.i18n.localize("MGT2.Settings.QuickRolls.Hint"),
         scope: 'client',
@@ -131,7 +131,7 @@ Hooks.once('init', async function() {
             console.log(`Setting quickRolls to ${value}`)
         }
     });
-    game.settings.register('mgt2e', 'npcChaDamage', {
+    game.settings.register('mgt2e-piggy', 'npcChaDamage', {
         name: game.i18n.localize("MGT2.Settings.NPCChaDamage.Name"),
         hint: game.i18n.localize("MGT2.Settings.NPCChaDamage.Hint"),
         scope: 'world',
@@ -139,7 +139,7 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: true
     });
-    game.settings.register('mgt2e', 'skillColumns', {
+    game.settings.register('mgt2e-piggy', 'skillColumns', {
         name: game.i18n.localize("MGT2.Settings.SkillColumns.Name"),
         hint: game.i18n.localize("MGT2.Settings.SkillColumns.Hint"),
         scope: 'client',
@@ -151,7 +151,7 @@ Hooks.once('init', async function() {
         },
         default: "3"
     });
-    game.settings.register('mgt2e', 'skillFormat', {
+    game.settings.register('mgt2e-piggy', 'skillFormat', {
         name: game.i18n.localize("MGT2.Settings.SkillFormat.Name"),
         hint: game.i18n.localize("MGT2.Settings.SkillFormat.Hint"),
         scope: 'client',
@@ -164,7 +164,7 @@ Hooks.once('init', async function() {
         default: "columns"
     });
 
-    game.settings.register('mgt2e', 'currentYear', {
+    game.settings.register('mgt2e-piggy', 'currentYear', {
        name: game.i18n.localize("MGT2.Settings.CurrentYear.Name"),
        hint: game.i18n.localize("MGT2.Settings.CurrentYear.Hint"),
        scope: 'world',
@@ -172,7 +172,7 @@ Hooks.once('init', async function() {
        type: Number,
        default: 1105
     });
-    game.settings.register('mgt2e', 'currentDay', {
+    game.settings.register('mgt2e-piggy', 'currentDay', {
         name: game.i18n.localize("MGT2.Settings.CurrentDay.Name"),
         hint: game.i18n.localize("MGT2.Settings.CurrentDay.Hint"),
         scope: 'world',
@@ -180,7 +180,7 @@ Hooks.once('init', async function() {
         type: Number,
         default: 1
     });
-    game.settings.register('mgt2e', 'autoResizeSpacecraft', {
+    game.settings.register('mgt2e-piggy', 'autoResizeSpacecraft', {
         name: game.i18n.localize("MGT2.Settings.AutoResizeSpacecraft.Name"),
         hint: game.i18n.localize("MGT2.Settings.AutoResizeSpacecraft.Hint"),
         scope: 'world',
@@ -188,7 +188,7 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: true
     });
-    game.settings.register('mgt2e', 'playerSheetNotification', {
+    game.settings.register('mgt2e-piggy', 'playerSheetNotification', {
         name: game.i18n.localize("MGT2.Settings.PlayerSheetNotification.Name"),
         hint: game.i18n.localize("MGT2.Settings.PlayerSheetNotification.Hint"),
         scope: 'world',
@@ -200,7 +200,7 @@ Hooks.once('init', async function() {
         },
         default: "gm"
     });
-    game.settings.register('mgt2e', 'gmSheetNotification', {
+    game.settings.register('mgt2e-piggy', 'gmSheetNotification', {
         name: game.i18n.localize("MGT2.Settings.GMSheetNotification.Name"),
         hint: game.i18n.localize("MGT2.Settings.GMSheetNotification.Hint"),
         scope: 'world',
@@ -211,7 +211,7 @@ Hooks.once('init', async function() {
         },
         default: "private"
     });
-    game.settings.register('mgt2e', 'visionDefaultTraveller', {
+    game.settings.register('mgt2e-piggy', 'visionDefaultTraveller', {
         name: game.i18n.localize("MGT2.Settings.PlayerVision.Traveller.Name"),
         hint: game.i18n.localize("MGT2.Settings.PlayerVision.Traveller.Hint"),
         scope: 'world',
@@ -219,7 +219,7 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: false
     });
-    game.settings.register('mgt2e', 'visionDefaultNPC', {
+    game.settings.register('mgt2e-piggy', 'visionDefaultNPC', {
         name: game.i18n.localize("MGT2.Settings.PlayerVision.NPC.Name"),
         hint: game.i18n.localize("MGT2.Settings.PlayerVision.NPC.Hint"),
         scope: 'world',
@@ -227,7 +227,7 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: false
     });
-    game.settings.register('mgt2e', 'visionDefaultCreature', {
+    game.settings.register('mgt2e-piggy', 'visionDefaultCreature', {
         name: game.i18n.localize("MGT2.Settings.PlayerVision.Creature.Name"),
         hint: game.i18n.localize("MGT2.Settings.PlayerVision.Creature.Hint"),
         scope: 'world',
@@ -235,7 +235,7 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: false
     });
-    game.settings.register('mgt2e', 'visionDefaultSpacecraft', {
+    game.settings.register('mgt2e-piggy', 'visionDefaultSpacecraft', {
         name: game.i18n.localize("MGT2.Settings.PlayerVision.Spacecraft.Name"),
         hint: game.i18n.localize("MGT2.Settings.PlayerVision.Spacecraft.Hint"),
         scope: 'world',
@@ -243,7 +243,7 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: false
     });
-    game.settings.register('mgt2e', 'autoPlayerCharacter', {
+    game.settings.register('mgt2e-piggy', 'autoPlayerCharacter', {
         name: game.i18n.localize("MGT2.Settings.AutoPlayerCharacter.Name"),
         hint: game.i18n.localize("MGT2.Settings.AutoPlayerCharacter.Hint"),
         scope: 'world',
@@ -251,7 +251,7 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: true
     });
-    game.settings.register('mgt2e', 'defaultTraveller', {
+    game.settings.register('mgt2e-piggy', 'defaultTraveller', {
         name: game.i18n.localize("MGT2.Settings.DefaultTraveller.Name"),
         hint: game.i18n.localize("MGT2.Settings.DefaultTraveller.Hint"),
         scope: 'world',
@@ -259,7 +259,7 @@ Hooks.once('init', async function() {
         type: String,
         default: "DEFAULT TRAVELLER"
     });
-    game.settings.register('mgt2e', 'blastEffectDivergence', {
+    game.settings.register('mgt2e-piggy', 'blastEffectDivergence', {
         name: game.i18n.localize("MGT2.Settings.BlastEffectDivergence.Name"),
         hint: game.i18n.localize("MGT2.Settings.BlastEffectDivergence.Hint"),
         scope: 'world',
@@ -272,7 +272,15 @@ Hooks.once('init', async function() {
         },
         default: "0"
     });
-    game.settings.register('mgt2e', "splitAttackDamage", {
+    game.settings.register('mgt2e-piggy', "blastLinearFalloff", {
+        name: game.i18n.localize("MGT2.Settings.BlastLinearFalloff.Name"),
+        hint: game.i18n.localize("MGT2.Settings.BlastLinearFalloff.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    });
+    game.settings.register('mgt2e-piggy', "splitAttackDamage", {
        name: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Name"),
        hint: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Hint"),
        scope: "client",
@@ -280,7 +288,7 @@ Hooks.once('init', async function() {
        type: Boolean,
        default: false
     });
-    game.settings.register('mgt2e', "hexInWorldMenus", {
+    game.settings.register('mgt2e-piggy', "hexInWorldMenus", {
         name: game.i18n.localize("MGT2.Settings.HexInWorldMenus.Name"),
         hint: game.i18n.localize("MGT2.Settings.HexInWorldMenus.Hint"),
         scope: "client",
@@ -288,7 +296,7 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: false
     });
-    game.settings.register('mgt2e', "damageManager", {
+    game.settings.register('mgt2e-piggy', "damageManager", {
         name: game.i18n.localize("MGT2.Settings.DamageManager.Name"),
         hint: game.i18n.localize("MGT2.Settings.DamageManager.Hint"),
         scope: "world",
@@ -322,25 +330,25 @@ Hooks.once('init', async function() {
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("mgt2e", MgT2ActorSheet, { label: "Traveller Sheet", makeDefault: true });
-  Actors.registerSheet("mgt2e", MgT2NpcActorSheet, { label: "NPC Sheet", types: [ "npc"], makeDefault: false });
-  Actors.registerSheet("mgt2e", MgT2CreatureActorSheet, { label: "Creature Sheet", types: [ "creature"], makeDefault: false });
-  Actors.registerSheet("mgt2e", MgT2WorldActorSheet, { label: "World Sheet", types: [ "world"], makeDefault: true });
-  Actors.registerSheet("mgt2e", MgT2VehicleActorSheet, { label: "Vehicle Sheet", types: [ "vehicle"], makeDefault: true });
-  Actors.registerSheet("mgt2e", MgT2eVehicleSheet, { label: "Vehicle Sheet 2", types: [ "vehicle"], makeDefault: false });
-  Actors.registerSheet("mgt2e", MgT2eRobotSheet, { label: "Robot Sheet", types: [ "robot"], makeDefault: true });
-  Actors.registerSheet("mgt2e", MgT2SwarmActorSheet, { label: "Swarm Sheet", types: [ "swarm"], makeDefault: true });
+  Actors.registerSheet("mgt2e-piggy", MgT2ActorSheet, { label: "Traveller Sheet", makeDefault: true });
+  Actors.registerSheet("mgt2e-piggy", MgT2NpcActorSheet, { label: "NPC Sheet", types: [ "npc"], makeDefault: false });
+  Actors.registerSheet("mgt2e-piggy", MgT2CreatureActorSheet, { label: "Creature Sheet", types: [ "creature"], makeDefault: false });
+  Actors.registerSheet("mgt2e-piggy", MgT2WorldActorSheet, { label: "World Sheet", types: [ "world"], makeDefault: true });
+  Actors.registerSheet("mgt2e-piggy", MgT2VehicleActorSheet, { label: "Vehicle Sheet", types: [ "vehicle"], makeDefault: true });
+  Actors.registerSheet("mgt2e-piggy", MgT2eVehicleSheet, { label: "Vehicle Sheet 2", types: [ "vehicle"], makeDefault: false });
+  Actors.registerSheet("mgt2e-piggy", MgT2eRobotSheet, { label: "Robot Sheet", types: [ "robot"], makeDefault: true });
+  Actors.registerSheet("mgt2e-piggy", MgT2SwarmActorSheet, { label: "Swarm Sheet", types: [ "swarm"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("mgt2e", MgT2ItemSheet, { label: "Item Sheet", makeDefault: true });
-  Items.registerSheet("mgt2e", MgT2AssociateItemSheet, { label: "Associate Sheet", types: [ "associate"], makeDefault: true });
-  Items.registerSheet("mgt2e", MgT2WorldDataItemSheet, { label: "World Data Sheet", types: [ "worlddata"], makeDefault: true });
-  Items.registerSheet("mgt2e", MgT2SoftwareItemSheet, { label: "Software", types: [ "software"], makeDefault: true });
-  Items.registerSheet("mgt2e", MgT2eOptionSheet, { label: "Option", types: [ "option"], makeDefault: true });
+  Items.registerSheet("mgt2e-piggy", MgT2ItemSheet, { label: "Item Sheet", makeDefault: true });
+  Items.registerSheet("mgt2e-piggy", MgT2AssociateItemSheet, { label: "Associate Sheet", types: [ "associate"], makeDefault: true });
+  Items.registerSheet("mgt2e-piggy", MgT2WorldDataItemSheet, { label: "World Data Sheet", types: [ "worlddata"], makeDefault: true });
+  Items.registerSheet("mgt2e-piggy", MgT2SoftwareItemSheet, { label: "Software", types: [ "software"], makeDefault: true });
+  Items.registerSheet("mgt2e-piggy", MgT2eOptionSheet, { label: "Option", types: [ "option"], makeDefault: true });
 
   foundry.applications.apps.DocumentSheetConfig.unregisterSheet(ActiveEffect, "core", foundry.applications.sheets.ActiveEffectConfig);
-  foundry.applications.apps.DocumentSheetConfig.registerSheet(ActiveEffect, "mgt2e", MgT2EffectSheet, { makeDefault: true});
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(ActiveEffect, "mgt2e-piggy", MgT2EffectSheet, { makeDefault: true});
 //  ActiveEffects.unregisterSheet("core", ActiveEffectSheet);
-//  ActiveEffects.registerSheet("mgt2e", MgT2EffectSheet, { makeDefault: true });
+//  ActiveEffects.registerSheet("mgt2e-piggy", MgT2EffectSheet, { makeDefault: true });
 
     // Sockets
     game.socket.on("system.mgt2e", (data) => {
@@ -418,7 +426,7 @@ Hooks.once("init", function() {
         Tools.inlineUppRollSkill(name, data);
     })
 
-    if (!game.settings.get("mgt2e", "useCoreStatusEffects")) {
+    if (!game.settings.get("mgt2e-piggy", "useCoreStatusEffects")) {
         CONFIG.statusEffects = [];
     }
 
@@ -709,11 +717,11 @@ Hooks.on('ready', () => {
     if (game.user.isGM) {
         // Do we need to run a migration?
         const LATEST_SCHEMA_VERSION = 10;
-        const currentVersion = parseInt(game.settings.get("mgt2e", "systemSchemaVersion"));
+        const currentVersion = parseInt(game.settings.get("mgt2e-piggy", "systemSchemaVersion"));
         console.log(`Schema version is ${currentVersion}`);
         if (!currentVersion || currentVersion < LATEST_SCHEMA_VERSION) {
             migrateWorld(currentVersion);
-            game.settings.set("mgt2e", "systemSchemaVersion", LATEST_SCHEMA_VERSION);
+            game.settings.set("mgt2e-piggy", "systemSchemaVersion", LATEST_SCHEMA_VERSION);
         }
     }
     // Need to add click event to all existing chat damage buttons.
@@ -819,7 +827,7 @@ Hooks.on("createActor", (actor, data, userId) => {
         let player = game.users.current;
         if (game.user._id === userId && actor.type === "traveller") {
             let playerName = player.name;
-            if (player.character === null && game.settings.get("mgt2e", "autoPlayerCharacter")) {
+            if (player.character === null && game.settings.get("mgt2e-piggy", "autoPlayerCharacter")) {
                 player.update({"character": actor._id});
             }
             // If we don't do both of the following, player name isn't set
@@ -831,15 +839,15 @@ Hooks.on("createActor", (actor, data, userId) => {
         }
     }
 
-    if (actor.type === "traveller" && game.settings.get("mgt2e", "visionDefaultTraveller")) {
+    if (actor.type === "traveller" && game.settings.get("mgt2e-piggy", "visionDefaultTraveller")) {
         actor.update({"prototypeToken.sight.enabled": true});
-    } else if (actor.type === "npc" && game.settings.get("mgt2e", "visionDefaultNPC")) {
+    } else if (actor.type === "npc" && game.settings.get("mgt2e-piggy", "visionDefaultNPC")) {
         actor.update({"prototypeToken.sight.enabled": true});
-    } else if (actor.type === "creature" && game.settings.get("mgt2e", "visionDefaultCreature")) {
+    } else if (actor.type === "creature" && game.settings.get("mgt2e-piggy", "visionDefaultCreature")) {
         actor.update({"prototypeToken.sight.enabled": true});
-    } else if ((actor.type === "spacecraft" || actor.type === "vehicle") && game.settings.get("mgt2e", "visionDefaultSpacecraft")) {
+    } else if ((actor.type === "spacecraft" || actor.type === "vehicle") && game.settings.get("mgt2e-piggy", "visionDefaultSpacecraft")) {
         actor.update({"prototypeToken.sight.enabled": true});
-    } else if (actor.type === "npc" && game.settings.get("mgt2e", "npcChaDamage")) {
+    } else if (actor.type === "npc" && game.settings.get("mgt2e-piggy", "npcChaDamage")) {
         actor.addDamageValues();
     }
 
@@ -960,17 +968,17 @@ Hooks.on("preUpdateActor2", (actor, changedData, options, userId) => {
         if (strDmg >= strMax) atZero++;
         switch (atZero) {
             case 2:
-                actor.setFlag("mgt2e", "unconscious", true);
-                actor.unsetFlag("mgt2e", "disabled");
-                actor.unsetFlag("mgt2e", "dead");
+                actor.setFlag("mgt2e-piggy", "unconscious", true);
+                actor.unsetFlag("mgt2e-piggy", "disabled");
+                actor.unsetFlag("mgt2e-piggy", "dead");
                 break;
             case 3:
-                actor.setFlag("mgt2e", "disabled", true);
+                actor.setFlag("mgt2e-piggy", "disabled", true);
                 break;
             default:
-                actor.unsetFlag("mgt2e", "unconscious");
-                actor.unsetFlag("mgt2e", "disabled");
-                actor.unsetFlag("mgt2e", "dead");
+                actor.unsetFlag("mgt2e-piggy", "unconscious");
+                actor.unsetFlag("mgt2e-piggy", "disabled");
+                actor.unsetFlag("mgt2e-piggy", "dead");
         }
     } else if (changedData?.system?.hits) {
         console.log("NPC OR CREATURE");
@@ -980,17 +988,17 @@ Hooks.on("preUpdateActor2", (actor, changedData, options, userId) => {
         let max = hits.max?hits.max:actor.system.hits.max;
 
         if (dmg >= max) {
-            actor.setFlag("mgt2e", "dead", "true");
-            actor.unsetFlag("mgt2e", "unconscious");
-            actor.unsetFlag("mgt2e", "disabled");
+            actor.setFlag("mgt2e-piggy", "dead", "true");
+            actor.unsetFlag("mgt2e-piggy", "unconscious");
+            actor.unsetFlag("mgt2e-piggy", "disabled");
         } else if (dmg >= max * 0.667) {
-            actor.setFlag("mgt2e", "unconscious", "true");
-            actor.unsetFlag("mgt2e", "dead");
-            actor.unsetFlag("mgt2e", "disabled");
+            actor.setFlag("mgt2e-piggy", "unconscious", "true");
+            actor.unsetFlag("mgt2e-piggy", "dead");
+            actor.unsetFlag("mgt2e-piggy", "disabled");
         } else {
-            actor.unsetFlag("mgt2e", "unconscious");
-            actor.unsetFlag("mgt2e", "disabled");
-            actor.unsetFlag("mgt2e", "dead");
+            actor.unsetFlag("mgt2e-piggy", "unconscious");
+            actor.unsetFlag("mgt2e-piggy", "disabled");
+            actor.unsetFlag("mgt2e-piggy", "dead");
         }
     }
 });
@@ -1115,9 +1123,9 @@ Hooks.on("combatTurn", (combat, data, options) => {
     // If stunned, reduce rounds left to be stunned
     const stunned = actor.getEffect("stunned");
     if (stunned) {
-        let rounds = stunned.getFlag("mgt2e", "value");
+        let rounds = stunned.getFlag("mgt2e-piggy", "value");
         if (--rounds > 0) {
-            stunned.setFlag("mgt2e", "value", rounds);
+            stunned.setFlag("mgt2e-piggy", "value", rounds);
         } else {
             actor.setStunnedEffect(0);
         }
@@ -1142,11 +1150,11 @@ Hooks.on("combatRound", (combat, data, options) => {
     // If stunned, reduce rounds left to be stunned
     let stunnedEffect = combatant.effects.find(e => e.statuses?.values()?.next()?.value === "stun");
     if (stunnedEffect) {
-        if (!isNaN(parseInt(stunnedEffect.flags?.mgt2e?.value))) {
-            let rounds = parseInt(stunnedEffect.flags.mgt2e.value);
+        if (!isNaN(parseInt(stunnedEffect.flags?.["mgt2e-piggy"]?.value))) {
+            let rounds = parseInt(stunnedEffect.flags["mgt2e-piggy"].value);
             if (rounds > 1) {
                 rounds -= 1;
-                stunnedEffect.setFlag("mgt2e", "value", rounds);
+                stunnedEffect.setFlag("mgt2e-piggy", "value", rounds);
             } else {
                 stunnedEffect.delete();
             }
@@ -1266,7 +1274,7 @@ function rollSkillMacro(skillName, options) {
       }
   }
 
-  if (game.settings.get("mgt2e", "quickRolls") || options.quick) {
+  if (game.settings.get("mgt2e-piggy", "quickRolls") || options.quick) {
       rollSkill(actor, skillName, options);
   } else {
       new MgT2SkillDialog(actor, skillName, options).render(true);
@@ -1732,8 +1740,8 @@ Handlebars.registerHelper('augmentedSkill', function(skill, spec) {
  */
 Handlebars.registerHelper('skillListClasses', function() {
     let classes="skillList";
-    let columns = parseInt(game.settings.get("mgt2e", "skillColumns"));
-    let format = game.settings.get("mgt2e", "skillFormat");
+    let columns = parseInt(game.settings.get("mgt2e-piggy", "skillColumns"));
+    let format = game.settings.get("mgt2e-piggy", "skillFormat");
 
     if (format === "columns") {
         classes += " skillList-Columns";
@@ -1874,7 +1882,7 @@ Handlebars.registerHelper('skillBlock', function(data, skillId, skill, key) {
             augmented = true;
             title += " + " + Number(skill.augdm);
         }
-        if (game.settings.get("mgt2e", "quickRolls")) {
+        if (game.settings.get("mgt2e-piggy", "quickRolls")) {
             title += "&#10;" + game.i18n.localize("MGT2.TravellerSheet.SkillTitle.Dialog");
         } else {
             title += "&#10;" + game.i18n.localize("MGT2.TravellerSheet.SkillTitle.Quick");
@@ -1954,7 +1962,7 @@ Handlebars.registerHelper('skillBlock', function(data, skillId, skill, key) {
                     if (spec.bonus && Number(spec.bonus) > 0) {
                         augmented = true;
                     }
-                    if (game.settings.get("mgt2e", "quickRolls")) {
+                    if (game.settings.get("mgt2e-piggy", "quickRolls")) {
                         title += "&#10;" + game.i18n.localize("MGT2.TravellerSheet.SkillTitle.Dialog");
                     } else {
                         title += "&#10;" + game.i18n.localize("MGT2.TravellerSheet.SkillTitle.Quick");
@@ -2061,12 +2069,12 @@ Handlebars.registerHelper('effect', function(key) {
 Handlebars.registerHelper('hasStatus', function(actor) {
 
     for (let e of actor.effects) {
-        if (e.flags?.mgt2e?.effect) {
+        if (e.flags?.["mgt2e-piggy"]?.effect) {
             return true;
         }
         return true;
     }
-    const status = actor.flags.mgt2e;
+    const status = actor.flags["mgt2e-piggy"];
     if (!status) return false;
 
     if (status.fatigued || status.stunned || status.encumbered || status.vaccSuit ||
@@ -2080,7 +2088,7 @@ Handlebars.registerHelper('hasStatus', function(actor) {
 });
 
 Handlebars.registerHelper('itemHasStatus', function(item) {
-    const status = item.flags.mgt2e;
+    const status = item.flags["mgt2e-piggy"];
     if (!status) return false;
 
     if (status.damaged || status.destroyed) {
@@ -2100,18 +2108,18 @@ Handlebars.registerHelper('showStatus', function(actor, status, effect) {
 
     // If this is a proper status effect, then we can use a generic solution
     // and skip everything else.
-    if (effect && effect?.flags?.mgt2e) {
+    if (effect && effect?.flags?.["mgt2e-piggy"]) {
         let statusEffect = CONFIG.statusEffects.find(e => e.id === status);
         if (statusEffect) {
             label = game.i18n.localize(statusEffect.name);
-            type = effect.flags.mgt2e.css;
+            type = effect.flags["mgt2e-piggy"].css;
             let value = null;
 
-            if (!isNaN(parseInt(effect.flags.mgt2e.value))) {
-                value = parseInt(effect.flags.mgt2e.value);
-                label += ` (${parseInt(effect.flags.mgt2e.value)})`;
+            if (!isNaN(parseInt(effect.flags["mgt2e-piggy"].value))) {
+                value = parseInt(effect.flags["mgt2e-piggy"].value);
+                label += ` (${parseInt(effect.flags["mgt2e-piggy"].value)})`;
             }
-            if (!effect.flags.mgt2e.locked) {
+            if (!effect.flags["mgt2e-piggy"].locked) {
                 const statusName = "status" + status.charAt(0).toUpperCase() + status.slice(1);
                 label += ` <i class="fas fa-xmark effect-remove ${statusName}"> </i>`;
                 if (value !== null) {
@@ -2142,8 +2150,8 @@ Handlebars.registerHelper('showStatus', function(actor, status, effect) {
     if (status === "fatigued") {
         label += ` <i class="fas fa-xmark statusFatigued"> </i>`;
     } else if (status === "stunned") {
-        if (parseInt(actor.getFlag("mgt2e", "stunnedRounds")) > 0) {
-            label += ` (${actor.getFlag("mgt2e", "stunnedRounds")})`;
+        if (parseInt(actor.getFlag("mgt2e-piggy", "stunnedRounds")) > 0) {
+            label += ` (${actor.getFlag("mgt2e-piggy", "stunnedRounds")})`;
         }
         label += ` <i class="fas fa-xmark statusStunned"> </i>`;
         type = "statusBad";
@@ -2157,10 +2165,10 @@ Handlebars.registerHelper('showStatus', function(actor, status, effect) {
         label += ` <i class="fas fa-xmark statusDisabled"> </i>`;
         type = "statusBad";
     } else if (status === "reaction") {
-        if (!(parseInt(actor.getFlag("mgt2e", "reaction")) < 0)) {
+        if (!(parseInt(actor.getFlag("mgt2e-piggy", "reaction")) < 0)) {
             return "";
         }
-        label += ` (${actor.getFlag("mgt2e", "reaction")})`;
+        label += ` (${actor.getFlag("mgt2e-piggy", "reaction")})`;
         label += ` <i class="fas fa-xmark statusReaction"> </i>`;
     } else if (status === "highGravity") {
         label += ` <i class="fas fa-xmark statusHighGravity"> </i>`;
@@ -2188,8 +2196,8 @@ Handlebars.registerHelper('showStatus', function(actor, status, effect) {
         label += ` <i class="fas fa-xmark statusProne"> </i>`;
     } else if (status === "inCover") {
         type = "statusGood";
-        if (parseInt(actor.getFlag("mgt2e", "inCover")) > 0) {
-            label += ` (${actor.getFlag("mgt2e", "inCover")})`;
+        if (parseInt(actor.getFlag("mgt2e-piggy", "inCover")) > 0) {
+            label += ` (${actor.getFlag("mgt2e-piggy", "inCover")})`;
         }
         label += ` <i class="fas fa-xmark statusInCover"> </i>`;
     }
@@ -2205,8 +2213,8 @@ Handlebars.registerHelper('showItemStatus', function(item, status) {
 
     if (status === "damaged") {
         label += ` <i class="fas fa-xmark damaged"> </i>`;
-        if (parseInt(item.getFlag("mgt2e", "damaged")) !== 0) {
-            label += ` (${item.getFlag("mgt2e", "damaged")})`;
+        if (parseInt(item.getFlag("mgt2e-piggy", "damaged")) !== 0) {
+            label += ` (${item.getFlag("mgt2e-piggy", "damaged")})`;
         }
     } else if (status === "destroyed") {
         label += ` <i class="fas fa-xmark statusDestroyed"> </i>`;
@@ -2221,9 +2229,9 @@ Handlebars.registerHelper('showCriticals', function(actor) {
     let html = "";
 
     for (let d in MGT2.SPACECRAFT_DAMAGE) {
-        if (actor.flags.mgt2e["damage_" + d]) {
+        if (actor.flags["mgt2e-piggy"]["damage_" + d]) {
             let label = game.i18n.localize("MGT2.Spacecraft.CriticalLabel."+d);
-            let value = actor.flags.mgt2e["damage_" + d];
+            let value = actor.flags["mgt2e-piggy"]["damage_" + d];
             if (!isNaN(parseInt(value)) && parseInt(value) !== 0) {
                 value = " (" + parseInt(value) + ")";
             } else {
@@ -2235,7 +2243,7 @@ Handlebars.registerHelper('showCriticals', function(actor) {
     }
 
     for (let c in MGT2.SPACECRAFT_CRITICALS) {
-        let severity = actor.flags.mgt2e["crit_"+c];
+        let severity = actor.flags["mgt2e-piggy"]["crit_"+c];
         if (severity) {
             let type = "criticalLow";
             if (severity > 4) {
@@ -3098,7 +3106,7 @@ Handlebars.registerHelper("itemName", function (item) {
 Hooks.once("ready", async function() {
     if (game.user.isGM) {
         let currentVersion = game.system.version;
-        let lastVersion = game.settings.get("mgt2e", "lastVersionReported");
+        let lastVersion = game.settings.get("mgt2e-piggy", "lastVersionReported");
 
         if (foundry.utils.isNewerVersion(currentVersion, lastVersion)) {
             let text = "";
@@ -3112,7 +3120,7 @@ Hooks.once("ready", async function() {
                 content: text
             };
             ChatMessage.create(chatData, {});
-            game.settings.set("mgt2e", "lastVersionReported", currentVersion);
+            game.settings.set("mgt2e-piggy", "lastVersionReported", currentVersion);
         }
     }
 });

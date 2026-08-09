@@ -1312,7 +1312,7 @@ MGT2.SKILLS = {
 MGT2.getDefaultSkills = function() {
     let skills = MGT2.SKILLS;
 
-    let actorName = game.settings.get("mgt2e", "defaultTraveller");
+    let actorName = game.settings.get("mgt2e-piggy", "defaultTraveller");
     if (actorName && game.actors.getName(actorName)?.type === "traveller") {
         skills = game.actors.getName(actorName).system.skills;
     }

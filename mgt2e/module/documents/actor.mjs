@@ -81,7 +81,7 @@ export class MgT2Actor extends Actor {
                 }
                 let sizeDM = Math.min(6, parseInt(dtons / 1000));
                 //changes.system.spacecraft.combat.sizeDM = sizeDM;
-                //await this.setFlag("mgt2e", "sizeDM", sizeDM);
+                //await this.setFlag("mgt2e-piggy", "sizeDM", sizeDM);
 
                 if (dtons < 100) {
                     changes.system.spacecraft.skill = "pilot.smallCraft";
@@ -454,11 +454,11 @@ export class MgT2Actor extends Actor {
         init.base = parseInt(actorData.spacecraft.mdrive) + parseInt(actorData.spacecraft.rdrive);
         init.value = parseInt(init.base);
 
-        if (this.getFlag("mgt2e","initPilotDM")) {
-            init.value += parseInt(this.getFlag("mgt2e", "initPilotDM"));
+        if (this.getFlag("mgt2e-piggy","initPilotDM")) {
+            init.value += parseInt(this.getFlag("mgt2e-piggy", "initPilotDM"));
         }
-        if (this.getFlag("mgt2e","initTacticsDM")) {
-            init.value += parseInt(this.getFlag("mgt2e", "initTacticsDM"));
+        if (this.getFlag("mgt2e-piggy","initTacticsDM")) {
+            init.value += parseInt(this.getFlag("mgt2e-piggy", "initTacticsDM"));
         }
     }
 
@@ -566,7 +566,7 @@ export class MgT2Actor extends Actor {
       // Finally, just use the GM. If a backup GM has been set to handle damage, then
       // use that user, otherwise use whichever GM is marked as active.
       let gm = game.users.activeGM;
-      let damageManager = game.settings.get("mgt2e", "damageManager");
+      let damageManager = game.settings.get("mgt2e-piggy", "damageManager");
       if (damageManager) {
           let user = game.users.getName(damageManager);
           if (user && user.active && user.isGM) {
@@ -862,13 +862,13 @@ export class MgT2Actor extends Actor {
               this.system.damage.END.value = this.system.characteristics.END.value;
               let stunnedEffect = this.getEffect("stun");
               if (stunnedEffect) {
-                  let v = stunnedEffect.getFlag("mgt2e", "value");
+                  let v = stunnedEffect.getFlag("mgt2e-piggy", "value");
                   if (v && parseInt(v) !== NaN) {
                       v = parseInt(v) + stuns;
                   } else {
                       v = stuns;
                   }
-                  stunnedEffect.setFlag("mgt2e", "value", v);
+                  stunnedEffect.setFlag("mgt2e-piggy", "value", v);
               } else {
                   this.setStunnedEffect(stuns);
               }
@@ -975,7 +975,7 @@ export class MgT2Actor extends Actor {
           }
 
           let contentData = {
-              useChatIcons: game.settings.get("mgt2e", "useChatIcons"),
+              useChatIcons: game.settings.get("mgt2e-piggy", "useChatIcons"),
               actor: this,
               text: text
           }
@@ -1029,10 +1029,10 @@ export class MgT2Actor extends Actor {
           hits.damage += (damage - stuns);
           hits.tmpDamage += (damage - stuns);
           if (stuns > 0) {
-              this.setFlag("mgt2e", "stunned", true);
-              this.setFlag("mgt2e", "stunnedRounds",
-                  this.getFlag("mgt2e", "stunnedRounds") ?
-                      parseInt(this.getFlag("mgt2e", "stunnedRounds")) + stuns : stuns
+              this.setFlag("mgt2e-piggy", "stunned", true);
+              this.setFlag("mgt2e-piggy", "stunnedRounds",
+                  this.getFlag("mgt2e-piggy", "stunnedRounds") ?
+                      parseInt(this.getFlag("mgt2e-piggy", "stunnedRounds")) + stuns : stuns
               );
           }
       } else {
@@ -1079,7 +1079,7 @@ export class MgT2Actor extends Actor {
       }
 
       let contentData = {
-        useChatIcons: game.settings.get("mgt2e", "useChatIcons"),
+        useChatIcons: game.settings.get("mgt2e-piggy", "useChatIcons"),
         actor: this,
         text: text
       }
@@ -1535,13 +1535,13 @@ export class MgT2Actor extends Actor {
           if (!options.quiet) {
               let who = null;
               if (game.users.current.isGM) {
-                  if (game.settings.get("mgt2e", "gmSheetNotification") === "private") {
+                  if (game.settings.get("mgt2e-piggy", "gmSheetNotification") === "private") {
                       who = [game.user.id];
                   }
               } else {
-                  if (game.settings.get("mgt2e", "playerSheetNotification") === "private") {
+                  if (game.settings.get("mgt2e-piggy", "playerSheetNotification") === "private") {
                       who = [game.user.id];
-                  } else if (game.settings.get("mgt2e", "playerSheetNotification") === "gm") {
+                  } else if (game.settings.get("mgt2e-piggy", "playerSheetNotification") === "gm") {
                       who = [game.user.id, game.users.activeGM ];
                   }
               }
@@ -1559,7 +1559,7 @@ export class MgT2Actor extends Actor {
   getCriticalLevel(critical) {
       if (this.type === "spacecraft") {
           if (MGT2.SPACECRAFT_CRITICALS[critical]) {
-              let value = this.getFlag("mgt2e", "crit_" + critical);
+              let value = this.getFlag("mgt2e-piggy", "crit_" + critical);
               if (value && parseInt(value) > 0) {
                   return Math.min(6, parseInt(value));
               }
@@ -1575,8 +1575,8 @@ export class MgT2Actor extends Actor {
   }
 
   fixCriticalEffect(effect) {
-      this.unsetFlag("mgt2e", "damage_" + effect);
-      this.unsetFlag("mgt2e", "damageSev_" + effect);
+      this.unsetFlag("mgt2e-piggy", "damage_" + effect);
+      this.unsetFlag("mgt2e-piggy", "damageSev_" + effect);
   }
 
 
@@ -1747,21 +1747,21 @@ export class MgT2Actor extends Actor {
         if (value && effect) {
             if (isNaN(parseInt(value))) {
                 return false;
-            } else if (effect.flags?.mgt2e?.value) {
+            } else if (effect.flags?.["mgt2e-piggy"]?.value) {
                 // Passed in a numerical value. Need to +/- it.
-                let current = parseInt(effect.flags?.mgt2e?.value);
+                let current = parseInt(effect.flags?.["mgt2e-piggy"]?.value);
                 if (!isNaN(current) && current !== 0) {
                     if (CONFIG.MGT2.STATUS_EFFECTS[status]?.replace) {
                         current = parseInt(value);
                     } else {
                         current += parseInt(value);
                     }
-                    effect.setFlag("mgt2e", "value", current);
+                    effect.setFlag("mgt2e-piggy", "value", current);
                     if (!CONFIG.MGT2.STATUS_EFFECTS[status]?.mono) {
                         if (current < 0) {
-                            effect.setFlag("mgt2e", "css", "statusWarn");
+                            effect.setFlag("mgt2e-piggy", "css", "statusWarn");
                         } else if (current > 0) {
-                            effect.setFlag("mgt2e", "css", "statusGood");
+                            effect.setFlag("mgt2e-piggy", "css", "statusGood");
                         }
                     }
                     if (effect.changes && effect.changes.length > 0) {
@@ -1785,7 +1785,7 @@ export class MgT2Actor extends Actor {
                     "core": {
                         overlay: overlay
                     },
-                    "mgt2e": {
+                    "mgt2e-piggy": {
                         effect: status,
                         locked: locked?true:false,
                         css: "status" + css,
@@ -1795,7 +1795,7 @@ export class MgT2Actor extends Actor {
             }]);
         } else if (effect) {
             try {
-                effect.delete();
+                await effect.delete();
                 return true;
             } catch (e) {
                 // Already deleted.
@@ -1914,8 +1914,8 @@ export class MgT2Actor extends Actor {
         await this.setEffect("encumbered", value,  false, true, "Warn");
     }
 
-    setVaccSuitEffect(value) {
-        this.setEffect("vaccSuit", value,  false, true, "Warn");
+    async setVaccSuitEffect(value) {
+        await this.setEffect("vaccSuit", value,  false, true, "Warn");
     }
 
     setAwareEffect(value) {

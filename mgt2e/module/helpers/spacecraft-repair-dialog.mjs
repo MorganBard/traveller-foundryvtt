@@ -38,7 +38,7 @@ export class MgT2SpacecraftRepairDialog extends Application {
         // Current critical state.
         this.shipCriticals = {};
         for (let c in MGT2.SPACECRAFT_CRITICALS) {
-            let severity = this.actorShip.flags.mgt2e["crit_"+c];
+            let severity = this.actorShip.flags["mgt2e-piggy"]["crit_"+c];
             if (severity) {
                 this.shipCriticals[c] = parseInt(severity);
             } else {
@@ -48,14 +48,14 @@ export class MgT2SpacecraftRepairDialog extends Application {
         console.log(this.shipCriticals);
         this.shipDamage = {};
         for (let d in MGT2.SPACECRAFT_DAMAGE) {
-            if (this.actorShip.flags.mgt2e["damage_"+d]) {
-                let dm = 0 - this.actorShip.flags.mgt2e["damageSev_" + d];
-                if (this.actorShip.flags.mgt2e["damageDM_" + d]) {
-                    dm += parseInt(this.actorShip.flags.mgt2e["damageDM_" + d]);
+            if (this.actorShip.flags["mgt2e-piggy"]["damage_"+d]) {
+                let dm = 0 - this.actorShip.flags["mgt2e-piggy"]["damageSev_" + d];
+                if (this.actorShip.flags["mgt2e-piggy"]["damageDM_" + d]) {
+                    dm += parseInt(this.actorShip.flags["mgt2e-piggy"]["damageDM_" + d]);
                 }
                 this.shipDamage[d] = {
                     "label": game.i18n.localize("MGT2.Spacecraft.CriticalLabel." + d),
-                    "severity": this.actorShip.flags.mgt2e["damageSev_" + d],
+                    "severity": this.actorShip.flags["mgt2e-piggy"]["damageSev_" + d],
                     "dm": dm
                 };
             }
@@ -118,16 +118,16 @@ export class MgT2SpacecraftRepairDialog extends Application {
         if (result >= 8) {
             // Fixed it. Technically, this is a temporary fix. But for now, we
             // just fix is permanently.
-            this.actorShip.unsetFlag("mgt2e", "damage_"+id);
-            this.actorShip.unsetFlag("mgt2e", "damageSev_"+id);
-            this.actorShip.unsetFlag("mgt2e", "damageDM_"+id);
+            this.actorShip.unsetFlag("mgt2e-piggy", "damage_"+id);
+            this.actorShip.unsetFlag("mgt2e-piggy", "damageSev_"+id);
+            this.actorShip.unsetFlag("mgt2e-piggy", "damageDM_"+id);
             for (let e of html.find(".row_" + id)) {
                 e.remove();
             }
         } else {
             let dm = this.shipDamage[id].dm;
             dm = parseInt(dm) + 1;
-            this.actorShip.setFlag("mgt2e", "damageDM_" + id, dm);
+            this.actorShip.setFlag("mgt2e-piggy", "damageDM_" + id, dm);
             this.setIntValue(html, ".dm_"+id, dm);
             this.shipDamage[id].dm = dm;
         }

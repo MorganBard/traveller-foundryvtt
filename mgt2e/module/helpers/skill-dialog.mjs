@@ -233,7 +233,7 @@ export class MgT2SkillDialog extends Application {
 
         for (const effect of this.actor.allApplicableEffects()) {
             if (effect.disabled) continue;
-            const augmentType = effect.flags?.mgt2e?.augmentType ?? null;
+            const augmentType = effect.flags?.["mgt2e-piggy"]?.augmentType ?? null;
             const typeLabel = augmentType
                 ? game.i18n.localize("MGT2.Effects.Type." + augmentType)
                 : effect.name;

@@ -1,6 +1,6 @@
 
 import {MgT2AttackDialog } from "../helpers/attack-dialog.mjs";
-import {rollAttack, getMeleeTargetError} from "../helpers/dice-rolls.mjs";
+import {rollAttack, getMeleeTargetError, getRangedTargetError} from "../helpers/dice-rolls.mjs";
 import {getSkillValue} from "../helpers/dice-rolls.mjs";
 
 /**
@@ -133,7 +133,7 @@ export class MgT2Item extends Item {
     async roll() {
         const item = this;
 
-        let quickRoll = game.settings.get("mgt2e", "quickRolls");
+        let quickRoll = game.settings.get("mgt2e-piggy", "quickRolls");
         if (event.shiftKey) {
             quickRoll = !quickRoll;
         }
@@ -146,6 +146,12 @@ export class MgT2Item extends Item {
                     const meleeError = getMeleeTargetError();
                     if (meleeError) {
                         ui.notifications.error(game.i18n.localize(meleeError));
+                        return;
+                    }
+                } else {
+                    const rangedError = getRangedTargetError(item.system.weapon.traits);
+                    if (rangedError) {
+                        ui.notifications.error(game.i18n.localize(rangedError));
                         return;
                     }
                 }

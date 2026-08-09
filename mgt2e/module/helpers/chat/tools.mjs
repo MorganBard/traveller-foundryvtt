@@ -62,8 +62,8 @@ Tools.message = function(chatData, message) {
     ChatMessage.create(chatData);
 }
 Tools.formattedDate = function() {
-    const year = parseInt(game.settings.get("mgt2e", "currentYear")) || 0;
-    const day = Math.max(1, parseInt(game.settings.get("mgt2e", "currentDay")) || 1);
+    const year = parseInt(game.settings.get("mgt2e-piggy", "currentYear")) || 0;
+    const day = Math.max(1, parseInt(game.settings.get("mgt2e-piggy", "currentDay")) || 1);
 
     let dayStr = `${day}`;
     while (dayStr.length < 3) {
@@ -165,10 +165,10 @@ Tools.showBlastRadius = async function(x, y, damageOptions) {
     console.log("showBlastRadius: ");
     console.log(damageOptions);
 
-    if (game.settings.get("mgt2e", "blastEffectDivergence") > 0) {
+    if (game.settings.get("mgt2e-piggy", "blastEffectDivergence") > 0) {
         if (damageOptions.effect < 0) {
             let scale = canvas.grid.size / canvas.grid.distance;
-            const variance = parseInt(scale * parseFloat(game.settings.get("mgt2e", "blastEffectDivergence")) * Math.abs(damageOptions.effect));
+            const variance = parseInt(scale * parseFloat(game.settings.get("mgt2e-piggy", "blastEffectDivergence")) * Math.abs(damageOptions.effect));
             const dice = `1D${variance} - 1D${variance}`;
             const xv = (await new Roll(dice, null).evaluate()).total;
             const yv = (await new Roll(dice, null).evaluate()).total;
@@ -188,11 +188,47 @@ Tools.showBlastRadius = async function(x, y, damageOptions) {
         borderColor: "#FF8080",
         width: 3, opacity: 0.25
     }
-    const template = canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [templateData]);
+    const [template] = await canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [templateData]);
+    Tools._activeBlastTemplate = template;
+
+    Tools.targetTokensInBlast(x, y, damageOptions.blastRadius);
+};
+
+/**
+ * Replaces the current user's targets with every token within `radius`
+ * metres of (x, y) (canvas pixel coordinates), so that the "Apply Damage"
+ * button in chat (which prefers game.user.targets, see Tools.getSelected)
+ * picks up the whole blast without the GM having to hand-select each token.
+ *
+ * Also stashes each affected token's fractional distance from the blast
+ * centre (0 at ground zero, 1 at the edge) on the token placeable itself,
+ * for the optional linear-falloff house rule in Tools.applyDamageToTokens.
+ * This is deliberately transient client state, not persisted to any
+ * document - it's overwritten by the next blast and consumed (deleted) the
+ * moment damage is applied.
+ */
+Tools.targetTokensInBlast = function(x, y, radius) {
+    if (!radius || !canvas?.tokens) {
+        return;
+    }
+    for (let t of Array.from(game.user.targets)) {
+        t.setTarget(false, { user: game.user, releaseOthers: false });
+    }
+    for (let token of canvas.tokens.placeables) {
+        delete token._mgt2eBlastFalloff;
+        const dx = token.center.x - x;
+        const dy = token.center.y - y;
+        const pixels = Math.sqrt(dx * dx + dy * dy);
+        const metres = (pixels / canvas.grid.size) * canvas.grid.distance;
+        if (metres <= radius) {
+            token.setTarget(true, { user: game.user, releaseOthers: false });
+            token._mgt2eBlastFalloff = Math.min(1, metres / radius);
+        }
+    }
 };
 
 // Called from a button press in damage output in the chat.
-Tools.applyDamageToTokens = async function(damage, damageOptions) {
+Tools.applyDamageToTokens = async function(baseDamage, damageOptions) {
     console.log("Tools.applyDamageToTokens:");
 
     let tokens = Tools.getSelected();
@@ -202,6 +238,13 @@ Tools.applyDamageToTokens = async function(damage, damageOptions) {
     }
 
     for (let token of tokens) {
+        let damage = baseDamage;
+        if (damageOptions.blastRadius && typeof token._mgt2eBlastFalloff === "number") {
+            if (game.settings.get("mgt2e-piggy", "blastLinearFalloff")) {
+                damage = Math.round(baseDamage * (1 - token._mgt2eBlastFalloff));
+            }
+            delete token._mgt2eBlastFalloff;
+        }
         if (!token.isOwner) {
             // Don't have permission to update token.
             console.log("Token: Not the owner, look for someone else");
@@ -259,6 +302,24 @@ Tools.applyDamageToTokens = async function(damage, damageOptions) {
             }
         }
         token.actor.applyDamage(damage, damageOptions, (tokens.size > 1));
+    }
+
+    if (damageOptions.blastRadius) {
+        for (let t of Array.from(game.user.targets)) {
+            t.setTarget(false, { user: game.user, releaseOthers: false });
+        }
+
+        const activeTemplate = Tools._activeBlastTemplate;
+        Tools._activeBlastTemplate = null;
+        if (activeTemplate && canvas.scene?.templates?.has(activeTemplate.id)) {
+            const remove = await foundry.applications.api.DialogV2.confirm({
+                window: { title: game.i18n.localize("MGT2.Dialog.RemoveBlastTemplate.Title") },
+                content: `<p>${game.i18n.localize("MGT2.Dialog.RemoveBlastTemplate.Text")}</p>`
+            });
+            if (remove) {
+                await canvas.scene.deleteEmbeddedDocuments("MeasuredTemplate", [activeTemplate.id]);
+            }
+        }
     }
 };
 
@@ -464,8 +525,8 @@ Tools.rollChatAttack = async function(chatData, args) {
 
 Tools.currentTime = function(chatData, args) {
     const user = game.users.current;
-    let year = game.settings.get("mgt2e", "currentYear");
-    let day = game.settings.get("mgt2e", "currentDay");
+    let year = game.settings.get("mgt2e-piggy", "currentYear");
+    let day = game.settings.get("mgt2e-piggy", "currentDay");
 
     if (user.isGM && args.length > 0) {
         let value = args.shift();
@@ -497,8 +558,8 @@ Tools.currentTime = function(chatData, args) {
             year--;
             day += 365;
         }
-        game.settings.set("mgt2e", "currentYear", year);
-        game.settings.set("mgt2e", "currentDay", day);
+        game.settings.set("mgt2e-piggy", "currentYear", year);
+        game.settings.set("mgt2e-piggy", "currentDay", day);
     } else if (args.length > 0) {
         ui.notifications.error(game.i18n.localize("MGT2.Macro.Time.OnlyGM"));
     }

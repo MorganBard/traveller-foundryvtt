@@ -151,25 +151,25 @@ export class MgT2WorldActorSheet extends MgT2ActorSheet {
 
         context.SIZE_SELECT = {};
         for (let d in CONFIG.MGT2.WORLD.size) {
-            const h = game.settings.get("mgt2e", "hexInWorldMenus")?Tools.toHex(d):d;
+            const h = game.settings.get("mgt2e-piggy", "hexInWorldMenus")?Tools.toHex(d):d;
             context.SIZE_SELECT[d] = `${h} - ${CONFIG.MGT2.WORLD.size[d].diameter}`;
         }
 
         context.ATMOSPHERE_SELECT = {};
         for (let d in CONFIG.MGT2.WORLD.atmosphere) {
-            const h = game.settings.get("mgt2e", "hexInWorldMenus")?Tools.toHex(d):d;
+            const h = game.settings.get("mgt2e-piggy", "hexInWorldMenus")?Tools.toHex(d):d;
             context.ATMOSPHERE_SELECT[d] = `${h} - ${game.i18n.localize("MGT2.WorldSheet.Atmosphere.Composition." + d)}`;
         }
 
         context.HYDROGRAPHICS_SELECT = {};
         for (let d in CONFIG.MGT2.WORLD.hydrographics) {
-            const h = game.settings.get("mgt2e", "hexInWorldMenus")?Tools.toHex(d):d;
+            const h = game.settings.get("mgt2e-piggy", "hexInWorldMenus")?Tools.toHex(d):d;
             context.HYDROGRAPHICS_SELECT[d] = `${ parseInt(d) * 10 }% - ${game.i18n.localize("MGT2.WorldSheet.Hydrographics.Description."+d)}`;
         }
 
         context.POPULATION_SELECT = {};
         for (let d in CONFIG.MGT2.WORLD.population) {
-            const h = game.settings.get("mgt2e", "hexInWorldMenus")?Tools.toHex(d):d;
+            const h = game.settings.get("mgt2e-piggy", "hexInWorldMenus")?Tools.toHex(d):d;
             let v = parseInt(CONFIG.MGT2.WORLD.population[d].range);
             v = v * Math.max(1, parseInt(context.world.extra.popDigit) || 1);
             context.POPULATION_SELECT[d] = `${h} - ${v.toLocaleString()}`;
@@ -181,19 +181,19 @@ export class MgT2WorldActorSheet extends MgT2ActorSheet {
 
         context.GOVERNMENT_SELECT = {};
         for (let d in CONFIG.MGT2.WORLD.government) {
-            const h = game.settings.get("mgt2e", "hexInWorldMenus")?Tools.toHex(d):d;
+            const h = game.settings.get("mgt2e-piggy", "hexInWorldMenus")?Tools.toHex(d):d;
             context.GOVERNMENT_SELECT[d] = `${h} - ${game.i18n.localize("MGT2.WorldSheet.Government.Type." + d)}`;
         }
 
         context.LAW_SELECT = {};
         for (let d in CONFIG.MGT2.WORLD.lawLevel) {
-            const h = game.settings.get("mgt2e", "hexInWorldMenus")?Tools.toHex(d):d;
+            const h = game.settings.get("mgt2e-piggy", "hexInWorldMenus")?Tools.toHex(d):d;
             context.LAW_SELECT[d] = `${h} - ${game.i18n.localize("MGT2.WorldSheet.Law.Weapons." + d)}`;
         }
 
         context.TECH_SELECT = {};
         for (let d in CONFIG.MGT2.WORLD.techLevel) {
-            const h = game.settings.get("mgt2e", "hexInWorldMenus")?Tools.toHex(d):d;
+            const h = game.settings.get("mgt2e-piggy", "hexInWorldMenus")?Tools.toHex(d):d;
             context.TECH_SELECT[d] = `${h} - ${game.i18n.localize("MGT2.Item.Tech." + d)}`;
         }
         context.ZONE_SELECT = {
@@ -202,7 +202,7 @@ export class MgT2WorldActorSheet extends MgT2ActorSheet {
             "Red": game.i18n.localize("MGT2.Trade.Red")
         };
         for (let d in CONFIG.MGT2.WORLD.techLevel) {
-            const h = game.settings.get("mgt2e", "hexInWorldMenus")?Tools.toHex(d):d;
+            const h = game.settings.get("mgt2e-piggy", "hexInWorldMenus")?Tools.toHex(d):d;
             context.TECH_SELECT[d] = `${h} - ${game.i18n.localize("MGT2.Item.Tech." + d)}`;
         }
 

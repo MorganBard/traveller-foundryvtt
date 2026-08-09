@@ -152,7 +152,7 @@ export class MgT2EffectSheet extends foundry.applications.sheets.ActiveEffectCon
 
         // system.augment is what we use now. Also check what we used to use.
         let augmentType = context.document.system?.augmentType ??
-            context.document.flags?.mgt2e?.augmentType ??
+            context.document.flags?.["mgt2e-piggy"]?.augmentType ??
             null;
 
         if (!augmentType) {

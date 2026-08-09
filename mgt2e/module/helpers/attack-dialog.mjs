@@ -1,4 +1,4 @@
-import {rollAttack, hasTrait, getTraitValue, skillLabel, getMeleeTargetError} from "../helpers/dice-rolls.mjs";
+import {rollAttack, hasTrait, getTraitValue, skillLabel, getMeleeTargetError, getRangedTargetError} from "../helpers/dice-rolls.mjs";
 import {getSkillValue} from "../helpers/dice-rolls.mjs";
 
 export class MgT2AttackDialog extends Application {
@@ -232,6 +232,12 @@ export class MgT2AttackDialog extends Application {
             const meleeError = getMeleeTargetError();
             if (meleeError) {
                 ui.notifications.error(game.i18n.localize(meleeError));
+                return;
+            }
+        } else {
+            const rangedError = getRangedTargetError(this.weapon.system.weapon.traits);
+            if (rangedError) {
+                ui.notifications.error(game.i18n.localize(rangedError));
                 return;
             }
         }
