@@ -1932,6 +1932,13 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
                 }
                 ChatMessage.create(chatData, {});
 
+                if (game.combat) {
+                    const combatant = game.combat.combatants.find(c => c.actor?.id === shipActor.id);
+                    if (combatant) {
+                        await game.combat.setInitiative(combatant.id, roll.total);
+                    }
+                }
+
             } else if (action.special === "improveInit") {
 
             } else if (action.special === "evade") {

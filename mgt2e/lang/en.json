@@ -45,6 +45,8 @@
   "MGT2.Settings.BlastEffectDivergence.Hint": "If an attack roll with a blast effect misses, how far to diverge blast template from intended location",
   "MGT2.Settings.BlastLinearFalloff.Name": "Blast damage falloff (house rule)",
   "MGT2.Settings.BlastLinearFalloff.Hint": "Not RAW: when dropping a blast template, damage scales down linearly with distance from ground zero, reaching zero at the edge of the blast radius. Leave off for full damage to everyone caught in the blast, per the core rules.",
+  "MGT2.Settings.ShipInitiativePerRound.Name": "Re-roll ship initiative every round (house rule)",
+  "MGT2.Settings.ShipInitiativePerRound.Hint": "Not RAW: the Captain's Combat Tactics roll clears at the start of every round, requiring a fresh roll to set that round's initiative. Leave off for standard rules, where initiative is set once and holds for the whole encounter.",
   "MGT2.Settings.SplitAttackDamage.Name": "Split attack and damage rolls",
   "MGT2.Settings.SplitAttackDamage.Hint": "Rather than rolling damage with an attack, require a second button click to roll damage",
   "MGT2.Settings.DefaultTraveller.Name": "Default Traveller",

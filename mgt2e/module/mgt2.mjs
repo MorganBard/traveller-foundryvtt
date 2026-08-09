@@ -280,6 +280,14 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: false
     });
+    game.settings.register('mgt2e-piggy', "shipInitiativePerRound", {
+        name: game.i18n.localize("MGT2.Settings.ShipInitiativePerRound.Name"),
+        hint: game.i18n.localize("MGT2.Settings.ShipInitiativePerRound.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    });
     game.settings.register('mgt2e-piggy', "splitAttackDamage", {
        name: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Name"),
        hint: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Hint"),
@@ -1050,6 +1058,13 @@ Hooks.on("combatRound", (combat, data, options) => {
     // This is when the round changes.
     for (let combatant of combat.combatants) {
         const actor = combatant.actor;
+        if (actor.type === "spacecraft") {
+            if (game.settings.get("mgt2e-piggy", "shipInitiativePerRound")) {
+                actor.unsetFlag("mgt2e-piggy", "initTacticsDM");
+                actor.unsetFlag("mgt2e-piggy", "initTacticsName");
+            }
+            continue;
+        }
         if (actor.getEffect("surprised")) {
             actor.setSurprisedEffect(false);
             combatant.update({"initiative": combatant.initiative + 6 });
