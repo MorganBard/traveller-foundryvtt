@@ -3,9 +3,9 @@
     <label class="box-title">{{localize 'MGT2.TravellerSheet.Weapons'}}</label>
 
     <div class="ship-initiative">
-        {{#if actor.flags.[mgt2e-piggy].initTacticsDM}}
-            Initiative: {{actor.flags.[mgt2e-piggy].initTacticsDM}}
-            (rolled by {{actor.flags.[mgt2e-piggy].initTacticsName}})
+        {{#if actor.flags.[mgt2e-piggy].shipInitiativeRoller}}
+            Initiative: {{actor.flags.[mgt2e-piggy].shipInitiativeRoll}}
+            (rolled by {{actor.flags.[mgt2e-piggy].shipInitiativeRoller}})
         {{else}}
             No initiative rolled - have your Captain use Combat Tactics
         {{/if}}

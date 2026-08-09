@@ -1913,24 +1913,42 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
                 shipActor.setFlag("mgt2e-piggy", "initPilotName", actorCrew.name);
             } else if (action.special === "tacticsInit") {
                 let tacticsDM = actorCrew.getSkillValue("tactics.naval", { "addcha": true });
-                console.log(tacticsDM);
                 let roll = await new Roll("2D6 - 8 + " + tacticsDM).evaluate();
 
-                shipActor.setFlag("mgt2e-piggy", "initTacticsDM", roll.total);
-                shipActor.setFlag("mgt2e-piggy", "initTacticsName", actorCrew.name);
+                shipActor.setFlag("mgt2e-piggy", "shipInitiativeRoll", roll.total);
+                shipActor.setFlag("mgt2e-piggy", "shipInitiativeRoller", actorCrew.name);
 
-                let chatData = {
-                    user: game.user.id,
-                    speaker: {
-                        actor: actorCrew._id,
-                        alias: game.i18n.format("MGT2.Role.ChatAlias", {
-                            "actorName": actorCrew.name, "shipName": shipActor.name
-                        }),
-                        scene: game.scenes.current.id
-                    },
-                    content: `Rolling Tactics (Naval) for ship initiative.`
-                }
-                ChatMessage.create(chatData, {});
+                const dice = roll.dice.flatMap(die => die.results.map(result => ({
+                    result: result.result,
+                    cssClass: result.result === 6 ? "max" : (result.result === 1 ? "min" : "")
+                })));
+                const content = await renderTemplate(
+                    "systems/mgt2e-piggy/templates/chat/initiative-roll.html",
+                    {
+                        actor: shipActor,
+                        dice,
+                        statName: "Tactics (Naval)",
+                        statModifier: tacticsDM,
+                        total: roll.total,
+                        effect: roll.total
+                    }
+                );
+                const speaker = {
+                    actor: actorCrew._id,
+                    alias: game.i18n.format("MGT2.Role.ChatAlias", {
+                        "actorName": actorCrew.name, "shipName": shipActor.name
+                    }),
+                    scene: game.scenes.current.id
+                };
+                const messageData = await roll.toMessage(
+                    {speaker},
+                    {
+                        create: false,
+                        messageMode: game.settings.get("core", "rollMode")
+                    }
+                );
+                messageData.content = content;
+                await ChatMessage.create(messageData);
 
                 if (game.combat) {
                     const combatant = game.combat.combatants.find(c => c.actor?.id === shipActor.id);

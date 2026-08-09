@@ -1012,7 +1012,7 @@ Hooks.on("createCombatant", (combatant, combat, id) => {
    if (!game.user.isGM) {
        return;
    }
-   if (actor.type === "traveller") {
+   if (actor.type === "traveller" || actor.type === "spacecraft") {
        return;
    }
     console.log("createCombatant:");
@@ -1060,8 +1060,8 @@ Hooks.on("combatRound", (combat, data, options) => {
         const actor = combatant.actor;
         if (actor.type === "spacecraft") {
             if (game.settings.get("mgt2e-piggy", "shipInitiativePerRound")) {
-                actor.unsetFlag("mgt2e-piggy", "initTacticsDM");
-                actor.unsetFlag("mgt2e-piggy", "initTacticsName");
+                actor.unsetFlag("mgt2e-piggy", "shipInitiativeRoll");
+                actor.unsetFlag("mgt2e-piggy", "shipInitiativeRoller");
             }
             continue;
         }

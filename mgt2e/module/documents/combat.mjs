@@ -54,8 +54,8 @@ export async function rollTravellerInitiative(combat, actor, combatants) {
 }
 
 export async function rollShipInitiative(combat, actor, combatants) {
-    const tacticsDM = actor.getFlag("mgt2e-piggy", "initTacticsDM");
-    const tacticsName = actor.getFlag("mgt2e-piggy", "initTacticsName");
+    const tacticsDM = actor.getFlag("mgt2e-piggy", "shipInitiativeRoll");
+    const tacticsName = actor.getFlag("mgt2e-piggy", "shipInitiativeRoller");
 
     for (const combatant of combatants) {
         if (tacticsDM !== undefined && tacticsDM !== null) {
