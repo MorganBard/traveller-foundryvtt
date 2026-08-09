@@ -1,34 +1,34 @@
 {{#if (hasStatus actor)}}
   <div class="shadow">
     {{#each actor.effects as |e|}}
-      {{#if e.flags.mgt2e.effect}}
-        {{{showStatus actor e.flags.mgt2e.effect e }}}
+      {{#if e.flags.[mgt2e-piggy].effect}}
+        {{{showStatus actor e.flags.[mgt2e-piggy].effect e }}}
       {{else}}
         {{{showStatus actor null e }}}
       {{/if}}
     {{/each}}
 
-    {{#if actor.flags.mgt2e.dead}}{{{showStatus actor "dead"}}}{{/if}}
-    {{#if actor.flags.mgt2e.disabled}}{{{showStatus actor "dead"}}}{{/if}}
-    {{#if actor.flags.mgt2e.unconscious}}{{{showStatus actor "unconscious"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].dead}}{{{showStatus actor "dead"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].disabled}}{{{showStatus actor "dead"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].unconscious}}{{{showStatus actor "unconscious"}}}{{/if}}
 
-    {{#if actor.flags.mgt2e.diseased}}{{{showStatus actor "diseased"}}}{{/if}}
-    {{#if actor.flags.mgt2e.poisoned}}{{{showStatus actor "poisoned"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].diseased}}{{{showStatus actor "diseased"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].poisoned}}{{{showStatus actor "poisoned"}}}{{/if}}
 
-    {{#if actor.flags.mgt2e.stunned}}{{{showStatus actor "stunned"}}}{{/if}}
-    {{#if actor.flags.mgt2e.encumbered}}{{{showStatus actor "encumbered"}}}{{/if}}
-    {{#if actor.flags.mgt2e.vaccSuit}}{{{showStatus actor "vaccSuit"}}}{{/if}}
-    {{#if actor.flags.mgt2e.fatigued}}{{{showStatus actor "fatigued"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].stunned}}{{{showStatus actor "stunned"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].encumbered}}{{{showStatus actor "encumbered"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].vaccSuit}}{{{showStatus actor "vaccSuit"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].fatigued}}{{{showStatus actor "fatigued"}}}{{/if}}
 
-    {{#if actor.flags.mgt2e.highGravity}}{{{showStatus actor "highGravity"}}}{{/if}}
-    {{#if actor.flags.mgt2e.lowGravity}}{{{showStatus actor "lowGravity"}}}{{/if}}
-    {{#if actor.flags.mgt2e.zeroGravity}}{{{showStatus actor "zeroGravity"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].highGravity}}{{{showStatus actor "highGravity"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].lowGravity}}{{{showStatus actor "lowGravity"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].zeroGravity}}{{{showStatus actor "zeroGravity"}}}{{/if}}
 
-    {{#if actor.flags.mgt2e.needsFirstAid}}{{{showStatus actor "needsFirstAid"}}}{{/if}}
-    {{#if actor.flags.mgt2e.needsSurgery}}{{{showStatus actor "needsSurgery"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].needsFirstAid}}{{{showStatus actor "needsFirstAid"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].needsSurgery}}{{{showStatus actor "needsSurgery"}}}{{/if}}
 
-    {{#if actor.flags.mgt2e.prone}}{{{showStatus actor "prone"}}}{{/if}}
-    {{#if actor.flags.mgt2e.inCover}}{{{showStatus actor "inCover"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].prone}}{{{showStatus actor "prone"}}}{{/if}}
+    {{#if actor.flags.[mgt2e-piggy].inCover}}{{{showStatus actor "inCover"}}}{{/if}}
 
     {{{showStatus actor "reaction"}}}
   </div>

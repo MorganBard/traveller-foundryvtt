@@ -161,8 +161,8 @@
 
         {{#if (itemHasStatus item)}}
         <div class="shadow">
-            {{#if item.flags.mgt2e.damaged}}{{{showItemStatus item "damaged"}}}{{/if}}
-            {{#if item.flags.mgt2e.destroyed}}{{{showItemStatus item "destroyed"}}}{{/if}}
+            {{#if item.flags.[mgt2e-piggy].damaged}}{{{showItemStatus item "damaged"}}}{{/if}}
+            {{#if item.flags.[mgt2e-piggy].destroyed}}{{{showItemStatus item "destroyed"}}}{{/if}}
         </div>
         {{/if}}
 

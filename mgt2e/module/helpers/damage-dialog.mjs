@@ -222,6 +222,16 @@ export class MgT2DamageDialog extends Application {
     async doneClick(event, html) {
         event.preventDefault();
 
+        // Guard against a double-click (or a re-render re-binding the Done
+        // button) firing this twice - applyActualDamageToTraveller isn't
+        // awaited below, so a second overlapping call before the first has
+        // finished writing its effects would create duplicate Dead/
+        // Unconscious/Injured effects, same as the original Vacc Suit bug.
+        if (this._doneClicked) {
+            return;
+        }
+        this._doneClicked = true;
+
         let str = Math.max(0, this.getIntValue(html, ".DMG_STR") - this.DMG_STR);
         let dex = Math.max(0, this.getIntValue(html, ".DMG_DEX") - this.DMG_DEX);
         let end = Math.max(0, this.getIntValue(html, ".DMG_END") - this.DMG_END);
@@ -245,8 +255,13 @@ export class MgT2DamageDialog extends Application {
         if (this.ablatItem && html.find(".useAblat")[0]?.checked) {
             this.damageOptions.ablatItemId = this.ablatItem._id;
         }
-        this.actor.applyActualDamageToTraveller(damage, this.damageOptions);
+        await this.actor.applyActualDamageToTraveller(damage, this.damageOptions);
         this.close();
+    }
+
+    async close(options) {
+        this.damageOptions.onApplied?.();
+        return super.close(options);
     }
 
     async _updateObject(event, formData) {

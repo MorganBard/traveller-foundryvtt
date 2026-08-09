@@ -644,6 +644,7 @@ export class MgT2Actor extends Actor {
           } else {
               ui.notifications.error(game.i18n.format("MGT2.Error.NoSuitableOwner", { "actor": this.name }));
           }
+          options.onApplied?.();
           return;
       } else if (game.users.current.isGM) {
           console.log("I am the GM, looking for alternative player");
@@ -662,6 +663,7 @@ export class MgT2Actor extends Actor {
                   "actor": this.name,
                   "player": alternativePlayer.name
               }));
+              options.onApplied?.();
               return;
           }
       }
@@ -756,6 +758,7 @@ export class MgT2Actor extends Actor {
                   )
               );
               this.applyAnyAblatDamage(options);
+              options.onApplied?.();
               return;
           }
       }
@@ -763,8 +766,10 @@ export class MgT2Actor extends Actor {
       if (this.type === "traveller" || this.system.damage) {
           // This is a Traveller, so more complicated.
           if (options.noUI) {
-              this.applyActualDamageToTraveller(damage, options);
+              await this.applyActualDamageToTraveller(damage, options);
+              options.onApplied?.();
           } else {
+              // MgT2DamageDialog fires options.onApplied itself when closed.
               new MgT2DamageDialog(this, damage, options).render(true);
           }
       } else {
@@ -799,10 +804,12 @@ export class MgT2Actor extends Actor {
                   // Dialog cancelled. Assume no.
               }
               if (!confirmed) {
+                  options.onApplied?.();
                   return;
               }
           }
-          this.applyActualDamageToPerson(damage, options);
+          await this.applyActualDamageToPerson(damage, options);
+          options.onApplied?.();
       }
   }
 
@@ -924,6 +931,12 @@ export class MgT2Actor extends Actor {
           this.system.damage[c].value = Math.min(this.system.damage[c].value, this.system.characteristics[c].value);
       }
 
+      // Persist damage before touching effects below - creating/deleting an
+      // ActiveEffect triggers actor data re-preparation, which would rebuild
+      // this.system from the last-saved source and silently discard this
+      // in-memory damage mutation if it weren't saved first.
+      await this.update({"system.damage": this.system.damage });
+
       if (totalDamage > 0 || options.actualRadiation > 0) {
           let actorName = this?.token?.name?this.token.name:this.name;
           let wasInjured = this.effects.find(e => e.name === "injured");
@@ -938,14 +951,23 @@ export class MgT2Actor extends Actor {
           if (this.system.damage.END.value >= this.system.characteristics.END.value) numAtZero++;
           if (numAtZero === 1) {
               isInjured = true;
+              await this.setInjuredEffect(true);
+              await this.setUnconsciousEffect(false);
+              await this.setDeadEffect(false);
           } else if (numAtZero === 2) {
               isUnconscious = true;
-              this.setUnconsciousEffect(true);
+              await this.setInjuredEffect(false);
+              await this.setUnconsciousEffect(true);
+              await this.setDeadEffect(false);
           } else if (numAtZero === 3) {
               isDead = true;
-              isUnconscious = false;
-              this.setUnconsciousEffect(false);
-              this.setDeadEffect(true);
+              await this.setInjuredEffect(false);
+              await this.setUnconsciousEffect(false);
+              await this.setDeadEffect(true);
+          } else {
+              await this.setInjuredEffect(false);
+              await this.setUnconsciousEffect(false);
+              await this.setDeadEffect(false);
           }
 
           let text = "";
@@ -989,9 +1011,6 @@ export class MgT2Actor extends Actor {
               ChatMessage.create(chatData, {});
           }
       }
-
-
-      this.update({"system.damage": this.system.damage });
   }
 
     /**
@@ -1097,6 +1116,7 @@ export class MgT2Actor extends Actor {
   applyDamageToSpacecraft(damage, options) {
       if (hasTrait(options.traits, "stun")) {
           ui.notifications.info(game.i18n.format("MGT.Info.DamageMsg.SpacecraftNoStun"));
+          options.onApplied?.();
           return;
       }
       let armour = parseInt(this.system.spacecraft.armour);
@@ -1123,6 +1143,10 @@ export class MgT2Actor extends Actor {
       options.originalDamage = this.system.hits.damage;
 
       new MgT2SpacecraftDamageDialog(this, damage, options).render(true);
+      // Unlike MgT2DamageDialog, this dialog doesn't signal completion back,
+      // so a blast that catches a spacecraft can't wait for it - count it
+      // handed off rather than risk hanging the blast cleanup indefinitely.
+      options.onApplied?.();
   }
 
     /**
@@ -1141,6 +1165,7 @@ export class MgT2Actor extends Actor {
   applyDamageToVehicle(damage, options) {
       if (hasTrait(options.traits, "stun")) {
           ui.notifications.info(game.i18n.format("MGT.Info.DamageMsg.VehicleNoStun"));
+          options.onApplied?.();
           return;
       }
 
@@ -1164,6 +1189,7 @@ export class MgT2Actor extends Actor {
       this.system.hits.damage += damage;
       this.system.hits.value = this.system.hits.max - this.system.hits.damage;
       this.update({"system.hits": this.system.hits});
+      options.onApplied?.();
   }
 
   applyDamage(damage, options, multiSelect) {
@@ -1218,6 +1244,7 @@ export class MgT2Actor extends Actor {
           this.applyDamageToPerson(damage, options);
       } else {
           // Don't apply damage to anything else.
+          options.onApplied?.();
       }
   }
 
@@ -1878,36 +1905,36 @@ export class MgT2Actor extends Actor {
         }
     }
 
-    setDeadEffect(value) {
-        this.setEffect("dead", value, true, false,"Bad");
+    async setDeadEffect(value) {
+        await this.setEffect("dead", value, true, false,"Bad");
     }
 
-    setUnconsciousEffect(value) {
-        this.setEffect("unconscious", value,  true, false, "Bad");
+    async setUnconsciousEffect(value) {
+        await this.setEffect("unconscious", value,  true, false, "Bad");
     }
 
-    setInjuredEffect(value) {
-        this.setEffect("injured", value,  false, false, "Warn");
+    async setInjuredEffect(value) {
+        await this.setEffect("injured", value,  false, false, "Warn");
     }
 
-    setFearEffect(value) {
-        this.setEffect("fear", value,  false, false, "Warn");
+    async setFearEffect(value) {
+        await this.setEffect("fear", value,  false, false, "Warn");
     }
 
     setStunnedEffect(value) {
         return this.setEffect("stunned", value,  false, false, "Bad");
     }
 
-    setFirstAidEffect(value) {
-        this.setEffect("needsFirstAid", value,  false, false, "Warn");
+    async setFirstAidEffect(value) {
+        await this.setEffect("needsFirstAid", value,  false, false, "Warn");
     }
 
-    setSurgeryEffect(value) {
-        this.setEffect("needsSurgery", value,  false, false, "Bad");
+    async setSurgeryEffect(value) {
+        await this.setEffect("needsSurgery", value,  false, false, "Bad");
     }
 
-    setDestroyedEffect(value) {
-        this.setEffect("destroyed", value,  true, false, "Bad");
+    async setDestroyedEffect(value) {
+        await this.setEffect("destroyed", value,  true, false, "Bad");
     }
 
     async setEncumberedEffect(value) {
@@ -1918,86 +1945,86 @@ export class MgT2Actor extends Actor {
         await this.setEffect("vaccSuit", value,  false, true, "Warn");
     }
 
-    setAwareEffect(value) {
-        this.setEffect("aware", value,  false, false, "Good");
+    async setAwareEffect(value) {
+        await this.setEffect("aware", value,  false, false, "Good");
     }
 
-    setSurprisedEffect(value) {
-        this.setEffect("surprised", value,  false, false, "Warn");
+    async setSurprisedEffect(value) {
+        await this.setEffect("surprised", value,  false, false, "Warn");
     }
 
-    setReactionEffect(value) {
-        this.setEffect("reaction", value,  false, false, "Warn");
+    async setReactionEffect(value) {
+        await this.setEffect("reaction", value,  false, false, "Warn");
     }
 
-    setFatiguedEffect(value) {
-      this.setEffect("fatigued", value, false, false, "Warn",
+    async setFatiguedEffect(value) {
+      await this.setEffect("fatigued", value, false, false, "Warn",
           [
               { key: "system.modifiers.physical.effect", mode: 2, priority: 0, value: -2 }
           ]);
     }
-    setPhysicalEffect(value) {
+    async setPhysicalEffect(value) {
         let css= "Warn";
         if (parseInt(value) > 0) {
             css = "Good";
         }
-        this.setEffect("physical", value, false, false, css,
+        await this.setEffect("physical", value, false, false, css,
             [
                 { key: "system.modifiers.physical.effect", mode: 2, priority: 0, value: parseInt(value) }
             ]);
     }
-    setMeleeEffect(value) {
+    async setMeleeEffect(value) {
         let css= "Warn";
         if (parseInt(value) > 0) {
             css = "Good";
         }
-        this.setEffect("melee", value, false, false, css,
+        await this.setEffect("melee", value, false, false, css,
             [
                 { key: "system.modifiers.melee.effect", mode: 2, priority: 0, value: parseInt(value) }
             ]);
     }
-    setGunCombatEffect(value) {
+    async setGunCombatEffect(value) {
         let css= "Warn";
         if (parseInt(value) > 0) {
             css = "Good";
         }
-        this.setEffect("gunCombat", value, false, false, css,
+        await this.setEffect("gunCombat", value, false, false, css,
             [
                 { key: "system.modifiers.guncombat.effect", mode: 2, priority: 0, value: parseInt(value) }
             ]);
     }
-    setArmourEffect(value) {
-        this.setEffect("armour", value, false, false, "Good",
+    async setArmourEffect(value) {
+        await this.setEffect("armour", value, false, false, "Good",
             [
                 { key: "system.modifiers.armour.effect", mode: 2, priority: 0, value: parseInt(value) }
             ]);
     }
-    setInCoverEffect(value) {
-        this.setEffect("inCover", value, false, false, "Good");
+    async setInCoverEffect(value) {
+        await this.setEffect("inCover", value, false, false, "Good");
     }
-    setHidingEffect(value) {
-        this.setEffect("hiding", value, false, false, "Good",
+    async setHidingEffect(value) {
+        await this.setEffect("hiding", value, false, false, "Good",
             [
                 { key: "system.modifiers.armour.effect", mode: 2, priority: 0, value: parseInt(value) }
             ]);
     }
-    setProneEffect(value) {
-        this.setEffect("prone", value, false, false, "Good");
+    async setProneEffect(value) {
+        await this.setEffect("prone", value, false, false, "Good");
     }
-    setInCoverEffect(value) {
-        this.setEffect("inCover", value, false, false, "Good",
+    async setInCoverEffect(value) {
+        await this.setEffect("inCover", value, false, false, "Good",
             [
                 { key: "system.modifiers.armour.effect", mode: 2, priority: 0, value: parseInt(value) }
             ]);
     }
-    setTacticsEffect(value) {
-        this.setEffect("tactics", value, false, false, "Good",
+    async setTacticsEffect(value) {
+        await this.setEffect("tactics", value, false, false, "Good",
             [
                 { key: "system.modifiers.initiative.effect", mode: 2, priority: 0, value: parseInt(value) }
             ]);
     }
-    setInitiativeEffect(value) {
-        this.setEffect("initiative", value, false, false, "Good",
+    async setInitiativeEffect(value) {
+        await this.setEffect("initiative", value, false, false, "Good",
             [
                 { key: "system.modifiers.initiative.effect", mode: 2, priority: 0, value: parseInt(value) }
             ]);

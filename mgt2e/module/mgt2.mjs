@@ -1006,29 +1006,12 @@ Hooks.on("preUpdateActor2", (actor, changedData, options, userId) => {
 Hooks.on("updateActor", async (actor, updateData, options, userId) => {
    if (game.user._id !== userId) return;
 
-    if (foundry.utils.getProperty(updateData, "system.damage")) {
-       if (actor.system.characteristics) {
-           let char = actor.system.characteristics;
-           let str = Number(char['STR'].current);
-           let dex = Number(char['DEX'].current);
-           let end = Number(char['END'].current);
-
-           let numAtZero = 0;
-           if (str < 1) numAtZero++;
-           if (dex < 1) numAtZero++;
-           if (end < 1) numAtZero++;
-
-           switch (numAtZero) {
-               case 2:
-                   actor.setUnconsciousEffect(true);
-                   break;
-               case 3:
-                   actor.setDeadEffect(true);
-                   actor.setUnconsciousEffect(false);
-                   break;
-           }
-       }
-    } else if (foundry.utils.getProperty(updateData, "system.hits")) {
+    // Note: system.damage (traveller STR/DEX/END) is deliberately NOT
+    // handled here. applyActualDamageToTraveller() in actor.mjs already
+    // sets injured/unconscious/dead for that case as part of applying the
+    // damage - handling it again here too, on the update this hook fires
+    // in response to, raced that exact code and produced duplicate effects.
+    if (foundry.utils.getProperty(updateData, "system.hits")) {
         if (["npc", "creature"].includes(actor.type)) {
             let hits = Number(actor.system.hits.value);
             let max = Number(actor.system.hits.max);

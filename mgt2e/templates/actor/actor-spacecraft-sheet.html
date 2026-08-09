@@ -191,32 +191,32 @@
                         <label>{{localize 'MGT2.TravellerSheet.InitThrust'}}</label>
                         <span>{{system.initiative.base}}</span>
                     </div>
-                    <div class="mini-value" title="{{actor.flags.mgt2e.initPilotName}}">
+                    <div class="mini-value" title="{{actor.flags.[mgt2e-piggy].initPilotName}}">
                         <label>{{localize 'MGT2.TravellerSheet.InitPilot'}}</label>
-                        <span>{{actor.flags.mgt2e.initPilotDM}}</span>
+                        <span>{{actor.flags.[mgt2e-piggy].initPilotDM}}</span>
                     </div>
-                    {{#if actor.flags.mgt2e.initTacticsDM}}
-                        <div class="mini-value" title="{{actor.flags.mgt2e.initTacticsName}}">
+                    {{#if actor.flags.[mgt2e-piggy].initTacticsDM}}
+                        <div class="mini-value" title="{{actor.flags.[mgt2e-piggy].initTacticsName}}">
                             <label>{{localize 'MGT2.TravellerSheet.InitTactics'}}</label>
-                            <span>{{actor.flags.mgt2e.initTacticsDM}}</span>
+                            <span>{{actor.flags.[mgt2e-piggy].initTacticsDM}}</span>
                         </div>
                     {{/if}}
-                    {{#if actor.flags.mgt2e.initLeadershipDM}}
+                    {{#if actor.flags.[mgt2e-piggy].initLeadershipDM}}
                         <div class="mini-value">
                             <label>{{localize 'MGT2.TravellerSheet.InitLeader'}}</label>
-                            <span>{{actor.flags.mgt2e.initLeadershipDM}}</span>
+                            <span>{{actor.flags.[mgt2e-piggy].initLeadershipDM}}</span>
                         </div>
                     {{/if}}
-                    {{#if actor.flags.mgt2e.sizeDM}}
+                    {{#if actor.flags.[mgt2e-piggy].sizeDM}}
                         <div class="mini-value">
                             <label>{{localize 'MGT2.TravellerSheet.SizeDM'}}</label>
-                            <span>{{actor.flags.mgt2e.sizeDM}}</span>
+                            <span>{{actor.flags.[mgt2e-piggy].sizeDM}}</span>
                         </div>
                     {{/if}}
                 </div>
             </div>
 
-            {{#if actor.flags.mgt2e.hasCrits}}
+            {{#if actor.flags.[mgt2e-piggy].hasCrits}}
                 <div class="shadow flex-group-left">
                     {{{showCriticals actor}}}
                 </div>

@@ -231,14 +231,39 @@ Tools.targetTokensInBlast = function(x, y, radius) {
 Tools.applyDamageToTokens = async function(baseDamage, damageOptions) {
     console.log("Tools.applyDamageToTokens:");
 
-    let tokens = Tools.getSelected();
-    if (tokens.size === 0) {
+    let tokens = Array.from(Tools.getSelected());
+    if (tokens.length === 0) {
         ui.notifications.error(game.i18n.localize("MGT2.Error.CombatNoSelection"));
         return;
     }
 
+    // For a blast hitting several tokens, damage on "traveller" actors is
+    // applied through a modal dialog the GM works through one at a time -
+    // it isn't something we can await, since it depends on user input.
+    // Track completions (dialog closed, or applied immediately for actor
+    // types that don't show a dialog) so the blast cleanup below waits for
+    // every affected token, not just for the dialogs to have been opened.
+    const isBlast = !!damageOptions.blastRadius;
+    let pendingCount = tokens.length;
+    let resolveAllApplied;
+    const allApplied = new Promise(resolve => { resolveAllApplied = resolve; });
+    const onApplied = () => {
+        pendingCount--;
+        if (pendingCount <= 0) {
+            resolveAllApplied();
+        }
+    };
+
     for (let token of tokens) {
         let damage = baseDamage;
+        // Each token gets its own copy of damageOptions - applying damage
+        // mutates it (armour, characteristics, etc.), and with several
+        // dialogs open at once for a blast, a shared object would let one
+        // token's edits bleed into another's.
+        let tokenOptions = { ...damageOptions };
+        if (isBlast) {
+            tokenOptions.onApplied = onApplied;
+        }
         if (damageOptions.blastRadius && typeof token._mgt2eBlastFalloff === "number") {
             if (game.settings.get("mgt2e-piggy", "blastLinearFalloff")) {
                 damage = Math.round(baseDamage * (1 - token._mgt2eBlastFalloff));
@@ -254,6 +279,7 @@ Tools.applyDamageToTokens = async function(baseDamage, damageOptions) {
                 ui.notifications.error(game.i18n.format("MGT2.Error.NoSuitableOwner", {
                     "actor": token.document.name
                 }));
+                onApplied();
                 continue;
             }
             ui.notifications.info(game.i18n.format("MGT2.Info.ActorOwnerFound", {
@@ -270,6 +296,9 @@ Tools.applyDamageToTokens = async function(baseDamage, damageOptions) {
                 currentPlayerId: game.users.current.uuid
             }
             game.socket.emit("system.mgt2e", data);
+            // Can't wait on another client's dialog, so count this as done
+            // from our side once it's been handed off.
+            onApplied();
             continue;
         } else {
             // Do have permission, but are we the right person?
@@ -280,6 +309,7 @@ Tools.applyDamageToTokens = async function(baseDamage, damageOptions) {
                 ui.notifications.error(game.i18n.format("MGT2.Error.NoSuitableOwner", {
                     "actor": token.document.name
                 }));
+                onApplied();
                 continue;
             }
             if (alternativePlayer.uuid !== game.users.current.uuid) {
@@ -298,13 +328,16 @@ Tools.applyDamageToTokens = async function(baseDamage, damageOptions) {
                     "player": alternativePlayer.name
                 }));
 
+                onApplied();
                 continue;
             }
         }
-        token.actor.applyDamage(damage, damageOptions, (tokens.size > 1));
+        token.actor.applyDamage(damage, tokenOptions, (tokens.length > 1));
     }
 
-    if (damageOptions.blastRadius) {
+    if (isBlast) {
+        await allApplied;
+
         for (let t of Array.from(game.user.targets)) {
             t.setTarget(false, { user: game.user, releaseOthers: false });
         }
