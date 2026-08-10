@@ -2624,3 +2624,32 @@ ol.actor-items li.item-status- {
   width: 64px;
   height: 64px;
 }
+
+/* GM Naval Combat Control panel */
+#mgt2e-naval-combat-panel .ncp-body {
+  padding: 6px;
+}
+#mgt2e-naval-combat-panel .ncp-ship-name {
+  margin: 0 0 2px 0;
+}
+#mgt2e-naval-combat-panel .ncp-facing {
+  margin: 0 0 8px 0;
+  font-style: italic;
+}
+#mgt2e-naval-combat-panel .ncp-section {
+  margin-bottom: 10px;
+}
+#mgt2e-naval-combat-panel .ncp-section-title {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+#mgt2e-naval-combat-panel button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 3px;
+}
+#mgt2e-naval-combat-panel button:disabled {
+  opacity: 0.5;
+}

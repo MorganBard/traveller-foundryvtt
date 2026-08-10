@@ -1,0 +1,24 @@
+<div class="mgt2e-chat-message initiative-box ship-initiative-box">
+    <h2>{{actor.name}}</h2>
+    <div class="mgt2e-chat-content">
+        <table class="ship-initiative-table">
+            <tr class="section-header"><th colspan="2">{{label}}</th></tr>
+            <tr>
+                <th>Thrust / Heading</th>
+                <td>{{thrust}} / Sector {{newFacing}}</td>
+            </tr>
+
+            {{#each changes}}
+                <tr class="section-header"><th colspan="2">{{this.actorName}}</th></tr>
+                <tr>
+                    <th>Sector offset / Multiplier</th>
+                    <td>{{this.offset}} / {{this.multiplier}}</td>
+                </tr>
+                <tr>
+                    <th>Closing speed</th>
+                    <td>{{this.oldSpeed}} &rarr; <strong>{{this.newSpeed}}</strong></td>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
+</div>

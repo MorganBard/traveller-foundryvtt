@@ -12,8 +12,22 @@ export function getHexBand(hexDistance) {
 
 // Live unit vectors for the 6 hex neighbour directions, read from Foundry's own grid API rather
 // than hardcoded - keeps this correct regardless of the scene's hex orientation (odd-q, even-r...).
+// Sorted clockwise starting from whichever direction points closest to straight up ("north" on a
+// ground map), so sector 0 is always "up" and sectors 1-5 proceed clockwise from there - not
+// whatever arbitrary order Foundry's grid API happens to return.
 function cubeDirections() {
-    return canvas.grid.getAdjacentCubes({ q: 0, r: 0, s: 0 });
+    const zero = canvas.grid.cubeToPoint({ q: 0, r: 0, s: 0 });
+    const dirs = canvas.grid.getAdjacentCubes({ q: 0, r: 0, s: 0 });
+    return dirs
+        .map(dir => {
+            const point = canvas.grid.cubeToPoint(dir);
+            const dx = point.x - zero.x;
+            const dy = point.y - zero.y;
+            const clockwiseFromNorth = (Math.atan2(dx, -dy) * (180 / Math.PI) + 360) % 360;
+            return { dir, clockwiseFromNorth };
+        })
+        .sort((a, b) => a.clockwiseFromNorth - b.clockwiseFromNorth)
+        .map(entry => entry.dir);
 }
 
 // Which of the 6 directions a cube-coordinate offset most closely points toward.
@@ -51,6 +65,29 @@ export function computeBearing(tokenA, tokenB) {
 export function bearingFrom(pair, fromId, otherId) {
     const firstId = [fromId, otherId].sort()[0];
     return fromId === firstId ? pair.bearingFromFirst : (pair.bearingFromFirst + 3) % 6;
+}
+
+// Every hex cube within maxRadius of originCube that classifies as the given sector, using the
+// exact same classifyDirectionIndex used everywhere else in this module - so a canvas overlay
+// built from this is guaranteed to agree with actual bearing/facing calculations, not just
+// visually resemble them. Exported specifically for range-rings.mjs's sector-hover highlight.
+export function hexesInSector(originCube, sector, maxRadius) {
+    const hexes = [];
+    for (let dq = -maxRadius; dq <= maxRadius; dq++) {
+        const drMin = Math.max(-maxRadius, -dq - maxRadius);
+        const drMax = Math.min(maxRadius, -dq + maxRadius);
+        for (let dr = drMin; dr <= drMax; dr++) {
+            const ds = -dq - dr;
+            const hexLen = (Math.abs(dq) + Math.abs(dr) + Math.abs(ds)) / 2;
+            if (hexLen === 0 || hexLen > maxRadius) {
+                continue;
+            }
+            if (closestDirectionIndex({ q: dq, r: dr, s: ds }) === sector) {
+                hexes.push({ q: originCube.q + dq, r: originCube.r + dr, s: originCube.s + ds });
+            }
+        }
+    }
+    return hexes;
 }
 
 // Computes a fresh pair record from live token geometry - the one place real geometry legitimately
@@ -102,11 +139,51 @@ export function getSectorMultiplier(offset) {
     return game.settings.get("mgt2e-piggy", "maneuverTwoOffSectorMultiplier");
 }
 
-// Applies a Maneuver action: acting ship declares closing on/opening from target ship, spending
-// up to its Thrust rating. Also applies the same declared thrust to every other ship the acting
-// ship has an established pair with, scaled by the sector-offset multiplier.
-export async function applyManeuver(combat, actingShip, targetShip, thrust, direction) {
+// Converts a sector index (0-5) into a Foundry token rotation angle (degrees, clockwise from
+// north/up - Foundry's own convention), using the exact same unsorted direction basis that
+// defines "sector N" everywhere else in this module, so the token's visual facing is guaranteed
+// to match the sector actually used for bearing/multiplier calculations.
+function sectorAngleDegrees(sector) {
+    const zero = canvas.grid.cubeToPoint({ q: 0, r: 0, s: 0 });
+    const dir = cubeDirections()[sector];
+    const point = canvas.grid.cubeToPoint(dir);
+    const dx = point.x - zero.x;
+    const dy = point.y - zero.y;
+    const degrees = Math.atan2(dx, -dy) * (180 / Math.PI);
+    return (degrees + 360) % 360;
+}
+
+// Sets a ship's facing directly - free to change each round, no thrust cost, no target needed.
+// Also rotates the ship's token(s) on the current scene to visually match, so heading isn't just
+// a mechanical flag with no on-map indication.
+export async function setShipFacing(actingShip, facing) {
+    await actingShip.setFlag("mgt2e-piggy", "facing", facing);
+
+    if (canvas.grid.isHexagonal) {
+        const rotation = sectorAngleDegrees(facing);
+        const tokens = canvas.tokens.placeables.filter(t => t.actor?.id === actingShip.id);
+        for (const token of tokens) {
+            await token.document.update({ rotation });
+        }
+    }
+
+    return { newFacing: facing };
+}
+
+// Resolves the bearing of otherShip as seen from fromShip, lazily initialising their pair
+// record (via live token geometry) if this is the first time they've been touched.
+export async function bearingOfShip(combat, fromShip, otherShip) {
+    const { pair } = await getOrInitPair(combat, fromShip, otherShip);
+    return bearingFrom(pair, fromShip.id, otherShip.id);
+}
+
+// Applies Accelerate/Decelerate: the acting ship spends up to its Thrust rating to change its
+// closing speed toward every other ship in the encounter, using whatever heading is CURRENTLY
+// set (via setShipFacing) rather than deriving a heading from any specific target. Sector-offset
+// multipliers (same/opposite/adjacent/two-off) apply exactly as before.
+export async function applyThrust(combat, actingShip, thrust, direction) {
     const baseDelta = (direction === "opening" ? -1 : 1) * thrust;
+    const newFacing = parseInt(actingShip.getFlag("mgt2e-piggy", "facing")) || 0;
 
     // Establish a pair for every other spacecraft in the encounter (not just ones already
     // touched) so nobody is silently skipped just because their pair was never initialised yet.
@@ -115,7 +192,6 @@ export async function applyManeuver(combat, actingShip, targetShip, thrust, dire
             .filter(c => c.actor?.type === "spacecraft" && c.actor.id !== actingShip.id)
             .map(c => c.actor.id)
     );
-    otherActorIds.add(targetShip.id);
 
     const allPairs = foundry.utils.deepClone(combat.getFlag("mgt2e-piggy", "shipPairs") ?? {});
     for (const otherId of otherActorIds) {
@@ -127,9 +203,6 @@ export async function applyManeuver(combat, actingShip, targetShip, thrust, dire
         allPairs[key] = initPairRecord(actingShip, otherActor);
     }
 
-    const targetPair = allPairs[pairKey(actingShip.id, targetShip.id)];
-    const newFacing = bearingFrom(targetPair, actingShip.id, targetShip.id);
-    await actingShip.setFlag("mgt2e-piggy", "facing", newFacing);
     // Groundwork for a future Evasive Action implementation, which needs to know how much
     // Thrust a ship has left unspent this round - not read/enforced by anything yet.
     await actingShip.setFlag("mgt2e-piggy", "thrustSpentThisRound", thrust);

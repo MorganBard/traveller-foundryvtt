@@ -33,6 +33,7 @@ import { NpcIdCard } from "./helpers/id-card.mjs";
 import {hasTrait} from "./helpers/dice-rolls.mjs";
 import { drawRangeRings, clearRangeRings } from "./helpers/canvas/range-rings.mjs";
 import { resolveShipPairsForRound } from "./helpers/naval-maneuver.mjs";
+import { MgT2NavalCombatPanel } from "./helpers/naval-combat-panel.mjs";
 import {
     tradeBuyGoodsHandler,
     tradeSellGoodsHandler,
@@ -1137,6 +1138,33 @@ Hooks.on("combatRound", (combat, data, options) => {
             }
         }
     }
+});
+
+// GM Naval Combat Control panel: live-refresh whenever the combat state or the active ship's
+// own flags (facing, thrust spent, evade charges...) change, so the panel never shows stale data.
+Hooks.on("updateCombat", () => MgT2NavalCombatPanel.refresh());
+Hooks.on("combatTurn", () => MgT2NavalCombatPanel.refresh());
+Hooks.on("combatRound", () => MgT2NavalCombatPanel.refresh());
+Hooks.on("deleteCombat", () => MgT2NavalCombatPanel.refresh());
+Hooks.on("updateActor", actor => {
+    if (actor.id === game.combat?.combatant?.actor?.id) {
+        MgT2NavalCombatPanel.refresh();
+    }
+});
+
+Hooks.on("getSceneControlButtons", controls => {
+    if (!game.user.isGM || !controls.tokens) {
+        return;
+    }
+    controls.tokens.tools.navalCombatPanel = {
+        name: "navalCombatPanel",
+        title: "Naval Combat Control",
+        icon: "fa-solid fa-rocket",
+        button: true,
+        order: Object.keys(controls.tokens.tools).length,
+        onClick: () => MgT2NavalCombatPanel.toggle(),
+        visible: true
+    };
 });
 
 Hooks.on("dropCanvasData", (canvas, data) =>{

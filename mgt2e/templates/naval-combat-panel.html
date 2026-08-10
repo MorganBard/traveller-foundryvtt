@@ -1,0 +1,39 @@
+<div class="ncp-body">
+    {{#if hasActiveShip}}
+        <h2 class="ncp-ship-name">{{ship.name}}</h2>
+        <p class="ncp-facing">Heading: Sector {{facing}}</p>
+
+        {{#if weaponActions.length}}
+            <div class="ncp-section">
+                <label class="ncp-section-title">Attack</label>
+                {{#each weaponActions}}
+                    <button type="button" class="ncp-attack-action" data-mount-id="{{this.mountId}}"
+                            data-gunner-id="{{this.gunnerId}}" {{#if this.disabled}}disabled title="No gunner assigned to this mount"{{/if}}>
+                        {{this.label}}
+                    </button>
+                {{/each}}
+            </div>
+        {{/if}}
+
+        {{#if specialActions.length}}
+            <div class="ncp-section">
+                <label class="ncp-section-title">Maneuver &amp; Reactions</label>
+                {{#each specialActions}}
+                    <button type="button" class="ncp-special-action" data-role-id="{{this.roleId}}"
+                            data-action-id="{{this.actionId}}" data-crew-id="{{this.crewId}}"
+                            {{#if this.disabled}}disabled title="No crew assigned to this role"{{/if}}>
+                        {{this.label}}{{#unless this.disabled}} ({{this.crewName}}){{/unless}}
+                    </button>
+                {{/each}}
+            </div>
+        {{/if}}
+
+        {{#unless weaponActions.length}}
+            {{#unless specialActions.length}}
+                <p>No combat actions available for this ship.</p>
+            {{/unless}}
+        {{/unless}}
+    {{else}}
+        <p>{{#if combatActive}}No active spacecraft combatant.{{else}}No active combat.{{/if}}</p>
+    {{/if}}
+</div>

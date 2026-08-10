@@ -5,8 +5,6 @@ import {MgT2XPDialog } from "../helpers/xp-dialog.mjs";
 import {MgT2QuantityDialog } from "../helpers/quantity-dialog.mjs";
 import {MgT2AddSkillDialog } from "../helpers/add-skill-dialog.mjs";
 import {MgT2CrewMemberDialog } from "../helpers/crew-member-dialog.mjs";
-import {MgT2SpacecraftAttackDialog } from "../helpers/spacecraft-attack-dialog.mjs";
-import {MgT2SpacecraftRepairDialog } from "../helpers/spacecraft-repair-dialog.mjs";
 import {rollSkill} from "../helpers/dice-rolls.mjs";
 import {skillLabel} from "../helpers/dice-rolls.mjs";
 import {getSkillValue, hasTrait, getTraitValue} from "../helpers/dice-rolls.mjs";
@@ -21,7 +19,7 @@ import {
 } from "../helpers/spacecraft/spacecraft-utils.mjs";
 import {MgT2CharacteristicDamageApp} from "../helpers/dialogs/characteristic-damage.mjs";
 import {rollTravellerInitiative} from "../documents/combat.mjs";
-import {applyManeuver, getHexBand} from "../helpers/naval-maneuver.mjs";
+import {runCrewAction} from "../helpers/crew-actions.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -1851,256 +1849,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
 
     async _runCrewAction(shipActor, actorCrewId, roleId, actionId) {
-        console.log("_runCrewAction: " + actorCrewId);
-        const actorCrew = game.actors.get(actorCrewId);
-        if (!actorCrew) {
-            ui.notifications.warn(game.i18n.format("MGT2.Warn.Crew.NoCrewActor", { crewId: actorCrewId}));
-            return;
-        }
-        const itemRole = shipActor.items.get(roleId);
-        if (!itemRole) {
-            ui.notifications.warn(game.i18n.format("MGT2.Warn.Crew.NoCrewActor", { roleId: roleId}));
-            return;
-        }
-        const action = itemRole.system.role.actions[actionId];
-
-        if (action.action === "chat") {
-            let chatData = {
-                user: game.user.id,
-                speaker: {
-                    actor: actorCrew._id,
-                    alias: game.i18n.format("MGT2.Role.ChatAlias", {
-                        "actorName": actorCrew.name, "shipName": shipActor.name
-                    }),
-                    scene: game.scenes.current.id
-                },
-                content: `${action.chat}`
-            }
-            ChatMessage.create(chatData, {});
-        } else if (action.action === "skill") {
-            let skill = action.skill;
-            let cha = action.cha;
-            let target = isNaN(action.target)?null:parseInt(action.target);
-            let dm = action.dm?action.dm:0;
-
-            if (!skill) {
-                return;
-            } else if (skill.startsWith("pilot")) {
-                if (shipActor.getFlag("mgt2e-piggy", "damage_pilotDM")) {
-                    dm += parseInt(shipActor.getFlag("mgt2e-piggy", "damage_pilotDM"));
-                }
-            } else if (skill === "engineer.jDrive") {
-                if (shipActor.getFlag("mgt2e-piggy", "damage_jumpDM")) {
-                    dm += parseInt(shipActor.getFlag("mgt2e-piggy", "damage_jumpDM"));
-                }
-            }
-
-            new MgT2SkillDialog(actorCrew, skill, {
-                "dm": dm,
-                "cha": cha,
-                "difficulty": target,
-                "text": action.text
-            }).render(true);
-        } else if (action.action === "weapon") {
-            let weaponId = action.weapon;
-            let weaponItem = shipActor.items.get(weaponId);
-            let dm = parseInt(action.dm);
-            console.log(weaponItem);
-            new MgT2SpacecraftAttackDialog(shipActor, actorCrew, weaponItem, dm).render(true);
-        } else if (action.action === "special") {
-            if (action.special === "pilot") {
-                // Core rulebook: ship initiative is 2D + the pilot's Pilot skill + the ship's Thrust
-                // (M-Drive rating). This establishes the ship's base initiative for the round; the
-                // Captain's Combat Tactics check (below) adds its Effect on top of this.
-                let pilotSkill = actorCrew.getSkillValue("pilot.spacecraft");
-                let thrust = parseInt(shipActor.system.spacecraft.mdrive) || 0;
-                let roll = await new Roll("2D6 + " + pilotSkill + " + " + thrust).evaluate();
-
-                shipActor.setFlag("mgt2e-piggy", "initPilotDM", pilotSkill);
-                shipActor.setFlag("mgt2e-piggy", "initPilotName", actorCrew.name);
-                shipActor.setFlag("mgt2e-piggy", "shipInitiativeRoll", roll.total);
-                shipActor.setFlag("mgt2e-piggy", "shipInitiativePilotName", actorCrew.name);
-                shipActor.unsetFlag("mgt2e-piggy", "shipInitiativeTacticsName");
-
-                const dice = roll.dice.flatMap(die => die.results.map(result => ({
-                    result: result.result,
-                    cssClass: result.result === 6 ? "max" : (result.result === 1 ? "min" : "")
-                })));
-                const content = await renderTemplate(
-                    "systems/mgt2e-piggy/templates/chat/ship-pilot-initiative-roll.html",
-                    {
-                        actor: shipActor,
-                        dice,
-                        pilotSkill,
-                        thrust,
-                        total: roll.total,
-                        rollerName: actorCrew.name
-                    }
-                );
-                const pilotSpeaker = {
-                    actor: actorCrew._id,
-                    alias: game.i18n.format("MGT2.Role.ChatAlias", {
-                        "actorName": actorCrew.name, "shipName": shipActor.name
-                    }),
-                    scene: game.scenes.current.id
-                };
-                const pilotMessageData = await roll.toMessage(
-                    {speaker: pilotSpeaker},
-                    {
-                        create: false,
-                        messageMode: game.settings.get("core", "rollMode")
-                    }
-                );
-                pilotMessageData.content = content;
-                await ChatMessage.create(pilotMessageData);
-
-                if (game.combat) {
-                    const combatant = game.combat.combatants.find(c => c.actor?.id === shipActor.id);
-                    if (combatant) {
-                        await game.combat.setInitiative(combatant.id, roll.total);
-                    }
-                }
-            } else if (action.special === "tacticsInit") {
-                let tacticsDM = actorCrew.getSkillValue("tactics.naval", { "addcha": true });
-                let roll = await new Roll("2D6 + " + tacticsDM).evaluate();
-                let effect = roll.total - 8;
-
-                let previousTotal = shipActor.getFlag("mgt2e-piggy", "shipInitiativeRoll");
-                let baseWasSet = previousTotal !== undefined && previousTotal !== null;
-                let newTotal = (baseWasSet ? previousTotal : 0) + effect;
-
-                shipActor.setFlag("mgt2e-piggy", "shipInitiativeRoll", newTotal);
-                shipActor.setFlag("mgt2e-piggy", "shipInitiativeTacticsName", actorCrew.name);
-
-                const dice = roll.dice.flatMap(die => die.results.map(result => ({
-                    result: result.result,
-                    cssClass: result.result === 6 ? "max" : (result.result === 1 ? "min" : "")
-                })));
-                const content = await renderTemplate(
-                    "systems/mgt2e-piggy/templates/chat/ship-initiative-roll.html",
-                    {
-                        actor: shipActor,
-                        dice,
-                        statModifier: tacticsDM,
-                        total: roll.total,
-                        effect,
-                        previousTotal,
-                        baseWasSet,
-                        newTotal,
-                        rollerName: actorCrew.name
-                    }
-                );
-                const speaker = {
-                    actor: actorCrew._id,
-                    alias: game.i18n.format("MGT2.Role.ChatAlias", {
-                        "actorName": actorCrew.name, "shipName": shipActor.name
-                    }),
-                    scene: game.scenes.current.id
-                };
-                const messageData = await roll.toMessage(
-                    {speaker},
-                    {
-                        create: false,
-                        messageMode: game.settings.get("core", "rollMode")
-                    }
-                );
-                messageData.content = content;
-                await ChatMessage.create(messageData);
-
-                if (game.combat) {
-                    const combatant = game.combat.combatants.find(c => c.actor?.id === shipActor.id);
-                    if (combatant) {
-                        await game.combat.setInitiative(combatant.id, newTotal);
-                    }
-                }
-
-            } else if (action.special === "maneuverClose" || action.special === "maneuverOpen") {
-                const direction = action.special === "maneuverClose" ? "closing" : "opening";
-                if (!game.combat) {
-                    ui.notifications.error("Maneuvering requires an active combat encounter.");
-                    return;
-                }
-                const targets = Array.from(game.user.targets);
-                if (targets.length !== 1) {
-                    ui.notifications.error("Target exactly one other ship to maneuver against.");
-                    return;
-                }
-                const targetShip = targets[0].actor;
-                if (!targetShip || targetShip.type !== "spacecraft" || targetShip.id === shipActor.id) {
-                    ui.notifications.error("Target must be a different spacecraft.");
-                    return;
-                }
-                const thrust = parseInt(shipActor.system.spacecraft.mdrive) || 0;
-                const { newFacing, changes } = await applyManeuver(game.combat, shipActor, targetShip, thrust, direction);
-
-                const content = await renderTemplate(
-                    "systems/mgt2e-piggy/templates/chat/ship-maneuver-roll.html",
-                    {
-                        actor: shipActor,
-                        targetName: targetShip.name,
-                        direction,
-                        thrust,
-                        newFacing,
-                        changes: changes.map(c => ({
-                            ...c,
-                            actorName: game.actors.get(c.actorId)?.name ?? "Unknown ship"
-                        }))
-                    }
-                );
-                const speaker = {
-                    actor: actorCrew._id,
-                    alias: game.i18n.format("MGT2.Role.ChatAlias", {
-                        "actorName": actorCrew.name, "shipName": shipActor.name
-                    }),
-                    scene: game.scenes.current.id
-                };
-                await ChatMessage.create({ user: game.user.id, speaker, content });
-
-            } else if (action.special === "improveInit") {
-
-            } else if (action.special === "evade") {
-                // Core rulebook: the pilot may dodge incoming attacks so long as the ship has
-                // unspent Thrust after maneuvering. Each point of unspent Thrust allows one
-                // dodge attempt, at a DM equal to the pilot's skill, applied against the attack.
-                const thrust = parseInt(shipActor.system.spacecraft.mdrive) || 0;
-                const spent = parseInt(shipActor.getFlag("mgt2e-piggy", "thrustSpentThisRound")) || 0;
-                const unspentThrust = Math.max(0, thrust - spent);
-                const pilotSkill = actorCrew.getSkillValue("pilot.spacecraft");
-
-                if (unspentThrust === 0) {
-                    ui.notifications.warn("No unspent Thrust remaining - maneuver less this round to have Thrust available to evade with.");
-                    return;
-                }
-
-                await shipActor.setFlag("mgt2e-piggy", "evadeChargesRemaining", unspentThrust);
-                // Stored pre-negated - this is the actual DM applied to an incoming attack, not
-                // the raw pilot skill, so every reader of this flag can just add it directly.
-                await shipActor.setFlag("mgt2e-piggy", "evadeDM", -pilotSkill);
-                await shipActor.setFlag("mgt2e-piggy", "evadePilotName", actorCrew.name);
-
-                const content = await renderTemplate(
-                    "systems/mgt2e-piggy/templates/chat/ship-evade-roll.html",
-                    {
-                        actor: shipActor,
-                        rollerName: actorCrew.name,
-                        attackDM: -pilotSkill,
-                        unspentThrust
-                    }
-                );
-                const evadeSpeaker = {
-                    actor: actorCrew._id,
-                    alias: game.i18n.format("MGT2.Role.ChatAlias", {
-                        "actorName": actorCrew.name, "shipName": shipActor.name
-                    }),
-                    scene: game.scenes.current.id
-                };
-                await ChatMessage.create({ user: game.user.id, speaker: evadeSpeaker, content });
-
-            } else if (action.special === "repair") {
-                // Open ship repair dialog.
-                new MgT2SpacecraftRepairDialog(shipActor, actorCrew).render(true);
-            }
-        }
+        return runCrewAction(shipActor, actorCrewId, roleId, actionId);
     }
 
     // Add a new deck plan.
@@ -2957,6 +2706,18 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             system.role.actions[(t++).toString(36)] = {
                 "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.ManeuverOpen"),
                 "action": "special", "special": "maneuverOpen"
+            }
+            system.role.actions[(t++).toString(36)] = {
+                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.ChangeHeading"),
+                "action": "special", "special": "changeHeading"
+            }
+            system.role.actions[(t++).toString(36)] = {
+                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.Accelerate"),
+                "action": "special", "special": "accelerate"
+            }
+            system.role.actions[(t++).toString(36)] = {
+                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.Decelerate"),
+                "action": "special", "special": "decelerate"
             }
         } else if (roleType === "engineer") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Engineer");

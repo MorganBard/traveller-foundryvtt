@@ -1,7 +1,8 @@
 import { MGT2 } from "../config.mjs";
-import { getHexBand } from "../naval-maneuver.mjs";
+import { getHexBand, hexesInSector } from "../naval-maneuver.mjs";
 
 let overlay = null;
+let sectorOverlay = null;
 
 function getOverlay() {
     if (!overlay || overlay.destroyed) {
@@ -11,6 +12,19 @@ function getOverlay() {
         canvas.interface.addChild(overlay);
     }
     return overlay;
+}
+
+// Separate, independent overlay for the Change Heading dialog's sector-hover highlight, so it
+// can be shown/cleared without disturbing the range-band rings (which may or may not be visible
+// at the same time, depending on whether a ship token happens to be selected).
+function getSectorOverlay() {
+    if (!sectorOverlay || sectorOverlay.destroyed) {
+        sectorOverlay = new PIXI.Container();
+        sectorOverlay.name = "mgt2e-sector-highlight";
+        sectorOverlay.eventMode = "none";
+        canvas.interface.addChild(sectorOverlay);
+    }
+    return sectorOverlay;
 }
 
 // getAdjacentCubes() does not guarantee its 6 results are in angular (rotational) order - they
@@ -101,4 +115,35 @@ export function drawRangeRings(controlledToken) {
         graphics.drawCircle(token.center.x, token.center.y, radius);
         layer.addChild(graphics);
     }
+}
+
+export function clearSectorHighlight() {
+    if (sectorOverlay && !sectorOverlay.destroyed) {
+        sectorOverlay.removeChildren().forEach(child => child.destroy());
+    }
+}
+
+// Highlights the hex wedge belonging to one sector (0-5) around a ship token, so a player
+// hovering a sector option in the Change Heading dialog can see where it actually points on the
+// map. Uses hexesInSector (naval-maneuver.mjs) rather than any local direction math, so the
+// highlighted wedge is guaranteed to match the sector actually used by bearing/facing logic.
+export function highlightSector(token, sector) {
+    clearSectorHighlight();
+
+    if (!token || !canvas.grid.isHexagonal) {
+        return;
+    }
+
+    const layer = getSectorOverlay();
+    const originCube = canvas.grid.getCube(token.center);
+    const hexes = hexesInSector(originCube, sector, 6);
+
+    const graphics = new PIXI.Graphics();
+    graphics.beginFill(0x00ccff, 0.35);
+    for (const cube of hexes) {
+        const vertices = canvas.grid.getVertices(cube);
+        graphics.drawPolygon(vertices.flatMap(p => [p.x, p.y]));
+    }
+    graphics.endFill();
+    layer.addChild(graphics);
 }

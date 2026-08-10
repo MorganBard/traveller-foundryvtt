@@ -588,6 +588,9 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
                 "repair": game.i18n.localize("MGT2.Role.Special.Repair"),
                 "maneuverClose": game.i18n.localize("MGT2.Role.Special.ManeuverClose"),
                 "maneuverOpen": game.i18n.localize("MGT2.Role.Special.ManeuverOpen"),
+                "changeHeading": game.i18n.localize("MGT2.Role.Special.ChangeHeading"),
+                "accelerate": game.i18n.localize("MGT2.Role.Special.Accelerate"),
+                "decelerate": game.i18n.localize("MGT2.Role.Special.Decelerate"),
             }
         }
         if (context.item.system.computer && context.item.parent) {
