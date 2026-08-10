@@ -31,6 +31,8 @@ import {MgT2Combat} from "./documents/combat.mjs";
 import { migrateWorld } from "./migration.mjs";
 import { NpcIdCard } from "./helpers/id-card.mjs";
 import {hasTrait} from "./helpers/dice-rolls.mjs";
+import { drawRangeRings, clearRangeRings } from "./helpers/canvas/range-rings.mjs";
+import { resolveShipPairsForRound } from "./helpers/naval-maneuver.mjs";
 import {
     tradeBuyGoodsHandler,
     tradeSellGoodsHandler,
@@ -287,6 +289,22 @@ Hooks.once('init', async function() {
         config: true,
         type: Boolean,
         default: false
+    });
+    game.settings.register('mgt2e-piggy', "maneuverAdjacentSectorMultiplier", {
+        name: game.i18n.localize("MGT2.Settings.ManeuverAdjacentSectorMultiplier.Name"),
+        hint: game.i18n.localize("MGT2.Settings.ManeuverAdjacentSectorMultiplier.Hint"),
+        scope: "world",
+        config: true,
+        type: Number,
+        default: 0.5
+    });
+    game.settings.register('mgt2e-piggy', "maneuverTwoOffSectorMultiplier", {
+        name: game.i18n.localize("MGT2.Settings.ManeuverTwoOffSectorMultiplier.Name"),
+        hint: game.i18n.localize("MGT2.Settings.ManeuverTwoOffSectorMultiplier.Hint"),
+        scope: "world",
+        config: true,
+        type: Number,
+        default: 0
     });
     game.settings.register('mgt2e-piggy', "splitAttackDamage", {
        name: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Name"),
@@ -1036,6 +1054,27 @@ Hooks.on("deleteCombatant", combatant => {
     combatant.actor?.sheet?.render(false);
 });
 
+Hooks.on("controlToken", (token, controlled) => {
+    if (controlled && token.document?.actor?.type === "spacecraft") {
+        drawRangeRings(token);
+    } else {
+        clearRangeRings();
+    }
+});
+
+Hooks.on("updateToken", (tokenDocument, changes) => {
+    const token = tokenDocument.object;
+    if (token?.controlled && token.document?.actor?.type === "spacecraft" && ("x" in changes || "y" in changes)) {
+        drawRangeRings(token);
+    }
+});
+
+Hooks.on("deleteToken", tokenDocument => {
+    if (tokenDocument.object?.controlled) {
+        clearRangeRings();
+    }
+});
+
 Hooks.on("combatTurn", (combat, data, options) => {
     // This is the actor which just finished their turn.
     let actor = combat.combatant.actor;
@@ -1056,9 +1095,14 @@ Hooks.on("combatTurn", (combat, data, options) => {
 
 Hooks.on("combatRound", (combat, data, options) => {
     // This is when the round changes.
+    // Apply each ship pair's closing speed to its stored hex distance - once per pair, not
+    // once per combatant, since closing speed lives on the pair rather than either ship.
+    resolveShipPairsForRound(combat);
+
     for (let combatant of combat.combatants) {
         const actor = combatant.actor;
         if (actor.type === "spacecraft") {
+            actor.unsetFlag("mgt2e-piggy", "thrustSpentThisRound");
             if (game.settings.get("mgt2e-piggy", "shipInitiativePerRound")) {
                 actor.unsetFlag("mgt2e-piggy", "shipInitiativeRoll");
                 actor.unsetFlag("mgt2e-piggy", "shipInitiativePilotName");

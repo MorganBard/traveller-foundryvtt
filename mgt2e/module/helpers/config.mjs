@@ -799,6 +799,19 @@ MGT2.SPACE_RANGES = {
     "far": { "distance": 1000000000, "dm": -18 }
 }
 
+// Virtual, hex-distance-based range bands for the naval-combat maneuver/range-ring display
+// (independent of SPACE_RANGES above, which is real-km-based and drives weapon attack DMs).
+MGT2.HEX_RANGE_BANDS = [
+    { "key": "adjacent", "maxHex": 1, "color": 0x00ff00 },
+    { "key": "close", "maxHex": 3, "color": 0x66ff33 },
+    { "key": "short", "maxHex": 5, "color": 0xccff33 },
+    { "key": "medium", "maxHex": 7, "color": 0xffff00 },
+    { "key": "long", "maxHex": 9, "color": 0xffaa00 },
+    { "key": "verylong", "maxHex": 11, "color": 0xff6600 },
+    { "key": "distant", "maxHex": 13, "color": 0xff3300 },
+    { "key": "verydistant", "maxHex": Infinity, "color": 0xff0000 }
+];
+
 MGT2.SPACE_MOUNTS = {
     "fixed": { "multiplier": 1, "hardpoints": 1 },
     "turret": { "multiplier": 1, "hardpoints": 1 },

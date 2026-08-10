@@ -21,6 +21,7 @@ import {
 } from "../helpers/spacecraft/spacecraft-utils.mjs";
 import {MgT2CharacteristicDamageApp} from "../helpers/dialogs/characteristic-damage.mjs";
 import {rollTravellerInitiative} from "../documents/combat.mjs";
+import {applyManeuver, getHexBand} from "../helpers/naval-maneuver.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -2013,6 +2014,48 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
                     }
                 }
 
+            } else if (action.special === "maneuverClose" || action.special === "maneuverOpen") {
+                const direction = action.special === "maneuverClose" ? "closing" : "opening";
+                if (!game.combat) {
+                    ui.notifications.error("Maneuvering requires an active combat encounter.");
+                    return;
+                }
+                const targets = Array.from(game.user.targets);
+                if (targets.length !== 1) {
+                    ui.notifications.error("Target exactly one other ship to maneuver against.");
+                    return;
+                }
+                const targetShip = targets[0].actor;
+                if (!targetShip || targetShip.type !== "spacecraft" || targetShip.id === shipActor.id) {
+                    ui.notifications.error("Target must be a different spacecraft.");
+                    return;
+                }
+                const thrust = parseInt(shipActor.system.spacecraft.mdrive) || 0;
+                const { newFacing, changes } = await applyManeuver(game.combat, shipActor, targetShip, thrust, direction);
+
+                const content = await renderTemplate(
+                    "systems/mgt2e-piggy/templates/chat/ship-maneuver-roll.html",
+                    {
+                        actor: shipActor,
+                        targetName: targetShip.name,
+                        direction,
+                        thrust,
+                        newFacing,
+                        changes: changes.map(c => ({
+                            ...c,
+                            actorName: game.actors.get(c.actorId)?.name ?? "Unknown ship"
+                        }))
+                    }
+                );
+                const speaker = {
+                    actor: actorCrew._id,
+                    alias: game.i18n.format("MGT2.Role.ChatAlias", {
+                        "actorName": actorCrew.name, "shipName": shipActor.name
+                    }),
+                    scene: game.scenes.current.id
+                };
+                await ChatMessage.create({ user: game.user.id, speaker, content });
+
             } else if (action.special === "improveInit") {
 
             } else if (action.special === "evade") {
@@ -2870,6 +2913,14 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             system.role.actions[(t++).toString(36)] = {
                 "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.MakePilot"),
                 "action": "special", "special": "pilot"
+            }
+            system.role.actions[(t++).toString(36)] = {
+                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.ManeuverClose"),
+                "action": "special", "special": "maneuverClose"
+            }
+            system.role.actions[(t++).toString(36)] = {
+                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.ManeuverOpen"),
+                "action": "special", "special": "maneuverOpen"
             }
         } else if (roleType === "engineer") {
             itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Engineer");
