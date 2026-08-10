@@ -809,6 +809,27 @@ export async function rollSpaceAttack(starship, gunner, weaponItem, options) {
             dice += " " + options.rangeDM;
         }
     }
+    // Evasive Action: if the target has unspent-Thrust dodge charges available, this attack
+    // suffers a negative DM equal to the defending pilot's skill, consuming one charge.
+    let evadeApplied = null;
+    if (options.defenderShip) {
+        const charges = parseInt(options.defenderShip.getFlag("mgt2e-piggy", "evadeChargesRemaining")) || 0;
+        if (charges > 0) {
+            // evadeDM is already stored pre-negated (the actual DM to apply), not the raw skill.
+            const evadeDM = parseInt(options.defenderShip.getFlag("mgt2e-piggy", "evadeDM")) || 0;
+            if (evadeDM > 0) {
+                dice += ` + ${evadeDM}`;
+            } else if (evadeDM < 0) {
+                dice += ` ${evadeDM}`;
+            }
+            evadeApplied = {
+                dm: evadeDM,
+                chargesRemaining: charges - 1,
+                pilotName: options.defenderShip.getFlag("mgt2e-piggy", "evadePilotName")
+            };
+            await options.defenderShip.setFlag("mgt2e-piggy", "evadeChargesRemaining", charges - 1);
+        }
+    }
     let isMissile = false;
     let isSquadron = false;
     if (options.salvoSize) {
@@ -919,6 +940,7 @@ export async function rollSpaceAttack(starship, gunner, weaponItem, options) {
                     </span>
                     Effect ${(effect>0)?"+":""}${effect}
                 </div>
+                ${evadeApplied ? `<div class="evade-note"><i>Evasive Action (${evadeApplied.pilotName}): DM ${evadeApplied.dm} (${evadeApplied.chargesRemaining} dodge${evadeApplied.chargesRemaining === 1 ? "" : "s"} left)</i></div>` : ""}
                 <div class="damage-message" data-damage="${damageRoll.total + effect}" data-vers="2" data-options='${json}'>
                     <button data-damage="${(damageRoll.total + effect)}" data-vers="2"
                             data-options='${json}' class="damage-button"

@@ -2059,6 +2059,42 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             } else if (action.special === "improveInit") {
 
             } else if (action.special === "evade") {
+                // Core rulebook: the pilot may dodge incoming attacks so long as the ship has
+                // unspent Thrust after maneuvering. Each point of unspent Thrust allows one
+                // dodge attempt, at a DM equal to the pilot's skill, applied against the attack.
+                const thrust = parseInt(shipActor.system.spacecraft.mdrive) || 0;
+                const spent = parseInt(shipActor.getFlag("mgt2e-piggy", "thrustSpentThisRound")) || 0;
+                const unspentThrust = Math.max(0, thrust - spent);
+                const pilotSkill = actorCrew.getSkillValue("pilot.spacecraft");
+
+                if (unspentThrust === 0) {
+                    ui.notifications.warn("No unspent Thrust remaining - maneuver less this round to have Thrust available to evade with.");
+                    return;
+                }
+
+                await shipActor.setFlag("mgt2e-piggy", "evadeChargesRemaining", unspentThrust);
+                // Stored pre-negated - this is the actual DM applied to an incoming attack, not
+                // the raw pilot skill, so every reader of this flag can just add it directly.
+                await shipActor.setFlag("mgt2e-piggy", "evadeDM", -pilotSkill);
+                await shipActor.setFlag("mgt2e-piggy", "evadePilotName", actorCrew.name);
+
+                const content = await renderTemplate(
+                    "systems/mgt2e-piggy/templates/chat/ship-evade-roll.html",
+                    {
+                        actor: shipActor,
+                        rollerName: actorCrew.name,
+                        attackDM: -pilotSkill,
+                        unspentThrust
+                    }
+                );
+                const evadeSpeaker = {
+                    actor: actorCrew._id,
+                    alias: game.i18n.format("MGT2.Role.ChatAlias", {
+                        "actorName": actorCrew.name, "shipName": shipActor.name
+                    }),
+                    scene: game.scenes.current.id
+                };
+                await ChatMessage.create({ user: game.user.id, speaker: evadeSpeaker, content });
 
             } else if (action.special === "repair") {
                 // Open ship repair dialog.

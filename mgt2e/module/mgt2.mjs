@@ -1103,6 +1103,9 @@ Hooks.on("combatRound", (combat, data, options) => {
         const actor = combatant.actor;
         if (actor.type === "spacecraft") {
             actor.unsetFlag("mgt2e-piggy", "thrustSpentThisRound");
+            actor.unsetFlag("mgt2e-piggy", "evadeChargesRemaining");
+            actor.unsetFlag("mgt2e-piggy", "evadeDM");
+            actor.unsetFlag("mgt2e-piggy", "evadePilotName");
             if (game.settings.get("mgt2e-piggy", "shipInitiativePerRound")) {
                 actor.unsetFlag("mgt2e-piggy", "shipInitiativeRoll");
                 actor.unsetFlag("mgt2e-piggy", "shipInitiativePilotName");
