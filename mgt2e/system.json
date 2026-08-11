@@ -2,7 +2,7 @@
   "id": "mgt2e-piggy",
   "title": "Mongoose Traveller 2e (Piggy Build)",
   "description": "A system for Mongoose Traveller 2e. This includes rules specific to this version of Traveller.",
-  "version": "0.22.1.1",
+  "version": "0.22.1.2",
   "compatibility": {
     "minimum": 13,
     "verified": 14,
@@ -117,7 +117,7 @@
   "primaryTokenAttribute": "hits",
   "secondaryTokenAttribute": null,
   "url": "https://github.com/MorganBard/traveller-foundryvtt/",
-  "manifest": "https://github.com/MorganBard/traveller-foundryvtt/releases/download/v0.22.1.1/system.json",
-  "download": "https://github.com/MorganBard/traveller-foundryvtt/releases/download/v0.22.1.1/mongoose-traveller.zip",
-  "license": "https://github.com/MorganBard/traveller-foundryvtt/raw/v0.22.1.1/LICENSE.txt"
+  "manifest": "https://github.com/MorganBard/traveller-foundryvtt/releases/download/v0.22.1.2/system.json",
+  "download": "https://github.com/MorganBard/traveller-foundryvtt/releases/download/v0.22.1.2/mongoose-traveller.zip",
+  "license": "https://github.com/MorganBard/traveller-foundryvtt/raw/v0.22.1.2/LICENSE.txt"
 }
