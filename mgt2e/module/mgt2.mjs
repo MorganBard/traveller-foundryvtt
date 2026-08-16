@@ -1008,7 +1008,7 @@ Hooks.on("hotbarDrop", (bar, data, slot) => {
 Hooks.once("ready", async function() {
     if (game.user.isGM) {
         if (game.scenes.size === 0) {
-            const pack = game.packs.get("mgt2e.base-scenes");
+            const pack = game.packs.get("mgt2e-piggy.base-scenes");
             if (pack) {
                 const entry = await pack.getIndex();
                 const sceneId = entry?.find(e => e.name === "MgT2e")?._id;
@@ -3115,7 +3115,7 @@ Hooks.once("ready", async function() {
 
         if (foundry.utils.isNewerVersion(currentVersion, lastVersion)) {
             let text = "";
-            let d = await fromUuid("Compendium.mgt2e.traveller-docs.JournalEntry.83nkkP7aeGF22kG6.JournalEntryPage.mXeFfBZITS7IkfPU");
+            let d = await fromUuid("Compendium.mgt2e-piggy.traveller-docs.JournalEntry.83nkkP7aeGF22kG6.JournalEntryPage.mXeFfBZITS7IkfPU");
             if (d && d.text && d.text.content) {
                 text = `<h1>MgT2e ${currentVersion}</h1>${d.text.content}`;
             } else {

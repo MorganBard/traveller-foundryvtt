@@ -5,7 +5,7 @@ export async function getRollTableFolder(folderName, packName) {
         return null;
     }
     if (!packName) {
-        packName = "mgt2e.base-tables";
+        packName = "mgt2e-piggy.base-tables";
     }
     let folder = await game.tables.folders.getName(`${folderName} ${game.i18n.lang}`);
     if (!folder) {

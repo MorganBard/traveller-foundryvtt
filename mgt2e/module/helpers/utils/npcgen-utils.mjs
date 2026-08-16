@@ -142,7 +142,7 @@ async function getFolder(folderName) {
     }
     let folder = await game.tables.folders.getName(folderName);
     if (!folder) {
-        let pack = await game.packs.get("mgt2e.base-tables");
+        let pack = await game.packs.get("mgt2e-piggy.base-tables");
         folder = await pack.folders.getName("NPC Generator");
         if (!folder) {
             ui.notifications.error(`Unable to find folder [${folderName}] for NPC generation`);
