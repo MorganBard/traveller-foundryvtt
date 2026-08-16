@@ -1,33 +1,43 @@
 import {MgT2SkillDialog} from "./skill-dialog.mjs";
 import {MgT2SpacecraftAttackDialog} from "./spacecraft-attack-dialog.mjs";
 import {MgT2SpacecraftRepairDialog} from "./spacecraft-repair-dialog.mjs";
-import {MgT2ChangeHeadingDialog} from "./change-heading-dialog.mjs";
-import {setShipFacing, applyThrust, bearingOfShip} from "./naval-maneuver.mjs";
+import {setCourse} from "./naval-course.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
-// Prompts for how much of the ship's Thrust rating to spend on a maneuver (1 up to maxThrust,
-// defaulting to the max). Returns null if the dialog is cancelled/closed, or if there's no
-// Thrust available to spend at all. Shared by Close/Open/Accelerate/Decelerate so a pilot can
-// deliberately hold some Thrust back - e.g. to have something left for Evasive Action later
-// in the round, which depends entirely on Thrust that maneuvering didn't already spend.
-async function promptThrustAmount(shipName, maxThrust) {
-    if (maxThrust <= 0) {
-        ui.notifications.error(`${shipName} has no Thrust available to maneuver with.`);
+// Minimal target+speed prompt for the "setCourse" special. This is a stand-in for Phase 1
+// verification purposes - once the Ship Console panel exists (Phase 2), the Pilot's own console
+// will set course directly and this dialog fallback becomes unnecessary, but runCrewAction still
+// needs a working call path today since this is the only current entry point for the action.
+async function promptSetCourse(shipActor) {
+    const maxSpeed = parseInt(shipActor.system.spacecraft.mdrive) || 0;
+    const otherShips = (game.combat?.combatants ?? [])
+        .map(c => c.actor)
+        .filter(actor => actor?.type === "spacecraft" && actor.id !== shipActor.id);
+
+    if (otherShips.length === 0) {
+        ui.notifications.error("No other ships in the encounter to set a course toward.");
         return null;
     }
+
+    const currentTarget = shipActor.getFlag("mgt2e-piggy", "navTarget");
+    const options = otherShips.map(s =>
+        `<option value="${s.id}" ${s.id === currentTarget ? "selected" : ""}>${s.name}</option>`
+    ).join("");
+
     const data = await foundry.applications.api.DialogV2.input({
-        window: { title: `${shipName} - Spend Thrust` },
+        window: { title: `${shipActor.name} - Set Course` },
         content: `
-            <p>How much Thrust to spend (1-${maxThrust})?</p>
-            <input type="number" name="thrust" value="${maxThrust}" min="1" max="${maxThrust}" step="1" autofocus/>
+            <p>Orient toward, and commit speed toward (0-${maxSpeed}):</p>
+            <select name="target">${options}</select>
+            <input type="number" name="speed" value="${maxSpeed}" min="0" max="${maxSpeed}" step="1"/>
         `
     });
     if (!data) {
         return null;
     }
-    const thrust = Math.min(maxThrust, Math.max(1, parseInt(data.thrust) || 0));
-    return thrust;
+    const speed = Math.max(0, Math.min(maxSpeed, parseInt(data.speed) || 0));
+    return { targetId: data.target, speed };
 }
 
 // Dispatches a single crew-role action: skill rolls, weapon attacks, and the various
@@ -199,45 +209,25 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
                 }
             }
 
-        } else if (action.special === "maneuverClose" || action.special === "maneuverOpen") {
-            const direction = action.special === "maneuverClose" ? "closing" : "opening";
+        } else if (action.special === "setCourse") {
             if (!game.combat) {
-                ui.notifications.error("Maneuvering requires an active combat encounter.");
+                ui.notifications.error("Setting course requires an active combat encounter.");
                 return;
             }
-            const targets = Array.from(game.user.targets);
-            if (targets.length !== 1) {
-                ui.notifications.error("Target exactly one other ship to maneuver against.");
+            const choice = await promptSetCourse(shipActor);
+            if (!choice) {
                 return;
             }
-            const targetShip = targets[0].actor;
-            if (!targetShip || targetShip.type !== "spacecraft" || targetShip.id === shipActor.id) {
-                ui.notifications.error("Target must be a different spacecraft.");
-                return;
-            }
-            const maxThrust = parseInt(shipActor.system.spacecraft.mdrive) || 0;
-            const thrust = await promptThrustAmount(shipActor.name, maxThrust);
-            if (!thrust) {
-                return;
-            }
-
-            const headingSector = await bearingOfShip(game.combat, shipActor, targetShip);
-            await setShipFacing(shipActor, headingSector);
-
-            const { newFacing, changes } = await applyThrust(game.combat, shipActor, thrust, direction);
+            const { navTarget, navSpeed } = await setCourse(shipActor, choice.targetId, choice.speed);
+            const targetShip = game.actors.get(navTarget);
 
             const content = await renderTemplate(
-                "systems/mgt2e-piggy/templates/chat/ship-maneuver-roll.html",
+                "systems/mgt2e-piggy/templates/chat/ship-course-set.html",
                 {
                     actor: shipActor,
-                    targetName: targetShip.name,
-                    direction,
-                    thrust,
-                    newFacing,
-                    changes: changes.map(c => ({
-                        ...c,
-                        actorName: game.actors.get(c.actorId)?.name ?? "Unknown ship"
-                    }))
+                    rollerName: actorCrew.name,
+                    targetName: targetShip?.name ?? "Unknown ship",
+                    speed: navSpeed
                 }
             );
             const speaker = {
@@ -248,48 +238,6 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
                 scene: game.scenes.current.id
             };
             await ChatMessage.create({ user: game.user.id, speaker, content });
-
-        } else if (action.special === "changeHeading") {
-            if (!game.combat) {
-                ui.notifications.error("Changing heading requires an active combat encounter.");
-                return;
-            }
-            new MgT2ChangeHeadingDialog(shipActor, actorCrew).render(true);
-
-        } else if (action.special === "accelerate" || action.special === "decelerate") {
-            const direction = action.special === "accelerate" ? "closing" : "opening";
-            if (!game.combat) {
-                ui.notifications.error("Maneuvering requires an active combat encounter.");
-                return;
-            }
-            const maxThrust = parseInt(shipActor.system.spacecraft.mdrive) || 0;
-            const thrust = await promptThrustAmount(shipActor.name, maxThrust);
-            if (!thrust) {
-                return;
-            }
-            const { newFacing, changes } = await applyThrust(game.combat, shipActor, thrust, direction);
-
-            const content = await renderTemplate(
-                "systems/mgt2e-piggy/templates/chat/ship-thrust-roll.html",
-                {
-                    actor: shipActor,
-                    label: action.special === "accelerate" ? "Accelerate" : "Decelerate",
-                    thrust,
-                    newFacing,
-                    changes: changes.map(c => ({
-                        ...c,
-                        actorName: game.actors.get(c.actorId)?.name ?? "Unknown ship"
-                    }))
-                }
-            );
-            const thrustSpeaker = {
-                actor: actorCrew._id,
-                alias: game.i18n.format("MGT2.Role.ChatAlias", {
-                    "actorName": actorCrew.name, "shipName": shipActor.name
-                }),
-                scene: game.scenes.current.id
-            };
-            await ChatMessage.create({ user: game.user.id, speaker: thrustSpeaker, content });
 
         } else if (action.special === "improveInit") {
 

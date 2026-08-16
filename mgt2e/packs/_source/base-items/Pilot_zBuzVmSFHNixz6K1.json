@@ -5,6 +5,11 @@
   "system": {
     "role": {
       "actions": {
+        "svc0001a": {
+          "title": "Set Course",
+          "action": "special",
+          "special": "setCourse"
+        },
         "lybofso7": {
           "title": "Port Landing",
           "action": "skill",

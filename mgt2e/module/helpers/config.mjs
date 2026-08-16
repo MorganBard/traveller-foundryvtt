@@ -799,17 +799,18 @@ MGT2.SPACE_RANGES = {
     "far": { "distance": 1000000000, "dm": -18 }
 }
 
-// Virtual, hex-distance-based range bands for the naval-combat maneuver/range-ring display
-// (independent of SPACE_RANGES above, which is real-km-based and drives weapon attack DMs).
-MGT2.HEX_RANGE_BANDS = [
-    { "key": "adjacent", "maxHex": 1, "color": 0x00ff00 },
-    { "key": "close", "maxHex": 3, "color": 0x66ff33 },
-    { "key": "short", "maxHex": 5, "color": 0xccff33 },
-    { "key": "medium", "maxHex": 7, "color": 0xffff00 },
-    { "key": "long", "maxHex": 9, "color": 0xffaa00 },
-    { "key": "verylong", "maxHex": 11, "color": 0xff6600 },
-    { "key": "distant", "maxHex": 13, "color": 0xff3300 },
-    { "key": "verydistant", "maxHex": Infinity, "color": 0xff0000 }
+// The 7-rung abstract Range Band ladder used by naval combat's Manoeuvre Step (per-ship-pair,
+// no map/position involved - see naval-course.mjs). Index doubles as the stored band value
+// (0 = Adjacent ... 6 = Distant). Keys match SPACE_RANGES above deliberately, so a band index
+// can be mapped straight to that table's attack-DM entry when weapon range checks are wired up.
+MGT2.RANGE_BANDS = [
+    { "key": "adjacent", "label": "Adjacent" },
+    { "key": "close", "label": "Close" },
+    { "key": "short", "label": "Short" },
+    { "key": "medium", "label": "Medium" },
+    { "key": "long", "label": "Long" },
+    { "key": "verylong", "label": "Very Long" },
+    { "key": "distant", "label": "Distant" }
 ];
 
 MGT2.SPACE_MOUNTS = {
