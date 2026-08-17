@@ -34,6 +34,11 @@
           "dm": 0,
           "cha": "EDU",
           "target": 8
+        },
+        "cpt0001f": {
+          "title": "Ship Status",
+          "action": "special",
+          "special": "shipStatus"
         }
       },
       "description": "",

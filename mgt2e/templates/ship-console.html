@@ -95,6 +95,20 @@
             </div>
         {{/if}}
 
+        {{#if shipStatusSection}}
+            <div class="console-section">
+                <label class="console-section-title">Ship Status</label>
+                <p>Hull: {{shipStatusSection.hull.value}} / {{shipStatusSection.hull.max}} &middot; Armour: {{shipStatusSection.armour}} &middot; Fuel: {{shipStatusSection.fuel.value}} / {{shipStatusSection.fuel.max}}</p>
+                {{#if shipStatusSection.activeCriticals.length}}
+                    <ul class="console-band-list">
+                        {{#each shipStatusSection.activeCriticals}}
+                            <li>{{this.location}} (severity {{this.severity}})</li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+            </div>
+        {{/if}}
+
         {{#if reassignSection}}
             <div class="console-section">
                 <label class="console-section-title">Reassign Crew</label>

@@ -7,7 +7,7 @@ import { MGT2 } from "./config.mjs";
 // start-of-encounter or captain-only actions handled elsewhere) is simply not shown - the console
 // only surfaces what's relevant to running a round of combat from this one role's seat.
 const CONSOLE_SPECIALS = new Set([
-    "setCourse", "evade", "reassignCrew", "repair",
+    "setCourse", "evade", "reassignCrew", "repair", "shipStatus",
     "selfDestructVote", "sensorLock", "electronicWarfare", "pointDefence", "disperseSand"
 ]);
 
@@ -111,16 +111,13 @@ export class MgT2ShipConsoleApp extends Application {
         if (specials.repair) {
             damageSection = {
                 actionId: specials.repair.actionId,
-                hull: shipActor.system.hits,
-                armour: shipActor.system.spacecraft?.armour,
-                fuel: shipActor.system.spacecraft?.fuel,
-                activeCriticals: Object.keys(MGT2.SPACECRAFT_CRITICALS ?? {})
-                    .filter(loc => shipActor.getFlag("mgt2e-piggy", `crit_${loc}`))
-                    .map(loc => ({
-                        location: loc,
-                        severity: shipActor.getFlag("mgt2e-piggy", `crit_${loc}`)
-                    }))
+                ...this._buildDamageSummary(shipActor)
             };
+        }
+
+        let shipStatusSection = null;
+        if (specials.shipStatus) {
+            shipStatusSection = this._buildDamageSummary(shipActor);
         }
 
         let reassignSection = null;
@@ -153,6 +150,7 @@ export class MgT2ShipConsoleApp extends Application {
             evadeActionId: specials.evade?.actionId,
             courseSection,
             damageSection,
+            shipStatusSection,
             reassignSection,
             hasSelfDestructVote: !!specials.selfDestructVote,
             selfDestructVoteActionId: specials.selfDestructVote?.actionId,
@@ -166,6 +164,20 @@ export class MgT2ShipConsoleApp extends Application {
             disperseSandActionId: specials.disperseSand?.actionId,
             selfDestructArmed: !!selfDestructRoundsRemaining,
             selfDestructRoundsRemaining
+        };
+    }
+
+    _buildDamageSummary(shipActor) {
+        return {
+            hull: shipActor.system.hits,
+            armour: shipActor.system.spacecraft?.armour,
+            fuel: shipActor.system.spacecraft?.fuel,
+            activeCriticals: Object.keys(MGT2.SPACECRAFT_CRITICALS ?? {})
+                .filter(loc => shipActor.getFlag("mgt2e-piggy", `crit_${loc}`))
+                .map(loc => ({
+                    location: loc,
+                    severity: shipActor.getFlag("mgt2e-piggy", `crit_${loc}`)
+                }))
         };
     }
 
