@@ -2869,42 +2869,6 @@ Handlebars.registerHelper('showAttachedWeapons', function(ship, item) {
     return "";
 });
 
-Handlebars.registerHelper('showSpacecraftAttacks', function(shipActor, roles) {
-    let html = "";
-
-    let weapons = [];
-    for (let item of shipActor.items) {
-        if (item.type === "hardware" && item.system?.hardware?.system === "weapon") {
-            for (let w in item.system.hardware.weapons) {
-                // If we have at least one weapon attached, add it to the list.
-                weapons.push(item);
-                break;
-            }
-        }
-    }
-
-    if (weapons.length === 0) {
-        return "No weapons attached";
-    }
-
-    for (let wpnMount of weapons) {
-        html += `<div class="mount"><label>${wpnMount.name}</label>`;
-
-        for (let wpnId in wpnMount.system.hardware.weapons) {
-            let wpn = shipActor.items.get(wpnId);
-            html += `<span class="weapon-action-button">`;
-            html += `${wpn.name}`;
-            if (wpnMount.system.hardware.weapons[wpnId].quantity > 1) {
-                html += ` x ${wpnMount.system.hardware.weapons[wpnId].quantity}`;
-            }
-            html += `</span>`;
-        }
-
-        html += `</div>`;
-    }
-    return html;
-});
-
 // Display information about active effects on an actor.
 Handlebars.registerHelper("showEffectPill", function(actor, effect) {
     let html = "";
