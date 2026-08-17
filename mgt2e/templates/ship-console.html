@@ -98,13 +98,16 @@
         {{#if shipStatusSection}}
             <div class="console-section">
                 <label class="console-section-title">Ship Status</label>
-                <p>Hull: {{shipStatusSection.hull.value}} / {{shipStatusSection.hull.max}} &middot; Armour: {{shipStatusSection.armour}} &middot; Fuel: {{shipStatusSection.fuel.value}} / {{shipStatusSection.fuel.max}}</p>
-                {{#if shipStatusSection.activeCriticals.length}}
-                    <ul class="console-band-list">
-                        {{#each shipStatusSection.activeCriticals}}
-                            <li>{{this.location}} (severity {{this.severity}})</li>
-                        {{/each}}
-                    </ul>
+                <ul class="ship-status-list">
+                    {{#each shipStatusSection.rows}}
+                        <li class="ship-status-row" data-severity="{{this.severity}}">
+                            <span class="ship-status-label">{{this.label}}</span>
+                            <span class="ship-status-value">{{this.statusLabel}}</span>
+                        </li>
+                    {{/each}}
+                </ul>
+                {{#if shipStatusSection.hasWeaponMounts}}
+                    <button type="button" class="console-action console-open-weapons">View Weapons</button>
                 {{/if}}
             </div>
         {{/if}}

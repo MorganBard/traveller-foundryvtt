@@ -35,6 +35,7 @@ import { resolveRangeBandsForRound } from "./helpers/naval-course.mjs";
 import { MgT2NavalGMPanel } from "./helpers/naval-gm-panel.mjs";
 import { MgT2StartNavalEncounterDialog } from "./helpers/naval-encounter-dialog.mjs";
 import { MgT2ShipConsoleApp } from "./helpers/ship-console.mjs";
+import { MgT2WeaponStatusApp } from "./helpers/weapon-status.mjs";
 import {
     tradeBuyGoodsHandler,
     tradeSellGoodsHandler,
@@ -1146,6 +1147,15 @@ Hooks.on("updateActor", actor => {
     }
     if (game.user.isGM) {
         MgT2ShipConsoleApp.refreshAllForActor(actor.id);
+    }
+});
+
+// Weapon-mount status (system.status on the hardware Item) changes via updateItem, not
+// updateActor, since it's an embedded document edit - the ship console's own updateActor
+// hook above doesn't see it.
+Hooks.on("updateItem", item => {
+    if (item.parent?.documentName === "Actor") {
+        MgT2WeaponStatusApp.refreshAllForActor(item.parent.id);
     }
 });
 

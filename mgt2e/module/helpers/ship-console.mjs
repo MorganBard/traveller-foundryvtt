@@ -11,6 +11,24 @@ const CONSOLE_SPECIALS = new Set([
     "selfDestructVote", "sensorLock", "electronicWarfare", "pointDefence", "disperseSand"
 ]);
 
+// Ordered rows for the Ship Status board, one per MGT2.SPACECRAFT_CRITICALS key. Order and
+// wording here are the command-console presentation the Captain reads at a glance - deliberately
+// separate from the abbreviated labels the repair dialog/chat cards use (M-Drive, J-Drive, etc.),
+// which are tuned for a different, denser context.
+const SHIP_STATUS_ROWS = [
+    { key: "sensors", label: "Sensors" },
+    { key: "powerPlant", label: "Power Plant" },
+    { key: "fuel", label: "Fuel" },
+    { key: "weapon", label: "Weapons" },
+    { key: "armour", label: "Armor" },
+    { key: "hull", label: "Hull" },
+    { key: "cargo", label: "Cargo" },
+    { key: "jDrive", label: "Jump Drive" },
+    { key: "mDrive", label: "Maneuver Drive" },
+    { key: "bridge", label: "Bridge" },
+    { key: "crew", label: "Crew" }
+];
+
 // Single parametrized per-role ship control console, opened as (shipActor, roleId, crewActorId).
 // Deliberately not six hardcoded classes - roles in this codebase are just free-form Items with
 // a bound actions map, not a fixed enum, so this introspects whichever actions are actually bound
@@ -117,7 +135,10 @@ export class MgT2ShipConsoleApp extends Application {
 
         let shipStatusSection = null;
         if (specials.shipStatus) {
-            shipStatusSection = this._buildDamageSummary(shipActor);
+            shipStatusSection = {
+                rows: this._buildShipStatusRows(shipActor),
+                hasWeaponMounts: shipActor.items.some(i => i.type === "hardware" && i.system.hardware?.system === "weapon")
+            };
         }
 
         let reassignSection = null;
@@ -181,6 +202,18 @@ export class MgT2ShipConsoleApp extends Application {
         };
     }
 
+    _buildShipStatusRows(shipActor) {
+        return SHIP_STATUS_ROWS.map(({ key, label }) => {
+            const severity = parseInt(shipActor.getFlag("mgt2e-piggy", `crit_${key}`)) || 0;
+            return {
+                key,
+                label,
+                severity,
+                statusLabel: severity === 0 ? "No Damage" : `Level ${severity}`
+            };
+        });
+    }
+
     _bandLabel(bandIndex) {
         if (bandIndex === null || bandIndex === undefined) {
             return "Unknown";
@@ -198,6 +231,11 @@ export class MgT2ShipConsoleApp extends Application {
             }
             await runCrewAction(this.shipActor, this.crewActorId, this.roleId, actionId);
             this.render(false);
+        });
+
+        html.find(".console-open-weapons").on("click", async () => {
+            const { MgT2WeaponStatusApp } = await import("./weapon-status.mjs");
+            new MgT2WeaponStatusApp(this.shipActor).render(true);
         });
 
         html.find(".console-abort").on("click", async () => {

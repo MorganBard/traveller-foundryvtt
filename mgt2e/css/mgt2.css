@@ -2673,6 +2673,15 @@ ol.actor-items li.item-status- {
   --svc-verdigris-dim: #3f5a4d;
   --svc-danger: #a4402f;
   --svc-panel-inset: #150c05;
+  /* Ship Status severity gradient, interpolated verdigris (No Damage) -> danger (Level 6), so
+     it reads as part of the same instrument-panel palette rather than a stock traffic-light red/green. */
+  --svc-sev-0: #6f9683;
+  --svc-sev-1: #788875;
+  --svc-sev-2: #817967;
+  --svc-sev-3: #8a6b59;
+  --svc-sev-4: #925d4b;
+  --svc-sev-5: #9b4e3d;
+  --svc-sev-6: #a4402f;
 }
 
 #mgt2e-ship-console .window-content {
@@ -2774,6 +2783,47 @@ ol.actor-items li.item-status- {
   color: var(--svc-brass-bright);
 }
 
+#mgt2e-ship-console .ship-status-list {
+  list-style: none;
+  margin: 0 0 8px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+#mgt2e-ship-console .ship-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  background: var(--svc-panel-inset);
+  border-left: 4px solid var(--svc-sev-0);
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12);
+}
+#mgt2e-ship-console .ship-status-row[data-severity="1"] { border-left-color: var(--svc-sev-1); }
+#mgt2e-ship-console .ship-status-row[data-severity="2"] { border-left-color: var(--svc-sev-2); }
+#mgt2e-ship-console .ship-status-row[data-severity="3"] { border-left-color: var(--svc-sev-3); }
+#mgt2e-ship-console .ship-status-row[data-severity="4"] { border-left-color: var(--svc-sev-4); }
+#mgt2e-ship-console .ship-status-row[data-severity="5"] { border-left-color: var(--svc-sev-5); }
+#mgt2e-ship-console .ship-status-row[data-severity="6"] { border-left-color: var(--svc-sev-6); }
+#mgt2e-ship-console .ship-status-label {
+  color: var(--svc-parchment-dim);
+}
+#mgt2e-ship-console .ship-status-row[data-severity="0"] .ship-status-value {
+  color: var(--svc-sev-0);
+}
+#mgt2e-ship-console .ship-status-row[data-severity="1"] .ship-status-value { color: var(--svc-sev-1); }
+#mgt2e-ship-console .ship-status-row[data-severity="2"] .ship-status-value { color: var(--svc-sev-2); }
+#mgt2e-ship-console .ship-status-row[data-severity="3"] .ship-status-value { color: var(--svc-sev-3); }
+#mgt2e-ship-console .ship-status-row[data-severity="4"] .ship-status-value { color: var(--svc-sev-4); }
+#mgt2e-ship-console .ship-status-row[data-severity="5"] .ship-status-value { color: var(--svc-sev-5); }
+#mgt2e-ship-console .ship-status-row[data-severity="6"] .ship-status-value {
+  color: var(--svc-sev-6);
+  font-weight: 700;
+}
+
 #mgt2e-ship-console button.console-action,
 #mgt2e-ship-console button.console-abort {
   appearance: none;
@@ -2839,4 +2889,70 @@ ol.actor-items li.item-status- {
 }
 #mgt2e-ship-console button.console-abort::before {
   background: radial-gradient(circle at 35% 30%, #e37a5c 0%, var(--svc-danger) 100%);
+}
+
+/* Weapons status window - a lighter version of the ship console's theme (no rivets/plate),
+   opened from a ship's Ship Status section to list per-mount status individually. */
+#mgt2e-weapon-status {
+  --ws-wood-dark: #241209;
+  --ws-wood-mid: #3a2011;
+  --ws-wood-grain: #170b04;
+  --ws-brass-shadow: #4a3315;
+  --ws-parchment: #ecdfc2;
+  --ws-parchment-dim: #c9b98f;
+  --ws-panel-inset: #150c05;
+  --ws-operational: #6f9683;
+  --ws-disabled: #e3b657;
+  --ws-destroyed: #a4402f;
+}
+#mgt2e-weapon-status .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--ws-wood-mid) 0%, var(--ws-wood-dark) 55%, var(--ws-wood-grain) 100%);
+  color: var(--ws-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+#mgt2e-weapon-status .weapon-status-body {
+  padding: 12px;
+}
+#mgt2e-weapon-status .weapon-status-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+#mgt2e-weapon-status .weapon-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 11px;
+  border-radius: 4px;
+  font-size: 13px;
+  background: var(--ws-panel-inset);
+  border-left: 4px solid var(--ws-operational);
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12);
+}
+#mgt2e-weapon-status .weapon-status-name {
+  color: var(--ws-parchment-dim);
+}
+#mgt2e-weapon-status .weapon-status-badge {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ws-operational);
+}
+#mgt2e-weapon-status .weapon-status-disabled {
+  border-left-color: var(--ws-disabled);
+}
+#mgt2e-weapon-status .weapon-status-disabled .weapon-status-badge {
+  color: var(--ws-disabled);
+}
+#mgt2e-weapon-status .weapon-status-destroyed {
+  border-left-color: var(--ws-destroyed);
+}
+#mgt2e-weapon-status .weapon-status-destroyed .weapon-status-badge {
+  color: var(--ws-destroyed);
+  font-weight: 700;
 }
