@@ -137,7 +137,8 @@ export class MgT2ShipConsoleApp extends Application {
         if (specials.shipStatus) {
             shipStatusSection = {
                 rows: this._buildShipStatusRows(shipActor),
-                hasWeaponMounts: shipActor.items.some(i => i.type === "hardware" && i.system.hardware?.system === "weapon")
+                hasWeaponMounts: shipActor.items.some(i => i.type === "hardware" && i.system.hardware?.system === "weapon"),
+                hasCrew: Object.keys(shipActor.system.crewed?.crew ?? {}).length > 0
             };
         }
 
@@ -236,6 +237,11 @@ export class MgT2ShipConsoleApp extends Application {
         html.find(".console-open-weapons").on("click", async () => {
             const { MgT2WeaponStatusApp } = await import("./weapon-status.mjs");
             new MgT2WeaponStatusApp(this.shipActor).render(true);
+        });
+
+        html.find(".console-open-crew").on("click", async () => {
+            const { MgT2CrewStatusApp } = await import("./crew-status.mjs");
+            new MgT2CrewStatusApp(this.shipActor).render(true);
         });
 
         html.find(".console-abort").on("click", async () => {

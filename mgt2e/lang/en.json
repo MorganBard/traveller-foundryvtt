@@ -905,6 +905,7 @@
   "MGT2.Spacecraft.CriticalLabel.thrust": "Thrust",
   "MGT2.Spacecraft.CriticalLabel.jumpDM": "Jump",
   "MGT2.Spacecraft.CriticalLabel.armour": "Armour",
+  "MGT2.Spacecraft.CriticalLabel.lifeSupport": "Life Support",
   "MGT2.Spacecraft.Critical.hull.Title": "Hull Critical ({severity})",
   "MGT2.Spacecraft.Critical.hull.Text": "Starship takes {damage} hits to the hull",
   "MGT2.Spacecraft.Critical.hull.0": "Location already destroyed, instead suffer <b>6D6</b> damage",

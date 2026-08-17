@@ -2956,3 +2956,97 @@ ol.actor-items li.item-status- {
   color: var(--ws-destroyed);
   font-weight: 700;
 }
+
+/* Crew status window - same lighter theme as Weapons. */
+#mgt2e-crew-status {
+  --cs-wood-dark: #241209;
+  --cs-wood-mid: #3a2011;
+  --cs-wood-grain: #170b04;
+  --cs-parchment: #ecdfc2;
+  --cs-parchment-dim: #c9b98f;
+  --cs-panel-inset: #150c05;
+  --cs-nominal: #6f9683;
+  --cs-hours: #e3b657;
+  --cs-rounds: #c9603f;
+  --cs-failed: #a4402f;
+}
+#mgt2e-crew-status .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--cs-wood-mid) 0%, var(--cs-wood-dark) 55%, var(--cs-wood-grain) 100%);
+  color: var(--cs-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+#mgt2e-crew-status .crew-status-body {
+  padding: 12px;
+}
+#mgt2e-crew-status .life-support-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 11px;
+  border-radius: 4px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  background: var(--cs-panel-inset);
+  border: 1px solid var(--cs-nominal);
+  color: var(--cs-nominal);
+  margin-bottom: 12px;
+}
+#mgt2e-crew-status .life-support-hours {
+  border-color: var(--cs-hours);
+  color: var(--cs-hours);
+}
+#mgt2e-crew-status .life-support-rounds {
+  border-color: var(--cs-rounds);
+  color: var(--cs-rounds);
+}
+#mgt2e-crew-status .life-support-failed {
+  border-color: var(--cs-failed);
+  color: var(--cs-failed);
+  font-weight: 700;
+  animation: mgt2e-life-support-pulse 1.6s ease-in-out infinite;
+}
+@keyframes mgt2e-life-support-pulse {
+  0%, 100% { background: var(--cs-panel-inset); }
+  50% { background: rgba(164, 64, 47, 0.35); }
+}
+#mgt2e-crew-status .crew-status-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#mgt2e-crew-status .crew-status-row {
+  background: var(--cs-panel-inset);
+  border-radius: 4px;
+  padding: 7px 10px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12);
+}
+#mgt2e-crew-status .crew-status-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+#mgt2e-crew-status .crew-status-name {
+  color: var(--cs-parchment-dim);
+}
+#mgt2e-crew-status .crew-status-status {
+  color: var(--cs-parchment-dim);
+  opacity: 0.8;
+  font-style: italic;
+}
+#mgt2e-crew-status .crew-status-bar-track {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.5);
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+}
+#mgt2e-crew-status .crew-status-bar-fill {
+  height: 100%;
+  transition: width 0.2s ease;
+}

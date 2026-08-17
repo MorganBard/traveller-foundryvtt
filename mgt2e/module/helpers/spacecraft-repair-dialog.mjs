@@ -1,5 +1,6 @@
 import {rollSkill} from "../helpers/dice-rolls.mjs";
 import { MGT2 } from "../helpers/config.mjs";
+import { repairLifeSupport } from "./spacecraft/life-support.mjs";
 
 export class MgT2SpacecraftRepairDialog extends Application {
     static get defaultOptions() {
@@ -121,6 +122,9 @@ export class MgT2SpacecraftRepairDialog extends Application {
             this.actorShip.unsetFlag("mgt2e-piggy", "damage_"+id);
             this.actorShip.unsetFlag("mgt2e-piggy", "damageSev_"+id);
             this.actorShip.unsetFlag("mgt2e-piggy", "damageDM_"+id);
+            if (id === "lifeSupport") {
+                repairLifeSupport(this.actorShip);
+            }
             for (let e of html.find(".row_" + id)) {
                 e.remove();
             }

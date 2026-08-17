@@ -36,6 +36,8 @@ import { MgT2NavalGMPanel } from "./helpers/naval-gm-panel.mjs";
 import { MgT2StartNavalEncounterDialog } from "./helpers/naval-encounter-dialog.mjs";
 import { MgT2ShipConsoleApp } from "./helpers/ship-console.mjs";
 import { MgT2WeaponStatusApp } from "./helpers/weapon-status.mjs";
+import { MgT2CrewStatusApp } from "./helpers/crew-status.mjs";
+import { tickLifeSupportRounds, checkLifeSupportHourDeadlines } from "./helpers/spacecraft/life-support.mjs";
 import {
     tradeBuyGoodsHandler,
     tradeSellGoodsHandler,
@@ -1094,6 +1096,7 @@ Hooks.on("combatRound", (combat, data, options) => {
     // per pair, not once per combatant.
     resolveRangeBandsForRound(combat);
     tickSelfDestruct(combat);
+    tickLifeSupportRounds(combat);
 
     for (let combatant of combat.combatants) {
         const actor = combatant.actor;
@@ -1158,6 +1161,19 @@ Hooks.on("updateItem", item => {
         MgT2WeaponStatusApp.refreshAllForActor(item.parent.id);
     }
 });
+
+// The hour-based life support countdown runs on the real game clock rather than combat rounds
+// (see life-support.mjs), so it's checked whenever anyone advances world time - manually, via
+// Calendaria, via Simple Calendar, whatever the table uses.
+Hooks.on("updateWorldTime", () => {
+    if (game.user.isGM) {
+        checkLifeSupportHourDeadlines();
+    }
+});
+
+// Crew health/life-support panel: refresh on any traveller update (a crew member taking damage)
+// and any spacecraft update (the ship's own life-support flags changing).
+Hooks.on("updateActor", () => MgT2CrewStatusApp.refreshAll());
 
 Hooks.on("getSceneControlButtons", controls => {
     if (!game.user.isGM || !controls.tokens) {

@@ -1,0 +1,24 @@
+<div class="crew-status-body">
+    <div class="life-support-row life-support-{{lifeSupport.state}}">
+        <span class="life-support-label">Life Support</span>
+        <span class="life-support-value">{{lifeSupport.label}}</span>
+    </div>
+
+    {{#if crew.length}}
+        <ul class="crew-status-list">
+            {{#each crew}}
+                <li class="crew-status-row">
+                    <div class="crew-status-header">
+                        <span class="crew-status-name">{{this.name}}</span>
+                        <span class="crew-status-status">{{this.statusLabel}}</span>
+                    </div>
+                    <div class="crew-status-bar-track">
+                        <div class="crew-status-bar-fill" style="width: {{this.pct}}%; background-color: {{this.color}};"></div>
+                    </div>
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>This ship has no assigned crew.</p>
+    {{/if}}
+</div>
