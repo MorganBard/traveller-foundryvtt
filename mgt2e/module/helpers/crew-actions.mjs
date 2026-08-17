@@ -74,6 +74,34 @@ async function promptSetCourse(shipActor) {
     return { targetId: data.target, speed };
 }
 
+// Shared "pick one other ship in the encounter" prompt for specials that need exactly one enemy
+// target - sensorLock and electronicWarfare used to get this from canvas token targeting, which
+// never exists in this system's tokenless naval combat, so it always failed with "target exactly
+// one enemy spacecraft."
+async function promptPickTarget(shipActor, title) {
+    const otherShips = (game.combat?.combatants ?? [])
+        .map(c => c.actor)
+        .filter(actor => actor?.type === "spacecraft" && actor.id !== shipActor.id);
+
+    if (otherShips.length === 0) {
+        ui.notifications.error("No other ships in the encounter to target.");
+        return null;
+    }
+    if (otherShips.length === 1) {
+        return otherShips[0];
+    }
+
+    const options = otherShips.map(s => `<option value="${s.id}">${s.name}</option>`).join("");
+    const data = await foundry.applications.api.DialogV2.input({
+        window: { title },
+        content: `<select name="target">${options}</select>`
+    });
+    if (!data) {
+        return null;
+    }
+    return game.actors.get(data.target) ?? null;
+}
+
 // Dispatches a single crew-role action: skill rolls, weapon attacks, and the various
 // spacecraft "special" actions (initiative, maneuvering, evade, repair...). Standalone (no
 // dependency on any actor-sheet instance) so it's callable from any UI - the actor sheet's own
@@ -366,12 +394,10 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
             }
 
         } else if (action.special === "sensorLock") {
-            const targets = Array.from(game.user.targets);
-            if (targets.length !== 1 || targets[0].actor?.type !== "spacecraft") {
-                ui.notifications.error("Target exactly one enemy spacecraft to lock sensors onto.");
+            const targetShip = await promptPickTarget(shipActor, `${shipActor.name} - Sensor Lock`);
+            if (!targetShip) {
                 return;
             }
-            const targetShip = targets[0].actor;
             const result = await rollSkill(actorCrew, "electronics.sensors", {
                 "difficulty": 8,
                 "text": `Sensor Lock on ${targetShip.name}`
@@ -381,12 +407,10 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
             }
 
         } else if (action.special === "electronicWarfare") {
-            const targets = Array.from(game.user.targets);
-            if (targets.length !== 1 || targets[0].actor?.type !== "spacecraft") {
-                ui.notifications.error("Target exactly one enemy spacecraft for electronic warfare.");
+            const targetShip = await promptPickTarget(shipActor, `${shipActor.name} - Electronic Warfare`);
+            if (!targetShip) {
                 return;
             }
-            const targetShip = targets[0].actor;
             const result = await rollSkill(actorCrew, "electronics.comms", {
                 "difficulty": 8,
                 "text": `Electronic Warfare against ${targetShip.name}`
