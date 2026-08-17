@@ -80,6 +80,12 @@
             </div>
         {{/if}}
 
+        {{#if hasScanTarget}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{scanTargetActionId}}">Scan Target</button>
+            </div>
+        {{/if}}
+
         {{#if damageSection}}
             <div class="console-section">
                 <label class="console-section-title">Damage</label>

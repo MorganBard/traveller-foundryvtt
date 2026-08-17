@@ -295,6 +295,14 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: false
     });
+    game.settings.register('mgt2e-piggy', "detailedSensorScans", {
+        name: game.i18n.localize("MGT2.Settings.DetailedSensorScans.Name"),
+        hint: game.i18n.localize("MGT2.Settings.DetailedSensorScans.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    });
     game.settings.register('mgt2e-piggy', "splitAttackDamage", {
        name: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Name"),
        hint: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Hint"),

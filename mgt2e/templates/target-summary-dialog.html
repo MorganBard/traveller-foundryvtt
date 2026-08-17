@@ -1,0 +1,68 @@
+<div class="target-summary-body">
+    <span class="svc-rivet tl"></span>
+    <span class="svc-rivet tr"></span>
+    <span class="svc-rivet bl"></span>
+    <span class="svc-rivet br"></span>
+
+    <div class="svc-plate">
+        <p class="console-role-name">SENSOR OPS</p>
+        <h3 class="console-ship-name">{{crewActor.name}}</h3>
+    </div>
+
+    {{#if hasTargets}}
+        <div class="console-section">
+            <label class="console-section-title">Target</label>
+            <select class="target-summary-select" name="target">
+                {{selectOptions targetList selected=targetSelected}}
+            </select>
+        </div>
+
+        {{#if target}}
+            <div class="console-section target-summary-readout">
+                {{#if target.scanned}}
+                    <h4 class="target-summary-name">{{target.name}}</h4>
+                    <p class="target-summary-range">{{target.bandLabel}}</p>
+
+                    {{#if target.failed}}
+                        <p class="target-summary-none">No further data - the scan came back clean.</p>
+                    {{/if}}
+
+                    {{#if target.sizeClass}}
+                        <ul class="target-summary-facts">
+                            <li><span>Size Class</span><span>{{target.sizeClass}}</span></li>
+                            <li><span>Tonnage</span><span>{{target.tonnage}} tons</span></li>
+                            <li><span>Hull Configuration</span><span>{{target.hullConfig}}</span></li>
+                            {{#if target.trend}}
+                                <li><span>Trend</span><span>{{target.trend}}</span></li>
+                            {{/if}}
+                            {{#if target.hardpoints}}
+                                <li><span>Hardpoints</span><span>{{target.hardpoints}}</span></li>
+                                <li><span>Committed Speed</span><span>{{target.committedSpeed}}</span></li>
+                            {{/if}}
+                            {{#if target.hullCondition}}
+                                <li><span>Hull Condition</span><span>{{target.hullCondition}}</span></li>
+                                <li><span>Course</span><span>{{target.courseTarget}}</span></li>
+                                <li><span>Jump Drive</span><span>{{#if target.jumpCapable}}Capable{{else}}None Detected{{/if}}</span></li>
+                            {{/if}}
+                        </ul>
+                    {{/if}}
+
+                    {{#if target.weaponLoadout.length}}
+                        <label class="console-section-title">Weapon Loadout</label>
+                        <ul class="target-summary-facts">
+                            {{#each target.weaponLoadout}}
+                                <li><span>{{this.mountName}}</span><span>{{this.weapons}}</span></li>
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                {{else}}
+                    <p class="target-summary-none">No scan data yet.</p>
+                {{/if}}
+            </div>
+        {{/if}}
+
+        <button type="button" class="console-action scan-target">Scan</button>
+    {{else}}
+        <p>No targets currently detected.</p>
+    {{/if}}
+</div>

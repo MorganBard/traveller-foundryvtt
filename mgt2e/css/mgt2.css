@@ -3251,6 +3251,196 @@ ol.actor-items li.item-status- {
   transform: translateY(1px);
 }
 
+/* Target Summary dialog (house rule) - same brass/mahogany theme and svc- token/class names as
+   the attack dialog, so it reads as part of the same instrument panel family. */
+#mgt2e-target-summary {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-panel-inset: #150c05;
+}
+#mgt2e-target-summary.tactical {
+  --svc-wood-dark: #050a10;
+  --svc-wood-mid: #0a141c;
+  --svc-wood-grain: #02060a;
+  --svc-brass: #123840;
+  --svc-brass-bright: #4dd9e8;
+  --svc-brass-dim: #0a141c;
+  --svc-brass-shadow: #1f5a63;
+  --svc-parchment: #c9eef2;
+  --svc-parchment-dim: #7fa8ae;
+  --svc-ink: #8ff2ff;
+  --svc-panel-inset: #02060a;
+}
+#mgt2e-target-summary.tactical .window-content {
+  font-family: "Consolas", "SFMono-Regular", "Courier New", monospace;
+}
+#mgt2e-target-summary.tactical .console-ship-name {
+  text-shadow: none;
+}
+#mgt2e-target-summary .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+#mgt2e-target-summary .target-summary-body {
+  padding: 14px;
+  position: relative;
+}
+#mgt2e-target-summary .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright), var(--svc-brass) 45%, var(--svc-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+#mgt2e-target-summary .svc-rivet.tl { top: 4px; left: 4px; }
+#mgt2e-target-summary .svc-rivet.tr { top: 4px; right: 4px; }
+#mgt2e-target-summary .svc-rivet.bl { bottom: 4px; left: 4px; }
+#mgt2e-target-summary .svc-rivet.br { bottom: 4px; right: 4px; }
+#mgt2e-target-summary .svc-plate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow:
+    inset 0 1px 0 rgba(255,241,209,0.35),
+    inset 0 -3px 6px rgba(0,0,0,0.35),
+    0 3px 8px rgba(0,0,0,0.4);
+}
+#mgt2e-target-summary .console-role-name {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--svc-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+}
+#mgt2e-target-summary .console-ship-name {
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--svc-ink);
+  margin: 0;
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+#mgt2e-target-summary .console-section {
+  margin-bottom: 12px;
+}
+#mgt2e-target-summary .console-section-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+  margin: 0 0 0.4rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+  font-family: Georgia, serif;
+  font-weight: 400;
+  display: block;
+}
+#mgt2e-target-summary select {
+  width: 100%;
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+  padding: 5px 7px;
+  font-family: Georgia, serif;
+  font-size: 12px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+#mgt2e-target-summary select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+#mgt2e-target-summary .target-summary-readout {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 10px 12px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12);
+}
+#mgt2e-target-summary .target-summary-name {
+  margin: 0 0 2px;
+  color: var(--svc-brass-bright);
+  font-size: 16px;
+  font-weight: 400;
+}
+#mgt2e-target-summary .target-summary-range {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--svc-parchment-dim);
+}
+#mgt2e-target-summary .target-summary-none {
+  margin: 0;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--svc-parchment-dim);
+}
+#mgt2e-target-summary .target-summary-facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#mgt2e-target-summary .target-summary-facts li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(227,182,87,0.1);
+}
+#mgt2e-target-summary .target-summary-facts li:last-child {
+  border-bottom: none;
+}
+#mgt2e-target-summary .target-summary-facts li span:first-child {
+  color: var(--svc-parchment-dim);
+}
+#mgt2e-target-summary .target-summary-facts li span:last-child {
+  color: var(--svc-parchment);
+  font-weight: 600;
+}
+#mgt2e-target-summary button.console-action {
+  appearance: none;
+  width: 100%;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 5px;
+  padding: 9px 12px;
+  text-align: center;
+  cursor: pointer;
+  background: linear-gradient(180deg, #2c1710 0%, #170b04 100%);
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.22), 0 2px 6px rgba(0,0,0,0.4);
+  color: var(--svc-parchment);
+  font-family: Georgia, serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  transition: box-shadow 0.12s ease, background 0.12s ease, transform 0.08s ease;
+}
+#mgt2e-target-summary button.console-action:hover {
+  box-shadow: inset 0 0 0 1px var(--svc-brass-bright), 0 3px 8px rgba(0,0,0,0.5);
+  background: linear-gradient(180deg, #33190f 0%, #1c0d05 100%);
+}
+#mgt2e-target-summary button.console-action:active {
+  transform: translateY(1px);
+}
+
 /* Crew status window - same lighter theme as Weapons. */
 #mgt2e-crew-status {
   --cs-wood-dark: #241209;

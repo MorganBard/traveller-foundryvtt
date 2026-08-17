@@ -402,6 +402,13 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
                 "difficulty": 8,
                 "text": `${label} (${shipActor.name})`
             });
+        } else if (action.special === "scanTarget") {
+            if (!game.settings.get("mgt2e-piggy", "detailedSensorScans")) {
+                ui.notifications.warn("Detailed Sensor Scans is disabled in system settings.");
+                return;
+            }
+            const { MgT2TargetSummaryDialog } = await import("./target-summary-dialog.mjs");
+            new MgT2TargetSummaryDialog(shipActor, actorCrew, { theme: game.user.isGM ? "tactical" : "brass" }).render(true);
         }
     }
 }

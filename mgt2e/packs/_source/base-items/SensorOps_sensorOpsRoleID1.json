@@ -32,6 +32,11 @@
           "title": "Electronic Warfare",
           "action": "special",
           "special": "electronicWarfare"
+        },
+        "sns0001e": {
+          "title": "Scan Target",
+          "action": "special",
+          "special": "scanTarget"
         }
       },
       "description": "",

@@ -7,7 +7,7 @@ import { MGT2 } from "./config.mjs";
 // start-of-encounter or captain-only actions handled elsewhere) is simply not shown - the console
 // only surfaces what's relevant to running a round of combat from this one role's seat.
 const CONSOLE_SPECIALS = new Set([
-    "setCourse", "evade", "reassignCrew", "repair", "shipStatus",
+    "setCourse", "evade", "reassignCrew", "repair", "shipStatus", "scanTarget",
     "selfDestructVote", "sensorLock", "electronicWarfare", "pointDefence", "disperseSand"
 ]);
 
@@ -184,6 +184,8 @@ export class MgT2ShipConsoleApp extends Application {
             pointDefenceActionId: specials.pointDefence?.actionId,
             hasDisperseSand: !!specials.disperseSand,
             disperseSandActionId: specials.disperseSand?.actionId,
+            hasScanTarget: !!specials.scanTarget && game.settings.get("mgt2e-piggy", "detailedSensorScans"),
+            scanTargetActionId: specials.scanTarget?.actionId,
             selfDestructArmed: !!selfDestructRoundsRemaining,
             selfDestructRoundsRemaining
         };

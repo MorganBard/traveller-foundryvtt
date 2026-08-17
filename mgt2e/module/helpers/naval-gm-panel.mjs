@@ -3,7 +3,7 @@ import { MgT2NavalAttackDialog } from "./naval-attack-dialog.mjs";
 
 // Combat-relevant "special" actions surfaced on the GM panel.
 const COMBAT_PANEL_SPECIALS = new Set([
-    "setCourse", "evade", "repair", "reassignCrew",
+    "setCourse", "evade", "repair", "reassignCrew", "scanTarget",
     "selfDestructVote", "sensorLock", "electronicWarfare", "pointDefence", "disperseSand"
 ]);
 
@@ -149,6 +149,10 @@ export class MgT2NavalGMPanel extends Application {
             }
             const crewId = this._crewedActorIdFor(shipActor, roleId);
             for (const [actionId, action] of Object.entries(roleItem.system.role.actions)) {
+                if (action.action === "special" && action.special === "scanTarget"
+                    && !game.settings.get("mgt2e-piggy", "detailedSensorScans")) {
+                    continue;
+                }
                 if (action.action === "special" && COMBAT_PANEL_SPECIALS.has(action.special)) {
                     actions.push({
                         roleId, actionId, crewId,
