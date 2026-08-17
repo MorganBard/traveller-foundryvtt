@@ -7,6 +7,13 @@
         </select>
         <h2 class="ncp-ship-name">{{ship.name}}</h2>
 
+        {{#if selfDestructArmed}}
+            <div class="ncp-section ncp-selfdestruct-armed">
+                <p><strong>SELF-DESTRUCT ARMED</strong> &mdash; {{selfDestructRoundsRemaining}} round(s) remaining</p>
+                <button type="button" class="ncp-abort">Abort</button>
+            </div>
+        {{/if}}
+
         {{#if weaponActions.length}}
             <div class="ncp-section">
                 <label class="ncp-section-title">Attack</label>

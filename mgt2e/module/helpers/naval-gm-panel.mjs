@@ -70,6 +70,7 @@ export class MgT2NavalGMPanel extends Application {
             MgT2NavalGMPanel._selectedShipId = ships[0].id;
         }
         const shipActor = game.actors.get(MgT2NavalGMPanel._selectedShipId);
+        const selfDestructRoundsRemaining = shipActor.getFlag("mgt2e-piggy", "selfDestructRoundsRemaining");
 
         return {
             hasActiveShip: true,
@@ -77,18 +78,27 @@ export class MgT2NavalGMPanel extends Application {
             ship: shipActor,
             weaponActions: this._buildWeaponActions(shipActor),
             specialActions: this._buildSpecialActions(shipActor),
-            genericRollActions: this._buildGenericRollActions(shipActor)
+            genericRollActions: this._buildGenericRollActions(shipActor),
+            selfDestructArmed: !!selfDestructRoundsRemaining,
+            selfDestructRoundsRemaining
         };
     }
 
+    // Broker has no combat-relevant actions of its own - out of combat the GM just asks
+    // whichever player has it to make the roll normally, so it's excluded here rather than
+    // cluttering the combat panel's aggregated action lists with an irrelevant skill check.
     _crewedRoleIds(shipActor) {
         const roleIds = new Set();
         const crewed = shipActor.system.crewed?.crew ?? {};
         for (const actorId in crewed) {
             for (const roleId in crewed[actorId]) {
-                if (crewed[actorId][roleId]?.assigned) {
-                    roleIds.add(roleId);
+                if (!crewed[actorId][roleId]?.assigned) {
+                    continue;
                 }
+                if (shipActor.items.get(roleId)?.name === "Broker") {
+                    continue;
+                }
+                roleIds.add(roleId);
             }
         }
         return roleIds;
@@ -206,6 +216,21 @@ export class MgT2NavalGMPanel extends Application {
             const mount = shipActor.items.get(mountId);
             const gunner = game.actors.get(gunnerId);
             new MgT2NavalAttackDialog(shipActor, gunner, mount, { theme: "tactical", rollMode: "gm" }).render(true);
+        });
+
+        html.find(".ncp-abort").on("click", async () => {
+            const shipActor = game.actors.get(MgT2NavalGMPanel._selectedShipId);
+            if (!shipActor) {
+                return;
+            }
+            await shipActor.unsetFlag("mgt2e-piggy", "selfDestructCaptainVote");
+            await shipActor.unsetFlag("mgt2e-piggy", "selfDestructEngineerVote");
+            await shipActor.unsetFlag("mgt2e-piggy", "selfDestructRoundsRemaining");
+            await ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({ actor: shipActor }),
+                content: `<strong>${shipActor.name}</strong>: Self-destruct sequence aborted.`
+            });
+            this.render(false);
         });
     }
 }

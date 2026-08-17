@@ -2625,6 +2625,8 @@ ol.actor-items li.item-status- {
   --tac-amber-dim: #6b4e24;
   --tac-text: #c9eef2;
   --tac-text-dim: #7fa8ae;
+  --tac-danger: #e85a4d;
+  --tac-danger-dim: #4d1f18;
 }
 #mgt2e-naval-gm-panel .window-content,
 #mgt2e-naval-encounter .window-content {
@@ -2715,6 +2717,33 @@ ol.actor-items li.item-status- {
 }
 #mgt2e-naval-gm-panel button:disabled:hover {
   box-shadow: none;
+}
+#mgt2e-naval-gm-panel .ncp-selfdestruct-armed {
+  border: 1px solid var(--tac-danger);
+  border-radius: 2px;
+  padding: 8px 10px;
+  animation: mgt2e-tac-selfdestruct-pulse 1.6s ease-in-out infinite;
+}
+#mgt2e-naval-gm-panel .ncp-selfdestruct-armed p {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--tac-danger);
+}
+#mgt2e-naval-gm-panel button.ncp-abort {
+  border-color: var(--tac-danger);
+  color: var(--tac-danger);
+  text-align: center;
+  margin-bottom: 0;
+}
+#mgt2e-naval-gm-panel button.ncp-abort:hover {
+  border-color: var(--tac-danger);
+  box-shadow: 0 0 8px rgba(232,90,77,0.4), inset 0 0 8px rgba(232,90,77,0.1);
+}
+@keyframes mgt2e-tac-selfdestruct-pulse {
+  0%, 100% { background: var(--tac-panel-inset); }
+  50% { background: var(--tac-danger-dim); }
 }
 
 #mgt2e-naval-encounter .start-naval-encounter-dialog {
