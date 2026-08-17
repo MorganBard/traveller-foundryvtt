@@ -1,0 +1,53 @@
+{
+  "name": "Damage Control",
+  "type": "role",
+  "img": "systems/mgt2e-piggy/icons/items/crew_role.svg",
+  "system": {
+    "role": {
+      "actions": {
+        "dmc0001a": {
+          "title": "Repair",
+          "action": "special",
+          "special": "repair"
+        },
+        "dmc0001b": {
+          "title": "Mechanic",
+          "action": "skill",
+          "chat": "",
+          "skill": "engineer.power",
+          "dm": 0,
+          "cha": "INT",
+          "target": 8
+        }
+      },
+      "description": "Someone off crawling through access tubes with a hyper spanner, fixing whatever the Engineer flags as critical. Assigned by the Engineer or Captain, not a fixed station.",
+      "department": false,
+      "colour": null,
+      "dei": 0,
+      "positions": 1,
+      "show": true
+    }
+  },
+  "effects": [],
+  "folder": "eElDlFei05r9Idke",
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "core": {}
+  },
+  "_stats": {
+    "systemId": "mgt2e-piggy",
+    "systemVersion": "0.22.1.2",
+    "coreVersion": "14.365",
+    "createdTime": 1786953600000,
+    "modifiedTime": 1786953600000,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "damageCtrlRoleI1",
+  "sort": 0,
+  "_key": "!items!damageCtrlRoleI1"
+}

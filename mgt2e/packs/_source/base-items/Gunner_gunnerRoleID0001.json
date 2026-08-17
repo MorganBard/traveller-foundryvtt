@@ -1,0 +1,67 @@
+{
+  "name": "Gunner",
+  "type": "role",
+  "img": "systems/mgt2e-piggy/icons/items/roles/gunner.svg",
+  "system": {
+    "role": {
+      "actions": {
+        "gnr0001a": {
+          "title": "Gunner (Turret)",
+          "action": "skill",
+          "chat": "",
+          "skill": "gunner.turret",
+          "dm": 0,
+          "cha": "DEX",
+          "target": 8
+        },
+        "gnr0001b": {
+          "title": "Gunner (Bay)",
+          "action": "skill",
+          "chat": "",
+          "skill": "gunner.ortillery",
+          "dm": 0,
+          "cha": "DEX",
+          "target": 8
+        },
+        "gnr0001c": {
+          "title": "Point Defence",
+          "action": "special",
+          "special": "pointDefence"
+        },
+        "gnr0001d": {
+          "title": "Disperse Sand",
+          "action": "special",
+          "special": "disperseSand"
+        }
+      },
+      "description": "Weapon-mount Attack actions are added per-ship once turrets/bays are configured on that ship's Hardware tab.",
+      "department": false,
+      "colour": null,
+      "dei": 0,
+      "positions": 1,
+      "show": true
+    }
+  },
+  "effects": [],
+  "folder": "eElDlFei05r9Idke",
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "core": {}
+  },
+  "_stats": {
+    "systemId": "mgt2e-piggy",
+    "systemVersion": "0.22.1.2",
+    "coreVersion": "14.365",
+    "createdTime": 1786953600000,
+    "modifiedTime": 1786953600000,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "gunnerRoleID0001",
+  "sort": 0,
+  "_key": "!items!gunnerRoleID0001"
+}

@@ -2,6 +2,40 @@ import {MgT2SkillDialog} from "./skill-dialog.mjs";
 import {MgT2SpacecraftAttackDialog} from "./spacecraft-attack-dialog.mjs";
 import {MgT2SpacecraftRepairDialog} from "./spacecraft-repair-dialog.mjs";
 import {setCourse} from "./naval-course.mjs";
+import {rollSkill} from "./dice-rolls.mjs";
+
+// Minimal role+crew picker for the "reassignCrew" special. scope "any" (Captain, command
+// authority) lets any role be reassigned; scope "damageControl" (Engineer) restricts the target
+// role to Damage Control only - both write to the same shipActor.system.crewed.crew structure
+// every other panel already reads.
+async function promptReassignCrew(shipActor, scope) {
+    const crewIds = Object.keys(shipActor.system.crewed?.crew ?? {});
+    const crewOptions = crewIds
+        .map(id => game.actors.get(id))
+        .filter(a => a)
+        .map(a => `<option value="${a.id}">${a.name}</option>`)
+        .join("");
+    const roleItems = shipActor.items.filter(i => i.type === "role" && (scope === "any" || i.name === "Damage Control"));
+    const roleOptions = roleItems.map(r => `<option value="${r.id}">${r.name}</option>`).join("");
+
+    if (!crewOptions || !roleOptions) {
+        ui.notifications.error("No crew or roles available to reassign.");
+        return null;
+    }
+
+    const data = await foundry.applications.api.DialogV2.input({
+        window: { title: `${shipActor.name} - Reassign Crew` },
+        content: `
+            <p>Assign crew member to role:</p>
+            <select name="crew">${crewOptions}</select>
+            <select name="role">${roleOptions}</select>
+        `
+    });
+    if (!data) {
+        return null;
+    }
+    return { crewId: data.crew, roleId: data.role };
+}
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -282,6 +316,93 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
         } else if (action.special === "repair") {
             // Open ship repair dialog.
             new MgT2SpacecraftRepairDialog(shipActor, actorCrew).render(true);
+
+        } else if (action.special === "reassignCrew") {
+            const choice = await promptReassignCrew(shipActor, action.scope ?? "any");
+            if (!choice) {
+                return;
+            }
+            const crewMember = game.actors.get(choice.crewId);
+            const roleItem = shipActor.items.get(choice.roleId);
+            await shipActor.update({
+                [`system.crewed.crew.${choice.crewId}.${choice.roleId}.assigned`]: true
+            });
+            ChatMessage.create({
+                user: game.user.id,
+                speaker: ChatMessage.getSpeaker({ actor: shipActor }),
+                content: `<strong>${shipActor.name}</strong>: ${crewMember?.name ?? "Crew member"} assigned to ${roleItem?.name ?? "role"} by ${actorCrew.name}.`
+            });
+
+        } else if (action.special === "selfDestructVote") {
+            const flagKey = itemRole.name === "Engineer" ? "selfDestructEngineerVote" : "selfDestructCaptainVote";
+            const otherFlagKey = flagKey === "selfDestructEngineerVote" ? "selfDestructCaptainVote" : "selfDestructEngineerVote";
+
+            const data = await foundry.applications.api.DialogV2.input({
+                window: { title: `${shipActor.name} - Self-Destruct` },
+                content: `
+                    <p>Confirm self-destruct and propose a countdown, in rounds:</p>
+                    <input type="number" name="rounds" value="3" min="1" step="1"/>
+                `
+            });
+            if (!data) {
+                return;
+            }
+            const rounds = Math.max(1, parseInt(data.rounds) || 1);
+            await shipActor.setFlag("mgt2e-piggy", flagKey, { confirmed: true, rounds });
+
+            const otherVote = shipActor.getFlag("mgt2e-piggy", otherFlagKey);
+            if (otherVote?.confirmed && otherVote.rounds === rounds) {
+                await shipActor.setFlag("mgt2e-piggy", "selfDestructRoundsRemaining", rounds);
+                ChatMessage.create({
+                    user: game.user.id,
+                    speaker: ChatMessage.getSpeaker({ actor: shipActor }),
+                    content: `<strong>${shipActor.name}</strong>: SELF-DESTRUCT ARMED by ${actorCrew.name}. Detonation in ${rounds} round(s). Any crew member may abort.`
+                });
+            } else {
+                ChatMessage.create({
+                    user: game.user.id,
+                    speaker: ChatMessage.getSpeaker({ actor: shipActor }),
+                    content: `<strong>${shipActor.name}</strong>: ${actorCrew.name} confirms self-destruct at ${rounds} round(s) - awaiting matching confirmation from the other authority.`
+                });
+            }
+
+        } else if (action.special === "sensorLock") {
+            const targets = Array.from(game.user.targets);
+            if (targets.length !== 1 || targets[0].actor?.type !== "spacecraft") {
+                ui.notifications.error("Target exactly one enemy spacecraft to lock sensors onto.");
+                return;
+            }
+            const targetShip = targets[0].actor;
+            const result = await rollSkill(actorCrew, "electronics.sensors", {
+                "difficulty": 8,
+                "text": `Sensor Lock on ${targetShip.name}`
+            });
+            if (result >= 8) {
+                await shipActor.setFlag("mgt2e-piggy", "sensorLockTarget", targetShip.id);
+            }
+
+        } else if (action.special === "electronicWarfare") {
+            const targets = Array.from(game.user.targets);
+            if (targets.length !== 1 || targets[0].actor?.type !== "spacecraft") {
+                ui.notifications.error("Target exactly one enemy spacecraft for electronic warfare.");
+                return;
+            }
+            const targetShip = targets[0].actor;
+            const result = await rollSkill(actorCrew, "electronics.comms", {
+                "difficulty": 8,
+                "text": `Electronic Warfare against ${targetShip.name}`
+            });
+            if (result >= 8 && targetShip.getFlag("mgt2e-piggy", "sensorLockTarget") === shipActor.id) {
+                await targetShip.unsetFlag("mgt2e-piggy", "sensorLockTarget");
+            }
+
+        } else if (action.special === "pointDefence" || action.special === "disperseSand") {
+            const skill = action.special === "pointDefence" ? "gunner.turret" : "gunner.turret";
+            const label = action.special === "pointDefence" ? "Point Defence" : "Disperse Sand";
+            await rollSkill(actorCrew, skill, {
+                "difficulty": 8,
+                "text": `${label} (${shipActor.name})`
+            });
         }
     }
 }

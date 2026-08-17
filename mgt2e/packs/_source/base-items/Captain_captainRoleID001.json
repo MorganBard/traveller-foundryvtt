@@ -1,0 +1,69 @@
+{
+  "name": "Captain",
+  "type": "role",
+  "img": "systems/mgt2e-piggy/icons/items/crew_role.svg",
+  "system": {
+    "role": {
+      "actions": {
+        "cpt0001a": {
+          "title": "Combat Tactics",
+          "action": "special",
+          "special": "tacticsInit"
+        },
+        "cpt0001b": {
+          "title": "Improve Initiative",
+          "action": "special",
+          "special": "improveInit"
+        },
+        "cpt0001c": {
+          "title": "Reassign Crew",
+          "action": "special",
+          "special": "reassignCrew",
+          "scope": "any"
+        },
+        "cpt0001d": {
+          "title": "Self-Destruct",
+          "action": "special",
+          "special": "selfDestructVote"
+        },
+        "cpt0001e": {
+          "title": "Leadership",
+          "action": "skill",
+          "chat": "",
+          "skill": "leadership",
+          "dm": 0,
+          "cha": "EDU",
+          "target": 8
+        }
+      },
+      "description": "",
+      "department": false,
+      "colour": null,
+      "dei": 0,
+      "positions": 1,
+      "show": true
+    }
+  },
+  "effects": [],
+  "folder": "eElDlFei05r9Idke",
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "core": {}
+  },
+  "_stats": {
+    "systemId": "mgt2e-piggy",
+    "systemVersion": "0.22.1.2",
+    "coreVersion": "14.365",
+    "createdTime": 1786953600000,
+    "modifiedTime": 1786953600000,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "captainRoleID001",
+  "sort": 0,
+  "_key": "!items!captainRoleID001"
+}

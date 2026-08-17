@@ -31,6 +31,17 @@
           "dm": null,
           "cha": "INT",
           "target": 10
+        },
+        "eng0001a": {
+          "title": "Assign Damage Control",
+          "action": "special",
+          "special": "reassignCrew",
+          "scope": "damageControl"
+        },
+        "eng0001b": {
+          "title": "Self-Destruct",
+          "action": "special",
+          "special": "selfDestructVote"
         }
       },
       "description": "",

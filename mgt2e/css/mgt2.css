@@ -2626,30 +2626,70 @@ ol.actor-items li.item-status- {
 }
 
 /* GM Naval Combat Control panel */
-#mgt2e-naval-combat-panel .ncp-body {
+#mgt2e-naval-gm-panel .ncp-body {
   padding: 6px;
 }
-#mgt2e-naval-combat-panel .ncp-ship-name {
+#mgt2e-naval-gm-panel .ncp-ship-name {
   margin: 0 0 2px 0;
 }
-#mgt2e-naval-combat-panel .ncp-facing {
+#mgt2e-naval-gm-panel .ncp-facing {
   margin: 0 0 8px 0;
   font-style: italic;
 }
-#mgt2e-naval-combat-panel .ncp-section {
+#mgt2e-naval-gm-panel .ncp-section {
   margin-bottom: 10px;
 }
-#mgt2e-naval-combat-panel .ncp-section-title {
+#mgt2e-naval-gm-panel .ncp-section-title {
   display: block;
   font-weight: 700;
   margin-bottom: 4px;
 }
-#mgt2e-naval-combat-panel button {
+#mgt2e-naval-gm-panel button {
   display: block;
   width: 100%;
   text-align: left;
   margin-bottom: 3px;
 }
-#mgt2e-naval-combat-panel button:disabled {
+#mgt2e-naval-gm-panel button:disabled {
   opacity: 0.5;
+}
+
+/* Ship Console (per-role player panel) - plain/functional styling. Themed brass/wood look is a
+   separate, later pass and applies only via an added class, not this base ruleset. */
+#mgt2e-ship-console .ship-console-body {
+  padding: 6px;
+}
+#mgt2e-ship-console .console-ship-name {
+  margin: 0 0 2px 0;
+}
+#mgt2e-ship-console .console-role-name {
+  margin: 0 0 8px 0;
+  font-style: italic;
+}
+#mgt2e-ship-console .console-section {
+  margin-bottom: 10px;
+}
+#mgt2e-ship-console .console-section-title {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+#mgt2e-ship-console button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 3px;
+}
+#mgt2e-ship-console .console-selfdestruct-armed {
+  border: 2px solid #a4402f;
+  padding: 6px;
+  border-radius: 4px;
+}
+#mgt2e-ship-console .console-band-list {
+  list-style: none;
+  margin: 0 0 6px 0;
+  padding: 0;
+}
+#mgt2e-ship-console .console-current-target {
+  font-weight: 700;
 }

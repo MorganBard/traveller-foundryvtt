@@ -1,7 +1,11 @@
 <div class="ncp-body">
     {{#if hasActiveShip}}
+        <select class="ncp-ship-select">
+            {{#each ships}}
+                <option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.name}}</option>
+            {{/each}}
+        </select>
         <h2 class="ncp-ship-name">{{ship.name}}</h2>
-        <p class="ncp-facing">Heading: Sector {{facing}}</p>
 
         {{#if weaponActions.length}}
             <div class="ncp-section">
@@ -28,12 +32,27 @@
             </div>
         {{/if}}
 
+        {{#if genericRollActions.length}}
+            <div class="ncp-section">
+                <label class="ncp-section-title">Skill Checks</label>
+                {{#each genericRollActions}}
+                    <button type="button" class="ncp-roll-action" data-role-id="{{this.roleId}}"
+                            data-action-id="{{this.actionId}}" data-crew-id="{{this.crewId}}"
+                            {{#if this.disabled}}disabled title="No crew assigned to this role"{{/if}}>
+                        {{this.label}}
+                    </button>
+                {{/each}}
+            </div>
+        {{/if}}
+
         {{#unless weaponActions.length}}
             {{#unless specialActions.length}}
-                <p>No combat actions available for this ship.</p>
+                {{#unless genericRollActions.length}}
+                    <p>No combat actions available for this ship.</p>
+                {{/unless}}
             {{/unless}}
         {{/unless}}
     {{else}}
-        <p>{{#if combatActive}}No active spacecraft combatant.{{else}}No active combat.{{/if}}</p>
+        <p>{{#if combatActive}}No spacecraft in the current combat.{{else}}No active combat.{{/if}}</p>
     {{/if}}
 </div>

@@ -32,8 +32,9 @@ import { migrateWorld } from "./migration.mjs";
 import { NpcIdCard } from "./helpers/id-card.mjs";
 import {hasTrait} from "./helpers/dice-rolls.mjs";
 import { resolveRangeBandsForRound } from "./helpers/naval-course.mjs";
-import { MgT2NavalCombatPanel } from "./helpers/naval-combat-panel.mjs";
+import { MgT2NavalGMPanel } from "./helpers/naval-gm-panel.mjs";
 import { MgT2StartNavalEncounterDialog } from "./helpers/naval-encounter-dialog.mjs";
+import { MgT2ShipConsoleApp } from "./helpers/ship-console.mjs";
 import {
     tradeBuyGoodsHandler,
     tradeSellGoodsHandler,
@@ -1057,11 +1058,41 @@ Hooks.on("combatTurn", (combat, data, options) => {
     }
 });
 
+// Self-Destruct countdown: decrements selfDestructRoundsRemaining for every spacecraft that has
+// it set (armed via the "selfDestructVote" special once both Captain and Engineer confirm - see
+// crew-actions.mjs). At zero, the ship is wrecked (Hull to zero, matching how the rest of this
+// system already represents a destroyed spacecraft) and a detonation card posts.
+async function tickSelfDestruct(combat) {
+    for (const combatant of combat.combatants) {
+        const actor = combatant.actor;
+        if (actor?.type !== "spacecraft") {
+            continue;
+        }
+        const remaining = actor.getFlag("mgt2e-piggy", "selfDestructRoundsRemaining");
+        if (remaining === undefined || remaining === null) {
+            continue;
+        }
+        if (remaining <= 1) {
+            await actor.update({ "system.hits.damage": actor.system.hits.max });
+            await actor.unsetFlag("mgt2e-piggy", "selfDestructRoundsRemaining");
+            await actor.unsetFlag("mgt2e-piggy", "selfDestructCaptainVote");
+            await actor.unsetFlag("mgt2e-piggy", "selfDestructEngineerVote");
+            await ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({ actor }),
+                content: `<strong>${actor.name}</strong>: SELF-DESTRUCT. The ship is wrecked.`
+            });
+        } else {
+            await actor.setFlag("mgt2e-piggy", "selfDestructRoundsRemaining", remaining - 1);
+        }
+    }
+}
+
 Hooks.on("combatRound", (combat, data, options) => {
     // This is when the round changes.
     // Resolve each ship pair's Range Band from both ships' current navTarget/navSpeed - once
     // per pair, not once per combatant.
     resolveRangeBandsForRound(combat);
+    tickSelfDestruct(combat);
 
     for (let combatant of combat.combatants) {
         const actor = combatant.actor;
@@ -1103,15 +1134,18 @@ Hooks.on("combatRound", (combat, data, options) => {
     }
 });
 
-// GM Naval Combat Control panel: live-refresh whenever the combat state or the active ship's
-// own flags (facing, thrust spent, evade charges...) change, so the panel never shows stale data.
-Hooks.on("updateCombat", () => MgT2NavalCombatPanel.refresh());
-Hooks.on("combatTurn", () => MgT2NavalCombatPanel.refresh());
-Hooks.on("combatRound", () => MgT2NavalCombatPanel.refresh());
-Hooks.on("deleteCombat", () => MgT2NavalCombatPanel.refresh());
+// GM Naval Combat Control panel: live-refresh whenever the combat state or the selected ship's
+// own flags (course, thrust spent, evade charges...) change, so the panel never shows stale data.
+Hooks.on("updateCombat", () => MgT2NavalGMPanel.refresh());
+Hooks.on("combatTurn", () => MgT2NavalGMPanel.refresh());
+Hooks.on("combatRound", () => MgT2NavalGMPanel.refresh());
+Hooks.on("deleteCombat", () => MgT2NavalGMPanel.refresh());
 Hooks.on("updateActor", actor => {
-    if (actor.id === game.combat?.combatant?.actor?.id) {
-        MgT2NavalCombatPanel.refresh();
+    if (actor.id === MgT2NavalGMPanel._selectedShipId) {
+        MgT2NavalGMPanel.refresh();
+    }
+    if (game.user.isGM) {
+        MgT2ShipConsoleApp.refreshAllForActor(actor.id);
     }
 });
 
@@ -1125,7 +1159,7 @@ Hooks.on("getSceneControlButtons", controls => {
         icon: "fa-solid fa-rocket",
         button: true,
         order: Object.keys(controls.tokens.tools).length,
-        onClick: () => MgT2NavalCombatPanel.toggle(),
+        onClick: () => MgT2NavalGMPanel.toggle(),
         visible: true
     };
     controls.tokens.tools.startNavalEncounter = {

@@ -1,0 +1,67 @@
+{
+  "name": "Sensor Ops",
+  "type": "role",
+  "img": "systems/mgt2e-piggy/icons/items/crew_role.svg",
+  "system": {
+    "role": {
+      "actions": {
+        "sns0001a": {
+          "title": "Sensors",
+          "action": "skill",
+          "chat": "",
+          "skill": "electronics.sensors",
+          "dm": 0,
+          "cha": "INT",
+          "target": 8
+        },
+        "sns0001b": {
+          "title": "Comms",
+          "action": "skill",
+          "chat": "",
+          "skill": "electronics.comms",
+          "dm": 0,
+          "cha": "INT",
+          "target": 8
+        },
+        "sns0001c": {
+          "title": "Sensor Lock",
+          "action": "special",
+          "special": "sensorLock"
+        },
+        "sns0001d": {
+          "title": "Electronic Warfare",
+          "action": "special",
+          "special": "electronicWarfare"
+        }
+      },
+      "description": "",
+      "department": false,
+      "colour": null,
+      "dei": 0,
+      "positions": 1,
+      "show": true
+    }
+  },
+  "effects": [],
+  "folder": "eElDlFei05r9Idke",
+  "ownership": {
+    "default": 0
+  },
+  "flags": {
+    "core": {}
+  },
+  "_stats": {
+    "systemId": "mgt2e-piggy",
+    "systemVersion": "0.22.1.2",
+    "coreVersion": "14.365",
+    "createdTime": 1786953600000,
+    "modifiedTime": 1786953600000,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "sensorOpsRoleID1",
+  "sort": 0,
+  "_key": "!items!sensorOpsRoleID1"
+}

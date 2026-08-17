@@ -45,6 +45,64 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
         return `systems/mgt2e-piggy/templates/actor/actor-${this.actor.type}-sheet.html`;
     }
 
+    /** @override */
+    _getHeaderButtons() {
+        const buttons = super._getHeaderButtons();
+        if (this.actor.type === "spacecraft" && (this.actor.isOwner || game.user.isGM)) {
+            buttons.unshift({
+                label: "Console",
+                class: "open-ship-console",
+                icon: "fa-solid fa-satellite-dish",
+                onclick: () => this._openShipConsole()
+            });
+        }
+        return buttons;
+    }
+
+    // Opens the calling user's own ship console: if they're crewing exactly one role on this
+    // ship, opens it directly; otherwise (GM, or crewing multiple roles) prompts which.
+    async _openShipConsole() {
+        const { MgT2ShipConsoleApp } = await import("../helpers/ship-console.mjs");
+        const shipActor = this.actor;
+        const crewed = shipActor.system.crewed?.crew ?? {};
+
+        const myRoles = [];
+        for (const [crewId, roles] of Object.entries(crewed)) {
+            const crewActor = game.actors.get(crewId);
+            if (!crewActor?.isOwner && !game.user.isGM) {
+                continue;
+            }
+            for (const [roleId, data] of Object.entries(roles)) {
+                const roleItem = shipActor.items.get(roleId);
+                // Skip orphaned assignments left behind when a role Item was deleted/replaced
+                // without clearing the crewed.crew entry that pointed to it.
+                if (data?.assigned && roleItem) {
+                    myRoles.push({ crewId, roleId, label: `${crewActor?.name ?? "Unknown"} - ${roleItem.name}` });
+                }
+            }
+        }
+
+        if (myRoles.length === 0) {
+            ui.notifications.warn("No crewed role found for you on this ship.");
+            return;
+        }
+        if (myRoles.length === 1) {
+            new MgT2ShipConsoleApp(shipActor, myRoles[0].roleId, myRoles[0].crewId).render(true);
+            return;
+        }
+
+        const options = myRoles.map((r, i) => `<option value="${i}">${r.label}</option>`).join("");
+        const data = await foundry.applications.api.DialogV2.input({
+            window: { title: "Open Console" },
+            content: `<p>Which console?</p><select name="choice">${options}</select>`
+        });
+        if (!data) {
+            return;
+        }
+        const chosen = myRoles[parseInt(data.choice)];
+        new MgT2ShipConsoleApp(shipActor, chosen.roleId, chosen.crewId).render(true);
+    }
+
     /* -------------------------------------------- */
 
     /** @override */
