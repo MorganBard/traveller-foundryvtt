@@ -1,5 +1,5 @@
 import { runCrewAction } from "./crew-actions.mjs";
-import { MgT2SpacecraftAttackDialog } from "./spacecraft-attack-dialog.mjs";
+import { MgT2NavalAttackDialog } from "./naval-attack-dialog.mjs";
 
 // Combat-relevant "special" actions surfaced on the GM panel.
 const COMBAT_PANEL_SPECIALS = new Set([
@@ -205,7 +205,7 @@ export class MgT2NavalGMPanel extends Application {
             }
             const mount = shipActor.items.get(mountId);
             const gunner = game.actors.get(gunnerId);
-            new MgT2SpacecraftAttackDialog(shipActor, gunner, mount, {}).render(true);
+            new MgT2NavalAttackDialog(shipActor, gunner, mount).render(true);
         });
     }
 }

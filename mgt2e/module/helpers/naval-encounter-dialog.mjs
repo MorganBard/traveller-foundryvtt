@@ -10,6 +10,8 @@ import { initRangeBandsForEncounter } from "./naval-course.mjs";
 export class MgT2StartNavalEncounterDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
+        options.id = "mgt2e-naval-encounter";
+        options.classes = ["mgt2e-naval-encounter"];
         options.template = "systems/mgt2e-piggy/templates/naval-encounter-dialog.html";
         options.width = 360;
         options.height = "auto";

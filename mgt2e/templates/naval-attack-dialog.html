@@ -1,0 +1,53 @@
+<form class="flexcol naval-attack-body">
+    <span class="svc-rivet tl"></span>
+    <span class="svc-rivet tr"></span>
+    <span class="svc-rivet bl"></span>
+    <span class="svc-rivet br"></span>
+
+    <div class="svc-plate">
+        <p class="console-role-name">GUNNERY</p>
+        <h3 class="console-ship-name">{{gunner.name}}</h3>
+        {{#if gunnerChaLabel}}
+            <p class="svc-subtitle">{{gunnerChaLabel}} {{gunnerSkillLabel}}</p>
+        {{/if}}
+    </div>
+
+    {{#if hasTargets}}
+        <div class="console-section">
+            <label class="console-section-title">Target</label>
+            <select class="attackDialogTargets" name="target">
+                {{selectOptions targetList selected=targetSelected}}
+            </select>
+        </div>
+    {{/if}}
+
+    <div class="console-section naval-attack-grid">
+        <div>
+            <label class="console-section-title">Weapon</label>
+            <select class="attackDialogWeapon" name="weaponSelected">
+                {{selectOptions weaponSelect selected=weaponSelected}}
+            </select>
+        </div>
+        <div>
+            <label class="console-section-title">Range</label>
+            <select class="attackDialogRange" name="range">
+                {{selectOptions ranges selected=range}}
+            </select>
+        </div>
+    </div>
+
+    <div class="console-section naval-attack-grid">
+        <div>
+            <label class="console-section-title">Roll Type</label>
+            <select class="skillDialogRollType" name="dicetype">
+                {{selectOptions rollTypes selected="normal"}}
+            </select>
+        </div>
+        <div>
+            <label class="console-section-title">DM</label>
+            <input class="skillDialogDM" name="dm" type="text" data-dtype="Number" value="{{dm}}"/>
+        </div>
+    </div>
+
+    <button type="button" class="console-action attackRoll">Fire</button>
+</form>

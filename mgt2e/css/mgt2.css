@@ -2609,39 +2609,146 @@ ol.actor-items li.item-status- {
   height: 64px;
 }
 
-/* GM Naval Combat Control panel */
+/* GM Naval surfaces - a futuristic tactical-console look, deliberately distinct from the
+   player consoles' brass/mahogany theme: this is the ship-agnostic tactical overview, not any
+   one ship's cockpit, so it reads at a glance as "the GM screen" rather than reusing a specific
+   vessel's flavor. Applies to the GM combat panel and the Start Naval Encounter dialog. */
+#mgt2e-naval-gm-panel,
+#mgt2e-naval-encounter {
+  --tac-bg-deep: #050a10;
+  --tac-bg-mid: #0a141c;
+  --tac-panel-inset: #02060a;
+  --tac-cyan: #4dd9e8;
+  --tac-cyan-bright: #8ff2ff;
+  --tac-cyan-dim: #1f5a63;
+  --tac-amber: #e8a94d;
+  --tac-amber-dim: #6b4e24;
+  --tac-text: #c9eef2;
+  --tac-text-dim: #7fa8ae;
+}
+#mgt2e-naval-gm-panel .window-content,
+#mgt2e-naval-encounter .window-content {
+  background:
+    repeating-linear-gradient(180deg, rgba(77,217,232,0.03) 0 1px, transparent 1px 3px),
+    linear-gradient(160deg, var(--tac-bg-mid) 0%, var(--tac-bg-deep) 100%);
+  color: var(--tac-text);
+  font-family: "Consolas", "SFMono-Regular", "Courier New", monospace;
+}
 #mgt2e-naval-gm-panel .ncp-body {
-  padding: 6px;
+  padding: 10px;
+}
+#mgt2e-naval-gm-panel .ncp-ship-select,
+#mgt2e-naval-encounter select {
+  width: 100%;
+  background: var(--tac-panel-inset);
+  color: var(--tac-cyan-bright);
+  border: 1px solid var(--tac-cyan-dim);
+  border-radius: 2px;
+  padding: 5px 7px;
+  font-family: inherit;
+  font-size: 12px;
+  margin-bottom: 8px;
 }
 #mgt2e-naval-gm-panel .ncp-ship-name {
-  margin: 0 0 2px 0;
+  margin: 0 0 8px 0;
+  color: var(--tac-cyan-bright);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: 0 0 6px rgba(77,217,232,0.5);
+  border-bottom: 1px solid var(--tac-cyan-dim);
+  padding-bottom: 6px;
 }
 #mgt2e-naval-gm-panel .ncp-facing {
   margin: 0 0 8px 0;
   font-style: italic;
+  color: var(--tac-text-dim);
 }
 #mgt2e-naval-gm-panel .ncp-section {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 #mgt2e-naval-gm-panel .ncp-section-title {
   display: block;
-  font-weight: 700;
-  margin-bottom: 4px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tac-amber);
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(232,169,77,0.25);
 }
-#mgt2e-naval-gm-panel button {
+#mgt2e-naval-gm-panel button,
+#mgt2e-naval-encounter button {
   display: block;
   width: 100%;
   text-align: left;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
+  background: var(--tac-panel-inset);
+  color: var(--tac-cyan-bright);
+  border: 1px solid var(--tac-cyan-dim);
+  border-radius: 2px;
+  padding: 7px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+#mgt2e-naval-gm-panel button:hover,
+#mgt2e-naval-encounter button:hover {
+  border-color: var(--tac-cyan);
+  box-shadow: 0 0 8px rgba(77,217,232,0.35), inset 0 0 8px rgba(77,217,232,0.08);
 }
 #mgt2e-naval-gm-panel button:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
+  color: var(--tac-text-dim);
+  border-color: var(--tac-amber-dim);
+  cursor: not-allowed;
+}
+#mgt2e-naval-gm-panel button:disabled:hover {
+  box-shadow: none;
+}
+
+#mgt2e-naval-encounter .start-naval-encounter-dialog {
+  padding: 12px;
+}
+#mgt2e-naval-encounter p {
+  color: var(--tac-text-dim);
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+#mgt2e-naval-encounter .encounter-ship-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  background: var(--tac-panel-inset);
+  border: 1px solid var(--tac-cyan-dim);
+  border-radius: 2px;
+}
+#mgt2e-naval-encounter .encounter-ship-list li {
+  padding: 5px 8px;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(77,217,232,0.1);
+}
+#mgt2e-naval-encounter .encounter-ship-list li:last-child {
+  border-bottom: none;
+}
+#mgt2e-naval-encounter .encounter-band-row {
+  margin-bottom: 12px;
+}
+#mgt2e-naval-encounter .encounter-band-row label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tac-amber);
+  margin-bottom: 5px;
 }
 
 /* Ship Console (per-role player panel) - brass instrument panel in dark mahogany, per the
    approved design direction ("the Harrier is an old Sindalian noble's warship"). Deliberately
-   NOT applied to the GM's naval-gm-panel - that stays plain/utilitarian by design, so NPC ships
-   don't get the ornate treatment and the GM's multi-ship view stays fast to scan. */
+   NOT shared with the GM's naval surfaces, which get their own distinct futuristic-tactical
+   theme below - a specific ship's cockpit flavor doesn't fit the GM's ship-agnostic overview. */
 #mgt2e-ship-console {
   --svc-wood-dark: #241209;
   --svc-wood-mid: #3a2011;
@@ -2939,6 +3046,144 @@ ol.actor-items li.item-status- {
 #mgt2e-weapon-status .weapon-status-destroyed .weapon-status-badge {
   color: var(--ws-destroyed);
   font-weight: 700;
+}
+
+/* Naval Attack dialog - brass/mahogany, matching the Ship Console theme (opened from the
+   Gunner's own console or the GM panel; ship-flavored either way, not GM-overview-flavored). */
+#mgt2e-naval-attack {
+  --na-wood-dark: #241209;
+  --na-wood-mid: #3a2011;
+  --na-wood-grain: #170b04;
+  --na-brass: #a97c2f;
+  --na-brass-bright: #e3b657;
+  --na-brass-dim: #6e4f22;
+  --na-brass-shadow: #4a3315;
+  --na-parchment: #ecdfc2;
+  --na-parchment-dim: #c9b98f;
+  --na-ink: #1c130a;
+  --na-verdigris: #6f9683;
+  --na-verdigris-dim: #3f5a4d;
+  --na-panel-inset: #150c05;
+}
+#mgt2e-naval-attack .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--na-wood-mid) 0%, var(--na-wood-dark) 55%, var(--na-wood-grain) 100%);
+  color: var(--na-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+#mgt2e-naval-attack .naval-attack-body {
+  padding: 14px;
+  position: relative;
+}
+#mgt2e-naval-attack .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--na-brass-bright), var(--na-brass) 45%, var(--na-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+#mgt2e-naval-attack .svc-rivet.tl { top: 4px; left: 4px; }
+#mgt2e-naval-attack .svc-rivet.tr { top: 4px; right: 4px; }
+#mgt2e-naval-attack .svc-rivet.bl { bottom: 4px; left: 4px; }
+#mgt2e-naval-attack .svc-rivet.br { bottom: 4px; right: 4px; }
+#mgt2e-naval-attack .svc-plate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(180deg, var(--na-brass) 0%, var(--na-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--na-brass-shadow);
+  box-shadow:
+    inset 0 1px 0 rgba(255,241,209,0.35),
+    inset 0 -3px 6px rgba(0,0,0,0.35),
+    0 3px 8px rgba(0,0,0,0.4);
+}
+#mgt2e-naval-attack .console-role-name {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--na-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+}
+#mgt2e-naval-attack .console-ship-name {
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--na-ink);
+  margin: 0;
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+#mgt2e-naval-attack .svc-subtitle {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--na-ink);
+  opacity: 0.68;
+  margin: 3px 0 0;
+}
+#mgt2e-naval-attack .console-section {
+  margin-bottom: 12px;
+}
+#mgt2e-naval-attack .console-section-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--na-brass-bright);
+  margin: 0 0 0.4rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+  font-family: Georgia, serif;
+  font-weight: 400;
+  display: block;
+}
+#mgt2e-naval-attack .naval-attack-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+#mgt2e-naval-attack select,
+#mgt2e-naval-attack input {
+  width: 100%;
+  background: var(--na-panel-inset);
+  color: var(--na-parchment);
+  border: 1px solid var(--na-brass-shadow);
+  border-radius: 4px;
+  padding: 5px 7px;
+  font-family: Georgia, serif;
+  font-size: 12px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+#mgt2e-naval-attack select:focus,
+#mgt2e-naval-attack input:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--na-brass-bright), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+#mgt2e-naval-attack button.console-action {
+  appearance: none;
+  width: 100%;
+  border: 1px solid var(--na-brass-shadow);
+  border-radius: 5px;
+  padding: 9px 12px;
+  text-align: center;
+  cursor: pointer;
+  background: linear-gradient(180deg, #2c1710 0%, #170b04 100%);
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.22), 0 2px 6px rgba(0,0,0,0.4);
+  color: var(--na-parchment);
+  font-family: Georgia, serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  transition: box-shadow 0.12s ease, background 0.12s ease, transform 0.08s ease;
+}
+#mgt2e-naval-attack button.console-action:hover {
+  box-shadow: inset 0 0 0 1px var(--na-brass-bright), 0 3px 8px rgba(0,0,0,0.5);
+  background: linear-gradient(180deg, #33190f 0%, #1c0d05 100%);
+}
+#mgt2e-naval-attack button.console-action:active {
+  transform: translateY(1px);
 }
 
 /* Crew status window - same lighter theme as Weapons. */

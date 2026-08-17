@@ -1,5 +1,5 @@
 import {MgT2SkillDialog} from "./skill-dialog.mjs";
-import {MgT2SpacecraftAttackDialog} from "./spacecraft-attack-dialog.mjs";
+import {MgT2NavalAttackDialog} from "./naval-attack-dialog.mjs";
 import {MgT2SpacecraftRepairDialog} from "./spacecraft-repair-dialog.mjs";
 import {setCourse} from "./naval-course.mjs";
 import {rollSkill} from "./dice-rolls.mjs";
@@ -134,8 +134,7 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
         let weaponId = action.weapon;
         let weaponItem = shipActor.items.get(weaponId);
         let dm = parseInt(action.dm);
-        console.log(weaponItem);
-        new MgT2SpacecraftAttackDialog(shipActor, actorCrew, weaponItem, dm).render(true);
+        new MgT2NavalAttackDialog(shipActor, actorCrew, weaponItem, { dm }).render(true);
     } else if (action.action === "special") {
         if (action.special === "pilot") {
             // Core rulebook: ship initiative is 2D + the pilot's Pilot skill + the ship's Thrust
