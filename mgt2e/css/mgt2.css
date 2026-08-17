@@ -2649,6 +2649,14 @@ ol.actor-items li.item-status- {
   font-size: 12px;
   margin-bottom: 8px;
 }
+/* The dropdown's own popup list of <option>s is browser-native chrome that ignores the
+   select's background unless options are styled directly - without this it falls back to a
+   light default background while still inheriting the light text color, unreadable. */
+#mgt2e-naval-gm-panel .ncp-ship-select option,
+#mgt2e-naval-encounter select option {
+  background: var(--tac-panel-inset);
+  color: var(--tac-cyan-bright);
+}
 #mgt2e-naval-gm-panel .ncp-ship-name {
   margin: 0 0 8px 0;
   color: var(--tac-cyan-bright);
@@ -3154,6 +3162,12 @@ ol.actor-items li.item-status- {
   font-family: Georgia, serif;
   font-size: 12px;
   box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+/* Same fix as the GM surfaces above - the option popup ignores the select's own background
+   unless styled directly. */
+#mgt2e-naval-attack select option {
+  background: var(--na-panel-inset);
+  color: var(--na-parchment);
 }
 #mgt2e-naval-attack select:focus,
 #mgt2e-naval-attack input:focus {
