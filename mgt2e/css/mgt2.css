@@ -2654,42 +2654,189 @@ ol.actor-items li.item-status- {
   opacity: 0.5;
 }
 
-/* Ship Console (per-role player panel) - plain/functional styling. Themed brass/wood look is a
-   separate, later pass and applies only via an added class, not this base ruleset. */
-#mgt2e-ship-console .ship-console-body {
-  padding: 6px;
+/* Ship Console (per-role player panel) - brass instrument panel in dark mahogany, per the
+   approved design direction ("the Harrier is an old Sindalian noble's warship"). Deliberately
+   NOT applied to the GM's naval-gm-panel - that stays plain/utilitarian by design, so NPC ships
+   don't get the ornate treatment and the GM's multi-ship view stays fast to scan. */
+#mgt2e-ship-console {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
 }
-#mgt2e-ship-console .console-ship-name {
-  margin: 0 0 2px 0;
+
+#mgt2e-ship-console .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+#mgt2e-ship-console .ship-console-body {
+  padding: 14px;
+  position: relative;
+}
+
+#mgt2e-ship-console .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright), var(--svc-brass) 45%, var(--svc-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+#mgt2e-ship-console .svc-rivet.tl { top: 4px; left: 4px; }
+#mgt2e-ship-console .svc-rivet.tr { top: 4px; right: 4px; }
+#mgt2e-ship-console .svc-rivet.bl { bottom: 4px; left: 4px; }
+#mgt2e-ship-console .svc-rivet.br { bottom: 4px; right: 4px; }
+
+#mgt2e-ship-console .svc-plate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow:
+    inset 0 1px 0 rgba(255,241,209,0.35),
+    inset 0 -3px 6px rgba(0,0,0,0.35),
+    0 3px 8px rgba(0,0,0,0.4);
 }
 #mgt2e-ship-console .console-role-name {
-  margin: 0 0 8px 0;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--svc-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+  font-style: normal;
+}
+#mgt2e-ship-console .console-ship-name {
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--svc-ink);
+  margin: 0;
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+#mgt2e-ship-console .svc-subtitle {
+  font-size: 11px;
   font-style: italic;
+  color: var(--svc-ink);
+  opacity: 0.68;
+  margin: 3px 0 0;
+}
+
+#mgt2e-ship-console .console-section-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+  font-family: Georgia, serif;
+  font-weight: 400;
+  display: block;
 }
 #mgt2e-ship-console .console-section {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
-#mgt2e-ship-console .console-section-title {
-  display: block;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-#mgt2e-ship-console button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  margin-bottom: 3px;
-}
-#mgt2e-ship-console .console-selfdestruct-armed {
-  border: 2px solid #a4402f;
-  padding: 6px;
-  border-radius: 4px;
-}
+
 #mgt2e-ship-console .console-band-list {
   list-style: none;
-  margin: 0 0 6px 0;
+  margin: 0 0 8px 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+#mgt2e-ship-console .console-band-list li {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.18), inset 0 2px 5px rgba(0,0,0,0.5);
 }
 #mgt2e-ship-console .console-current-target {
   font-weight: 700;
+  color: var(--svc-brass-bright);
+}
+
+#mgt2e-ship-console button.console-action,
+#mgt2e-ship-console button.console-abort {
+  appearance: none;
+  width: 100%;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 5px;
+  padding: 9px 12px;
+  text-align: left;
+  cursor: pointer;
+  background: linear-gradient(180deg, #2c1710 0%, #170b04 100%);
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.22), 0 2px 6px rgba(0,0,0,0.4);
+  color: var(--svc-parchment);
+  font-family: Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+  transition: box-shadow 0.12s ease, background 0.12s ease, transform 0.08s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#mgt2e-ship-console button.console-action::before,
+#mgt2e-ship-console button.console-abort::before {
+  content: "";
+  flex: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-verdigris) 0%, var(--svc-verdigris-dim) 100%);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.5);
+}
+#mgt2e-ship-console button.console-action:hover,
+#mgt2e-ship-console button.console-abort:hover {
+  box-shadow: inset 0 0 0 1px var(--svc-brass-bright), 0 3px 8px rgba(0,0,0,0.5);
+  background: linear-gradient(180deg, #33190f 0%, #1c0d05 100%);
+}
+#mgt2e-ship-console button.console-action:active,
+#mgt2e-ship-console button.console-abort:active {
+  transform: translateY(1px);
+}
+
+/* The generic "make a roll" skill actions get a shared dice glyph instead of the plain dot, so
+   this button shape reads as "roll something" wherever it appears across every role's console. */
+#mgt2e-ship-console .console-section:last-of-type button.console-action::before {
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright) 0%, var(--svc-brass) 100%);
+}
+
+#mgt2e-ship-console .console-selfdestruct-armed {
+  border: 2px solid var(--svc-danger);
+  background: rgba(164, 64, 47, 0.15);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+#mgt2e-ship-console .console-selfdestruct-armed p {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--svc-parchment);
+}
+#mgt2e-ship-console button.console-abort {
+  border-color: var(--svc-danger);
+}
+#mgt2e-ship-console button.console-abort::before {
+  background: radial-gradient(circle at 35% 30%, #e37a5c 0%, var(--svc-danger) 100%);
 }

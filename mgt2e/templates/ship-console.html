@@ -4,8 +4,18 @@
     {{else if missingRole}}
         <p>This role no longer exists on this ship.</p>
     {{else}}
-        <h3 class="console-ship-name">{{shipActor.name}}</h3>
-        <p class="console-role-name">{{roleName}}{{#if crewActor}} &middot; {{crewActor.name}}{{/if}}</p>
+        <span class="svc-rivet tl"></span>
+        <span class="svc-rivet tr"></span>
+        <span class="svc-rivet bl"></span>
+        <span class="svc-rivet br"></span>
+
+        <div class="svc-plate">
+            <p class="console-role-name">{{roleName}}{{#if crewActor}} &middot; {{crewActor.name}}{{/if}}</p>
+            <h3 class="console-ship-name">{{shipActor.name}}</h3>
+            {{#if shipDescription}}
+                <p class="svc-subtitle">{{shipDescription}}</p>
+            {{/if}}
+        </div>
 
         {{#if selfDestructArmed}}
             <div class="console-section console-selfdestruct-armed">
@@ -45,16 +55,29 @@
         {{/if}}
 
         {{#if hasPointDefence}}
-            <button type="button" class="console-action" data-action-id="{{pointDefenceActionId}}">Point Defence</button>
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{pointDefenceActionId}}">Point Defence</button>
+                {{#if hasDisperseSand}}
+                    <button type="button" class="console-action" data-action-id="{{disperseSandActionId}}">Disperse Sand</button>
+                {{/if}}
+            </div>
+        {{else if hasDisperseSand}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{disperseSandActionId}}">Disperse Sand</button>
+            </div>
         {{/if}}
-        {{#if hasDisperseSand}}
-            <button type="button" class="console-action" data-action-id="{{disperseSandActionId}}">Disperse Sand</button>
-        {{/if}}
+
         {{#if hasSensorLock}}
-            <button type="button" class="console-action" data-action-id="{{sensorLockActionId}}">Sensor Lock</button>
-        {{/if}}
-        {{#if hasElectronicWarfare}}
-            <button type="button" class="console-action" data-action-id="{{electronicWarfareActionId}}">Electronic Warfare</button>
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{sensorLockActionId}}">Sensor Lock</button>
+                {{#if hasElectronicWarfare}}
+                    <button type="button" class="console-action" data-action-id="{{electronicWarfareActionId}}">Electronic Warfare</button>
+                {{/if}}
+            </div>
+        {{else if hasElectronicWarfare}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{electronicWarfareActionId}}">Electronic Warfare</button>
+            </div>
         {{/if}}
 
         {{#if damageSection}}
@@ -62,7 +85,7 @@
                 <label class="console-section-title">Damage</label>
                 <p>Hull: {{damageSection.hull.value}} / {{damageSection.hull.max}} &middot; Armour: {{damageSection.armour}} &middot; Fuel: {{damageSection.fuel.value}} / {{damageSection.fuel.max}}</p>
                 {{#if damageSection.activeCriticals.length}}
-                    <ul class="console-critical-list">
+                    <ul class="console-band-list">
                         {{#each damageSection.activeCriticals}}
                             <li>{{this.location}} (severity {{this.severity}})</li>
                         {{/each}}

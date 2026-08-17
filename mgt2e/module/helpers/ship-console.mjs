@@ -146,6 +146,7 @@ export class MgT2ShipConsoleApp extends Application {
             shipActor,
             crewActor,
             roleName: roleItem.name,
+            shipDescription: shipActor.system.description,
             genericRollActions,
             weaponActions,
             hasEvade: !!specials.evade,

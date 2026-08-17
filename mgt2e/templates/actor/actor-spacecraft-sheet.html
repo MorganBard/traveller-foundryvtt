@@ -103,6 +103,11 @@
                 <input name="name" type="text" value="{{actor.name}}" placeholder="Name"/>
             </h1>
 
+            <div class="shadow">
+                <textarea class="ship-description-field" name="system.description" rows="2"
+                          placeholder="A short flavor description, shown on this ship's crew consoles - e.g. 'a Sindalian noble's warship'.">{{system.description}}</textarea>
+            </div>
+
             <div class="shadow grid grid-5col">
                 <div class="resource flex-group-center">
                     <label for="system.spacecraft.dtons" class="field-label">{{localize 'MGT2.TravellerSheet.DTons'}}</label>
