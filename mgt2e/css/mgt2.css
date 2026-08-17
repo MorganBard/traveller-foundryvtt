@@ -3073,6 +3073,28 @@ ol.actor-items li.item-status- {
   --na-verdigris-dim: #3f5a4d;
   --na-panel-inset: #150c05;
 }
+/* GM-panel variant - same structural rules below, just repointed at the tactical palette
+   instead of brass/mahogany, since a GM firing an NPC ship's weapon isn't "in" that ship's
+   cockpit the way a player at their own console is. */
+#mgt2e-naval-attack.tactical {
+  --na-wood-dark: #050a10;
+  --na-wood-mid: #0a141c;
+  --na-wood-grain: #02060a;
+  --na-brass: #123840;
+  --na-brass-bright: #4dd9e8;
+  --na-brass-dim: #0a141c;
+  --na-brass-shadow: #1f5a63;
+  --na-parchment: #c9eef2;
+  --na-parchment-dim: #7fa8ae;
+  --na-ink: #8ff2ff;
+  --na-panel-inset: #02060a;
+}
+#mgt2e-naval-attack.tactical .window-content {
+  font-family: "Consolas", "SFMono-Regular", "Courier New", monospace;
+}
+#mgt2e-naval-attack.tactical .console-ship-name {
+  text-shadow: none;
+}
 #mgt2e-naval-attack .window-content {
   background:
     repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),

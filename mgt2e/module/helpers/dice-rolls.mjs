@@ -909,7 +909,10 @@ export async function rollSpaceAttack(starship, gunner, weaponItem, options) {
         "radiation": radiationDamage,
         "ranged": true,
         "isMissile": isMissile,
-        "isSquadron": isSquadron
+        "isSquadron": isSquadron,
+        // Tokenless naval combat has no canvas selection/targeting for the Damage button to
+        // fall back on - the attack roll already knew its target, so carry it through.
+        "defenderActorId": options.defenderShip?.uuid
     };
     let json = JSON.stringify(damageOptions);
     text = `
@@ -954,8 +957,9 @@ export async function rollSpaceAttack(starship, gunner, weaponItem, options) {
 
     attackRoll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: starship }),
-        content: text,
-        rollMode: game.settings.get("core", "rollMode")
+        content: text
+    }, {
+        messageMode: options.rollMode || game.settings.get("core", "rollMode")
     });
 
 }

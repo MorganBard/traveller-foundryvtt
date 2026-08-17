@@ -49,5 +49,12 @@
         </div>
     </div>
 
+    <div class="console-section">
+        <label class="console-section-title">Roll Visibility</label>
+        <select class="attackDialogRollMode" name="rollMode">
+            {{selectOptions rollModes selected=rollMode}}
+        </select>
+    </div>
+
     <button type="button" class="console-action attackRoll">Fire</button>
 </form>

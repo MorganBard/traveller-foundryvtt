@@ -205,7 +205,7 @@ export class MgT2NavalGMPanel extends Application {
             }
             const mount = shipActor.items.get(mountId);
             const gunner = game.actors.get(gunnerId);
-            new MgT2NavalAttackDialog(shipActor, gunner, mount).render(true);
+            new MgT2NavalAttackDialog(shipActor, gunner, mount, { theme: "tactical", rollMode: "gm" }).render(true);
         });
     }
 }

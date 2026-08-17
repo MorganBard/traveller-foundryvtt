@@ -30,6 +30,15 @@ export class MgT2NavalAttackDialog extends Application {
         this.gunner = gunnerActor;
         this.mount = mountItem;
         this.dm = isNaN(attackOptions.dm) ? 0 : parseInt(attackOptions.dm);
+        // "tactical" (GM panel) vs the default brass/mahogany (player consoles) - a specific
+        // ship's cockpit flavor doesn't fit an NPC ship the GM is running from the overview.
+        if (attackOptions.theme === "tactical") {
+            this.options.classes.push("tactical");
+        }
+        // GM-initiated attacks (NPC ships firing on the party) default to a private GM roll, so
+        // the GM can quietly fudge a killing blow without the table seeing the raw result -
+        // still overridable per-roll via the dialog's own Roll Visibility field.
+        this.rollMode = attackOptions.rollMode ?? game.settings.get("core", "rollMode");
 
         this.weaponSelect = {};
         this.weaponSelected = null;
@@ -99,6 +108,15 @@ export class MgT2NavalAttackDialog extends Application {
                 boon: game.i18n.localize("MGT2.TravellerSheet.Boon"),
                 bane: game.i18n.localize("MGT2.TravellerSheet.Bane")
             },
+            // "ic" is a speaker-identity mode, not a visibility level - not a real option for
+            // "who can see this roll" the way the other four are.
+            rollModes: Object.entries(CONFIG.ChatMessage.modes)
+                .filter(([mode]) => mode !== "ic")
+                .reduce((acc, [mode, data]) => {
+                    acc[mode] = game.i18n.localize(data.label ?? data);
+                    return acc;
+                }, {}),
+            rollMode: this.rollMode,
             gunnerChaLabel: chaDM ? `${cha} ${chaDM}` : "",
             gunnerSkillLabel: weaponItem ? this.gunner.getSkillLabel(weaponItem.system.weapon.skill, true) : ""
         };
@@ -133,6 +151,7 @@ export class MgT2NavalAttackDialog extends Application {
 
         const dm = parseInt(html.find(".skillDialogDM")[0].value) || 0;
         const rollType = html.find(".skillDialogRollType")[0].value;
+        const rollMode = html.find(".attackDialogRollMode")[0].value;
         const range = html.find(".attackDialogRange")[0].value;
         const rangeDM = parseInt(MGT2.SPACE_RANGES[range]?.dm) || 0;
         const defenderShip = this.targetId ? game.actors.get(this.targetId) : null;
@@ -143,6 +162,7 @@ export class MgT2NavalAttackDialog extends Application {
             range,
             rangeDM,
             boon: rollType,
+            rollMode,
             defenderShip
         };
 

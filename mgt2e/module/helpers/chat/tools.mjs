@@ -231,7 +231,19 @@ Tools.targetTokensInBlast = function(x, y, radius) {
 Tools.applyDamageToTokens = async function(baseDamage, damageOptions) {
     console.log("Tools.applyDamageToTokens:");
 
-    let tokens = Array.from(Tools.getSelected());
+    let tokens;
+    if (damageOptions.defenderActorId) {
+        // Tokenless naval combat: the attack roll already knew its target ship, so use that
+        // directly instead of a canvas token selection that will never exist in this system's
+        // map-less naval encounters. A minimal shim standing in for a Token placeable - only
+        // .actor, .isOwner, and .document.name are ever read below.
+        const defenderActor = await fromUuid(damageOptions.defenderActorId);
+        tokens = defenderActor
+            ? [{ actor: defenderActor, isOwner: defenderActor.isOwner, document: { name: defenderActor.name } }]
+            : [];
+    } else {
+        tokens = Array.from(Tools.getSelected());
+    }
     if (tokens.length === 0) {
         ui.notifications.error(game.i18n.localize("MGT2.Error.CombatNoSelection"));
         return;
