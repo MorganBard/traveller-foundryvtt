@@ -2,6 +2,44 @@ import {rollSkill} from "../helpers/dice-rolls.mjs";
 import { MGT2 } from "../helpers/config.mjs";
 import { repairLifeSupport } from "./spacecraft/life-support.mjs";
 
+// Which MGT2.SPACECRAFT_CRITICALS location each MGT2.SPACECRAFT_DAMAGE effect belongs to - used
+// to clear the Ship Status board's crit_<location> severity once every effect under that
+// location has actually been fixed. hull/cargo/weapon/crew/bridge have no damage_ effect key at
+// all today, so they're not reachable through this dialog yet - unchanged, not this fix's scope.
+const DAMAGE_TO_CRITICAL = {
+    sensorDM: "sensors",
+    sensorMax: "sensors",
+    powerPlant: "powerPlant",
+    fuelHour: "fuel",
+    fuelRound: "fuel",
+    armour: "armour",
+    thrust: "mDrive",
+    pilotDM: "mDrive",
+    jumpDM: "jDrive"
+};
+
+// Repairing a single effect (e.g. sensorDM) shouldn't clear the location's severity while a
+// sibling effect (sensorMax) under the same crit_sensors is still active - the location isn't
+// genuinely fixed until every effect belonging to it is gone.
+async function clearCriticalIfFullyRepaired(actorShip, repairedId) {
+    const location = DAMAGE_TO_CRITICAL[repairedId];
+    if (!location) {
+        return;
+    }
+    const stillDamaged = Object.keys(DAMAGE_TO_CRITICAL).some(key =>
+        DAMAGE_TO_CRITICAL[key] === location && key !== repairedId
+        && actorShip.getFlag("mgt2e-piggy", "damage_" + key)
+    );
+    if (stillDamaged) {
+        return;
+    }
+    await actorShip.unsetFlag("mgt2e-piggy", "crit_" + location);
+    const hasCrits = Object.keys(MGT2.SPACECRAFT_CRITICALS).some(c =>
+        c !== location && actorShip.getFlag("mgt2e-piggy", "crit_" + c)
+    );
+    await actorShip.setFlag("mgt2e-piggy", "hasCrits", hasCrits);
+}
+
 export class MgT2SpacecraftRepairDialog extends Application {
     static get defaultOptions() {
         const options = super.defaultOptions;
@@ -125,6 +163,7 @@ export class MgT2SpacecraftRepairDialog extends Application {
             if (id === "lifeSupport") {
                 repairLifeSupport(this.actorShip);
             }
+            await clearCriticalIfFullyRepaired(this.actorShip, id);
             for (let e of html.find(".row_" + id)) {
                 e.remove();
             }
