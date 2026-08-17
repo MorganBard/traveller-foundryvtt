@@ -118,7 +118,7 @@ export class MgT2NavalGMPanel extends Application {
                     continue;
                 }
                 const bound = Object.values(roleItem.system.role.actions).find(
-                    a => a.action === "weapon" && item.system.hardware.weapons?.[a.weapon]
+                    a => a.action === "weapon" && a.weapon === item.id
                 );
                 if (bound) {
                     gunnerId = this._crewedActorIdFor(shipActor, roleId);
