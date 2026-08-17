@@ -1183,8 +1183,70 @@ Hooks.on("updateWorldTime", () => {
 // and any spacecraft update (the ship's own life-support flags changing).
 Hooks.on("updateActor", () => MgT2CrewStatusApp.refreshAll());
 
+// Every role the current user owns the crew actor for, across every spacecraft in the world -
+// not scoped to a single ship's own sheet, since the whole point of this entry point is not
+// needing to find and open that ship's sheet first.
+function myShipConsoleRoles() {
+    const roles = [];
+    for (const shipActor of game.actors.filter(a => a.type === "spacecraft")) {
+        const crewed = shipActor.system.crewed?.crew ?? {};
+        for (const [crewId, rolesForCrew] of Object.entries(crewed)) {
+            const crewActor = game.actors.get(crewId);
+            if (!crewActor?.isOwner) {
+                continue;
+            }
+            for (const [roleId, data] of Object.entries(rolesForCrew)) {
+                const roleItem = shipActor.items.get(roleId);
+                if (data?.assigned && roleItem) {
+                    roles.push({
+                        shipActor, crewId, roleId,
+                        label: `${shipActor.name} - ${crewActor.name} - ${roleItem.name}`
+                    });
+                }
+            }
+        }
+    }
+    return roles;
+}
+
+async function openMyShipConsole() {
+    const roles = myShipConsoleRoles();
+    if (roles.length === 0) {
+        ui.notifications.warn("No crewed role found for you on any ship.");
+        return;
+    }
+    if (roles.length === 1) {
+        new MgT2ShipConsoleApp(roles[0].shipActor, roles[0].roleId, roles[0].crewId).render(true);
+        return;
+    }
+    const options = roles.map((r, i) => `<option value="${i}">${r.label}</option>`).join("");
+    const data = await foundry.applications.api.DialogV2.input({
+        window: { title: "Open Console" },
+        content: `<p>Which console?</p><select name="choice">${options}</select>`
+    });
+    if (!data) {
+        return;
+    }
+    const chosen = roles[parseInt(data.choice)];
+    new MgT2ShipConsoleApp(chosen.shipActor, chosen.roleId, chosen.crewId).render(true);
+}
+
 Hooks.on("getSceneControlButtons", controls => {
-    if (!game.user.isGM || !controls.tokens) {
+    if (!controls.tokens) {
+        return;
+    }
+    if (myShipConsoleRoles().length > 0) {
+        controls.tokens.tools.openMyShipConsole = {
+            name: "openMyShipConsole",
+            title: "Open My Ship Console",
+            icon: "fa-solid fa-gauge-high",
+            button: true,
+            order: Object.keys(controls.tokens.tools).length,
+            onClick: () => openMyShipConsole(),
+            visible: true
+        };
+    }
+    if (!game.user.isGM) {
         return;
     }
     controls.tokens.tools.navalCombatPanel = {
