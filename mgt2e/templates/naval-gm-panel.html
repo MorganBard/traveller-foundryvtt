@@ -1,5 +1,63 @@
 <div class="ncp-body">
     {{#if hasActiveShip}}
+        {{#if hasFleetStatus}}
+            <div class="ncp-section ncp-fleet-status">
+                <label class="ncp-section-title">Fleet Status</label>
+                <table class="ncp-fleet-table">
+                    <thead>
+                        <tr><th>Pair</th><th>Band</th><th>Course</th><th>Detection</th></tr>
+                    </thead>
+                    <tbody>
+                        {{#each fleetStatusRows}}
+                            <tr>
+                                <td>{{this.shipAName}} &harr; {{this.shipBName}}</td>
+                                <td>
+                                    {{this.bandLabel}}
+                                    {{#if this.progress}}
+                                        <span class="ncp-band-progress">({{this.progress.progress}}/{{this.progress.cost}})</span>
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{this.shipAName}}: {{this.aCourse}}<br/>
+                                    {{this.shipBName}}: {{this.bCourse}}
+                                </td>
+                                <td>
+                                    <span class="{{#if this.aDetectsB}}ncp-detected{{else}}ncp-undetected{{/if}}">{{this.shipAName}} &rarr; {{this.shipBName}}: {{#if this.aDetectsB}}Detected{{else}}Undetected{{/if}}</span><br/>
+                                    <span class="{{#if this.bDetectsA}}ncp-detected{{else}}ncp-undetected{{/if}}">{{this.shipBName}} &rarr; {{this.shipAName}}: {{#if this.bDetectsA}}Detected{{else}}Undetected{{/if}}</span>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+
+                {{#if pairPicker}}
+                    <div class="ncp-pair-picker">
+                        <select class="ncp-pair-attacker">
+                            {{#each pairPicker.attackerOptions}}
+                                <option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                        <span>&rarr;</span>
+                        <select class="ncp-pair-target">
+                            {{#each pairPicker.targetOptions}}
+                                <option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                        {{#with pairPicker.detail}}
+                            <p class="ncp-pair-detail">
+                                Band: {{this.bandLabel}}
+                                {{#if this.progress}}({{this.progress.progress}}/{{this.progress.cost}}){{/if}}
+                                &mdash;
+                                {{this.shipAName}}: {{this.aCourse}}, {{#if this.aDetectsB}}Detected{{else}}Undetected{{/if}}
+                                &mdash;
+                                {{this.shipBName}}: {{this.bCourse}}, {{#if this.bDetectsA}}Detected{{else}}Undetected{{/if}}
+                            </p>
+                        {{/with}}
+                    </div>
+                {{/if}}
+            </div>
+        {{/if}}
+
         <select class="ncp-ship-select">
             {{#each ships}}
                 <option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.name}}</option>

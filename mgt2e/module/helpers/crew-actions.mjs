@@ -1,5 +1,5 @@
 import {MgT2SkillDialog} from "./skill-dialog.mjs";
-import {MgT2NavalAttackDialog} from "./naval-attack-dialog.mjs";
+import {MgT2NavalAttackDialog, hasDetectedTarget} from "./naval-attack-dialog.mjs";
 import {MgT2SpacecraftRepairDialog} from "./spacecraft-repair-dialog.mjs";
 import {setCourse} from "./naval-course.mjs";
 import {rollSkill} from "./dice-rolls.mjs";
@@ -55,14 +55,15 @@ async function promptSetCourse(shipActor) {
     }
 
     const currentTarget = shipActor.getFlag("mgt2e-piggy", "navTarget");
-    const options = otherShips.map(s =>
+    const noneOption = `<option value="" ${!currentTarget ? "selected" : ""}>None - open range on everyone</option>`;
+    const options = noneOption + otherShips.map(s =>
         `<option value="${s.id}" ${s.id === currentTarget ? "selected" : ""}>${s.name}</option>`
     ).join("");
 
     const data = await foundry.applications.api.DialogV2.input({
         window: { title: `${shipActor.name} - Set Course` },
         content: `
-            <p>Orient toward, and commit speed toward (0-${maxSpeed}):</p>
+            <p>Orient toward (closing), or leave as None to open range on every other ship, and commit speed (0-${maxSpeed}):</p>
             <select name="target">${options}</select>
             <input type="number" name="speed" value="${maxSpeed}" min="0" max="${maxSpeed}" step="1"/>
         `
@@ -71,7 +72,7 @@ async function promptSetCourse(shipActor) {
         return null;
     }
     const speed = Math.max(0, Math.min(maxSpeed, parseInt(data.speed) || 0));
-    return { targetId: data.target, speed };
+    return { targetId: data.target || null, speed };
 }
 
 // Shared "pick one other ship in the encounter" prompt for specials that need exactly one enemy
@@ -159,6 +160,10 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
             "text": action.text
         }).render(true);
     } else if (action.action === "weapon") {
+        if (!hasDetectedTarget(shipActor)) {
+            ui.notifications.warn("No detected targets - run a Sensors scan first.");
+            return;
+        }
         let weaponId = action.weapon;
         let weaponItem = shipActor.items.get(weaponId);
         let dm = parseInt(action.dm);
@@ -280,14 +285,14 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
                 return;
             }
             const { navTarget, navSpeed } = await setCourse(shipActor, choice.targetId, choice.speed);
-            const targetShip = game.actors.get(navTarget);
+            const targetShip = navTarget ? game.actors.get(navTarget) : null;
 
             const content = await renderTemplate(
                 "systems/mgt2e-piggy/templates/chat/ship-course-set.html",
                 {
                     actor: shipActor,
                     rollerName: actorCrew.name,
-                    targetName: targetShip?.name ?? "Unknown ship",
+                    targetName: targetShip?.name ?? "No target - opening range on everyone",
                     speed: navSpeed
                 }
             );
@@ -390,6 +395,37 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
                     user: game.user.id,
                     speaker: ChatMessage.getSpeaker({ actor: shipActor }),
                     content: `<strong>${shipActor.name}</strong>: ${actorCrew.name} confirms self-destruct at ${rounds} round(s) - awaiting matching confirmation from the other authority.`
+                });
+            }
+
+        } else if (action.special === "detectTarget") {
+            // Base sensor detection - the prerequisite for weapon targeting and for the GM Fleet
+            // Status panel showing anything but "undetected" for this pair. Directional (this
+            // ship detecting the other doesn't mean the reverse is true) and persists for the
+            // life of the encounter once achieved, same lifecycle as Range Bands - no re-roll
+            // required each round. Difficulty 8 is a placeholder matching the existing
+            // sensorLock/electronicWarfare precedent, not yet confirmed against a range-band-
+            // scaled Sensors table in the book.
+            const targetShip = await promptPickTarget(shipActor, `${shipActor.name} - Sensors`);
+            if (!targetShip) {
+                return;
+            }
+            const result = await rollSkill(actorCrew, "electronics.sensors", {
+                "difficulty": 8,
+                "text": `Sensor scan on ${targetShip.name}`
+            });
+            if (result >= 8) {
+                await shipActor.setFlag("mgt2e-piggy", "detected_" + targetShip.id, true);
+                ChatMessage.create({
+                    user: game.user.id,
+                    speaker: ChatMessage.getSpeaker({ actor: shipActor }),
+                    content: `<strong>${shipActor.name}</strong>: ${targetShip.name} detected.`
+                });
+            } else {
+                ChatMessage.create({
+                    user: game.user.id,
+                    speaker: ChatMessage.getSpeaker({ actor: shipActor }),
+                    content: `<strong>${shipActor.name}</strong>: Sensor scan on ${targetShip.name} found nothing.`
                 });
             }
 

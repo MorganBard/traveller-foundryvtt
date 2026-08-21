@@ -1,5 +1,5 @@
 import { runCrewAction } from "./crew-actions.mjs";
-import { getRangeBand } from "./naval-course.mjs";
+import { getRangeBand, getRangeBandProgress } from "./naval-course.mjs";
 import { MGT2 } from "./config.mjs";
 
 // Combat-relevant special actions this console knows how to render a dedicated section for.
@@ -7,7 +7,7 @@ import { MGT2 } from "./config.mjs";
 // start-of-encounter or captain-only actions handled elsewhere) is simply not shown - the console
 // only surfaces what's relevant to running a round of combat from this one role's seat.
 const CONSOLE_SPECIALS = new Set([
-    "setCourse", "evade", "reassignCrew", "repair", "shipStatus", "scanTarget",
+    "setCourse", "evade", "reassignCrew", "repair", "shipStatus", "scanTarget", "detectTarget",
     "selfDestructVote", "sensorLock", "electronicWarfare", "pointDefence", "disperseSand"
 ]);
 
@@ -43,6 +43,17 @@ export class MgT2ShipConsoleApp extends Application {
     static refreshAllForActor(actorId) {
         for (const instance of this._openInstances) {
             if (instance.rendered && instance.shipActor?.id === actorId) {
+                instance.render(false);
+            }
+        }
+    }
+
+    // Range Band state lives on the Combat document (see naval-course.mjs), not on either ship's
+    // actor - so an actor-scoped refresh alone never catches a round-boundary band change while a
+    // console sits open. Called on every combat-level hook, same as MgT2NavalGMPanel.refresh().
+    static refreshAll() {
+        for (const instance of this._openInstances) {
+            if (instance.rendered) {
                 instance.render(false);
             }
         }
@@ -109,18 +120,24 @@ export class MgT2ShipConsoleApp extends Application {
 
         let courseSection = null;
         if (specials.setCourse) {
+            const rawModel = game.settings.get("mgt2e-piggy", "navalRangeBandModel") === "raw";
             const otherShips = (game.combat?.combatants ?? [])
                 .map(c => c.actor)
                 .filter(actor => actor?.type === "spacecraft" && actor.id !== shipActor.id)
-                .map(other => ({
-                    id: other.id,
-                    name: other.name,
-                    band: this._bandLabel(getRangeBand(game.combat, shipActor.id, other.id)),
-                    isTarget: shipActor.getFlag("mgt2e-piggy", "navTarget") === other.id
-                }));
+                .map(other => {
+                    const progress = rawModel ? getRangeBandProgress(game.combat, shipActor.id, other.id) : null;
+                    return {
+                        id: other.id,
+                        name: other.name,
+                        band: this._bandLabel(getRangeBand(game.combat, shipActor.id, other.id)),
+                        isTarget: shipActor.getFlag("mgt2e-piggy", "navTarget") === other.id,
+                        progress
+                    };
+                });
             courseSection = {
                 actionId: specials.setCourse.actionId,
                 navSpeed: parseInt(shipActor.getFlag("mgt2e-piggy", "navSpeed")) || 0,
+                rawModel,
                 otherShips
             };
         }
@@ -186,6 +203,8 @@ export class MgT2ShipConsoleApp extends Application {
             disperseSandActionId: specials.disperseSand?.actionId,
             hasScanTarget: !!specials.scanTarget && game.settings.get("mgt2e-piggy", "detailedSensorScans"),
             scanTargetActionId: specials.scanTarget?.actionId,
+            hasDetectTarget: !!specials.detectTarget,
+            detectTargetActionId: specials.detectTarget?.actionId,
             selfDestructArmed: !!selfDestructRoundsRemaining,
             selfDestructRoundsRemaining
         };

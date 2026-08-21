@@ -2640,6 +2640,8 @@ ol.actor-items li.item-status- {
   padding: 10px;
 }
 #mgt2e-naval-gm-panel .ncp-ship-select,
+#mgt2e-naval-gm-panel .ncp-pair-attacker,
+#mgt2e-naval-gm-panel .ncp-pair-target,
 #mgt2e-naval-encounter select {
   width: 100%;
   background: var(--tac-panel-inset);
@@ -2655,6 +2657,8 @@ ol.actor-items li.item-status- {
    select's background unless options are styled directly - without this it falls back to a
    light default background while still inheriting the light text color, unreadable. */
 #mgt2e-naval-gm-panel .ncp-ship-select option,
+#mgt2e-naval-gm-panel .ncp-pair-attacker option,
+#mgt2e-naval-gm-panel .ncp-pair-target option,
 #mgt2e-naval-encounter select option {
   background: var(--tac-panel-inset);
   color: var(--tac-cyan-bright);
@@ -2744,6 +2748,53 @@ ol.actor-items li.item-status- {
 @keyframes mgt2e-tac-selfdestruct-pulse {
   0%, 100% { background: var(--tac-panel-inset); }
   50% { background: var(--tac-danger-dim); }
+}
+
+#mgt2e-naval-gm-panel .ncp-fleet-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+#mgt2e-naval-gm-panel .ncp-fleet-table th,
+#mgt2e-naval-gm-panel .ncp-fleet-table td {
+  border: 1px solid var(--tac-cyan-dim);
+  padding: 4px 6px;
+  text-align: left;
+  vertical-align: top;
+}
+#mgt2e-naval-gm-panel .ncp-fleet-table th {
+  color: var(--tac-amber);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 9px;
+}
+#mgt2e-naval-gm-panel .ncp-detected {
+  color: var(--tac-cyan-bright);
+}
+#mgt2e-naval-gm-panel .ncp-undetected {
+  color: var(--tac-text-dim);
+}
+#mgt2e-naval-gm-panel .ncp-band-progress {
+  color: var(--tac-text-dim);
+  font-size: 10px;
+}
+#mgt2e-naval-gm-panel .ncp-pair-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+#mgt2e-naval-gm-panel .ncp-pair-picker select {
+  width: auto;
+  flex: 1 1 auto;
+  margin-bottom: 0;
+}
+#mgt2e-naval-gm-panel .ncp-pair-detail {
+  flex-basis: 100%;
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: var(--tac-text-dim);
 }
 
 #mgt2e-naval-encounter .start-naval-encounter-dialog {
@@ -2909,6 +2960,11 @@ ol.actor-items li.item-status- {
 #mgt2e-ship-console .console-current-target {
   font-weight: 700;
   color: var(--svc-brass-bright);
+}
+#mgt2e-ship-console .console-band-progress {
+  display: block;
+  font-size: 11px;
+  opacity: 0.75;
 }
 
 #mgt2e-ship-console .ship-status-list {

@@ -303,6 +303,18 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: false
     });
+    game.settings.register('mgt2e-piggy', "navalRangeBandModel", {
+        name: game.i18n.localize("MGT2.Settings.NavalRangeBandModel.Name"),
+        hint: game.i18n.localize("MGT2.Settings.NavalRangeBandModel.Hint"),
+        scope: "world",
+        config: true,
+        type: String,
+        choices: {
+            "houseRule": game.i18n.localize("MGT2.Settings.NavalRangeBandModel.Values.HouseRule"),
+            "raw": game.i18n.localize("MGT2.Settings.NavalRangeBandModel.Values.RAW")
+        },
+        default: "houseRule"
+    });
     game.settings.register('mgt2e-piggy', "splitAttackDamage", {
        name: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Name"),
        hint: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Hint"),
@@ -1152,6 +1164,14 @@ Hooks.on("updateCombat", () => MgT2NavalGMPanel.refresh());
 Hooks.on("combatTurn", () => MgT2NavalGMPanel.refresh());
 Hooks.on("combatRound", () => MgT2NavalGMPanel.refresh());
 Hooks.on("deleteCombat", () => MgT2NavalGMPanel.refresh());
+
+// Ship Consoles: same staleness risk as the GM panel above - Range Band state lives on the Combat
+// document, so a console left open across a round boundary needs the same combat-level refresh,
+// not just the actor-scoped one already wired up below.
+Hooks.on("updateCombat", () => MgT2ShipConsoleApp.refreshAll());
+Hooks.on("combatTurn", () => MgT2ShipConsoleApp.refreshAll());
+Hooks.on("combatRound", () => MgT2ShipConsoleApp.refreshAll());
+Hooks.on("deleteCombat", () => MgT2ShipConsoleApp.refreshAll());
 Hooks.on("updateActor", actor => {
     if (actor.id === MgT2NavalGMPanel._selectedShipId) {
         MgT2NavalGMPanel.refresh();

@@ -32,6 +32,9 @@
                     {{#each courseSection.otherShips}}
                         <li{{#if this.isTarget}} class="console-current-target"{{/if}}>
                             {{this.name}}{{#if this.isTarget}} (target){{/if}} &mdash; {{this.band}}
+                            {{#if this.progress}}
+                                <span class="console-band-progress">({{this.progress.progress}} / {{this.progress.cost}} Thrust banked toward next shift)</span>
+                            {{/if}}
                         </li>
                     {{/each}}
                 </ul>
@@ -64,6 +67,12 @@
         {{else if hasDisperseSand}}
             <div class="console-section">
                 <button type="button" class="console-action" data-action-id="{{disperseSandActionId}}">Disperse Sand</button>
+            </div>
+        {{/if}}
+
+        {{#if hasDetectTarget}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{detectTargetActionId}}">Sensors</button>
             </div>
         {{/if}}
 

@@ -813,6 +813,11 @@ MGT2.RANGE_BANDS = [
     { "key": "distant", "label": "Distant" }
 ];
 
+// Core Rulebook "Ship Movement" table - Thrust required to shift the Range Band between a pair
+// of ships by one step, up or down, from the given band. Indices match MGT2.RANGE_BANDS. Only
+// consulted when the "navalRangeBandModel" world setting is "raw" - see naval-course.mjs.
+MGT2.RANGE_BAND_THRUST_COST = [1, 1, 2, 5, 10, 25, 50];
+
 MGT2.SPACE_MOUNTS = {
     "fixed": { "multiplier": 1, "hardpoints": 1 },
     "turret": { "multiplier": 1, "hardpoints": 1 },

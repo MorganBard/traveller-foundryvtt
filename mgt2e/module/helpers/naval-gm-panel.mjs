@@ -1,9 +1,11 @@
 import { runCrewAction } from "./crew-actions.mjs";
-import { MgT2NavalAttackDialog } from "./naval-attack-dialog.mjs";
+import { MgT2NavalAttackDialog, hasDetectedTarget } from "./naval-attack-dialog.mjs";
+import { getRangeBand, getRangeBandProgress } from "./naval-course.mjs";
+import { MGT2 } from "./config.mjs";
 
 // Combat-relevant "special" actions surfaced on the GM panel.
 const COMBAT_PANEL_SPECIALS = new Set([
-    "setCourse", "evade", "repair", "reassignCrew", "scanTarget",
+    "setCourse", "evade", "repair", "reassignCrew", "scanTarget", "detectTarget",
     "selfDestructVote", "sensorLock", "electronicWarfare", "pointDefence", "disperseSand"
 ]);
 
@@ -15,6 +17,10 @@ const COMBAT_PANEL_SPECIALS = new Set([
 export class MgT2NavalGMPanel extends Application {
     static _instance = null;
     static _selectedShipId = null;
+    // Pair picker (Fleet Status drill-down) - separate from _selectedShipId, which drives the
+    // existing single-ship action list above it.
+    static _pairAttackerId = null;
+    static _pairTargetId = null;
 
     static show() {
         if (!this._instance) {
@@ -80,8 +86,74 @@ export class MgT2NavalGMPanel extends Application {
             specialActions: this._buildSpecialActions(shipActor),
             genericRollActions: this._buildGenericRollActions(shipActor),
             selfDestructArmed: !!selfDestructRoundsRemaining,
-            selfDestructRoundsRemaining
+            selfDestructRoundsRemaining,
+            hasFleetStatus: ships.length >= 2,
+            fleetStatusRows: this._fleetStatusRows(ships),
+            pairPicker: this._pairPicker(ships)
         };
+    }
+
+    // Range Band, course, and detection state for every ship pair in the encounter, all at once -
+    // Range Band state lives on the Combat document (naval-course.mjs), not any ship's own actor,
+    // so this is the only place that can show the full tactical picture without opening every
+    // ship's own console individually.
+    _fleetStatusRows(ships) {
+        const rawModel = game.settings.get("mgt2e-piggy", "navalRangeBandModel") === "raw";
+        const rows = [];
+        for (let i = 0; i < ships.length; i++) {
+            for (let j = i + 1; j < ships.length; j++) {
+                rows.push(this._pairDetail(ships[i], ships[j], rawModel));
+            }
+        }
+        return rows;
+    }
+
+    // Secondary attacker/target drill-down, for inspecting one specific pair once the flat Fleet
+    // Status list gets long with more ships in the encounter. Target choices exclude whichever
+    // ship is currently selected as attacker - a ship can't usefully target itself.
+    _pairPicker(ships) {
+        if (ships.length < 2) {
+            return null;
+        }
+        if (!MgT2NavalGMPanel._pairAttackerId || !ships.some(s => s.id === MgT2NavalGMPanel._pairAttackerId)) {
+            MgT2NavalGMPanel._pairAttackerId = ships[0].id;
+        }
+        const targetChoices = ships.filter(s => s.id !== MgT2NavalGMPanel._pairAttackerId);
+        if (!MgT2NavalGMPanel._pairTargetId || !targetChoices.some(s => s.id === MgT2NavalGMPanel._pairTargetId)) {
+            MgT2NavalGMPanel._pairTargetId = targetChoices[0]?.id ?? null;
+        }
+        const attacker = game.actors.get(MgT2NavalGMPanel._pairAttackerId);
+        const target = game.actors.get(MgT2NavalGMPanel._pairTargetId);
+        const rawModel = game.settings.get("mgt2e-piggy", "navalRangeBandModel") === "raw";
+
+        return {
+            attackerOptions: ships.map(s => ({ id: s.id, name: s.name, selected: s.id === attacker.id })),
+            targetOptions: targetChoices.map(s => ({ id: s.id, name: s.name, selected: s.id === target?.id })),
+            detail: (attacker && target) ? this._pairDetail(attacker, target, rawModel) : null
+        };
+    }
+
+    _pairDetail(shipA, shipB, rawModel) {
+        const band = getRangeBand(game.combat, shipA.id, shipB.id);
+        return {
+            shipAName: shipA.name,
+            shipBName: shipB.name,
+            bandLabel: (band === null || band === undefined) ? "Unknown" : (MGT2.RANGE_BANDS[band]?.label ?? "Unknown"),
+            progress: rawModel ? getRangeBandProgress(game.combat, shipA.id, shipB.id) : null,
+            aCourse: this._courseLabel(shipA, shipB),
+            bCourse: this._courseLabel(shipB, shipA),
+            aDetectsB: !!shipA.getFlag("mgt2e-piggy", "detected_" + shipB.id),
+            bDetectsA: !!shipB.getFlag("mgt2e-piggy", "detected_" + shipA.id)
+        };
+    }
+
+    // observer's own course relative to other - "Closing" if other is observer's current
+    // navTarget, "Opening" otherwise (including no target set at all), same logic
+    // ship-console.mjs's courseSection already uses for the per-role console.
+    _courseLabel(observer, other) {
+        const navSpeed = parseInt(observer.getFlag("mgt2e-piggy", "navSpeed")) || 0;
+        const closing = observer.getFlag("mgt2e-piggy", "navTarget") === other.id;
+        return `${closing ? "Closing" : "Opening"} (speed ${navSpeed})`;
     }
 
     // Broker has no combat-relevant actions of its own - out of combat the GM just asks
@@ -195,6 +267,19 @@ export class MgT2NavalGMPanel extends Application {
             this.render(false);
         });
 
+        html.find(".ncp-pair-attacker").on("change", ev => {
+            MgT2NavalGMPanel._pairAttackerId = ev.currentTarget.value;
+            if (MgT2NavalGMPanel._pairTargetId === MgT2NavalGMPanel._pairAttackerId) {
+                MgT2NavalGMPanel._pairTargetId = null;
+            }
+            this.render(false);
+        });
+
+        html.find(".ncp-pair-target").on("change", ev => {
+            MgT2NavalGMPanel._pairTargetId = ev.currentTarget.value;
+            this.render(false);
+        });
+
         html.find(".ncp-special-action, .ncp-roll-action").on("click", async ev => {
             const { roleId, actionId, crewId } = ev.currentTarget.dataset;
             if (!crewId) {
@@ -215,6 +300,10 @@ export class MgT2NavalGMPanel extends Application {
             }
             const shipActor = game.actors.get(MgT2NavalGMPanel._selectedShipId);
             if (!shipActor) {
+                return;
+            }
+            if (!hasDetectedTarget(shipActor)) {
+                ui.notifications.warn("No detected targets - run a Sensors scan first.");
                 return;
             }
             const mount = shipActor.items.get(mountId);

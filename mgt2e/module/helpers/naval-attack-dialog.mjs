@@ -3,6 +3,16 @@ import { launchMissiles } from "./spacecraft/spacecraft-utils.mjs";
 import { getRangeBand } from "./naval-course.mjs";
 import { MGT2 } from "./config.mjs";
 
+// Whether shipActor has detected at least one other ship in the current encounter - callers use
+// this to guard opening MgT2NavalAttackDialog at all, rather than letting it open with an empty
+// target list (mirrors crew-actions.mjs's promptPickTarget "no other ships" guard).
+export function hasDetectedTarget(shipActor) {
+    return (game.combat?.combatants ?? [])
+        .map(c => c.actor)
+        .some(a => a?.type === "spacecraft" && a.id !== shipActor.id
+            && shipActor.getFlag("mgt2e-piggy", "detected_" + a.id));
+}
+
 // Range-Band-aware replacement for MgT2SpacecraftAttackDialog, used only by the Gunner console
 // and the GM panel - both tokenless naval combat surfaces. Deliberately NOT a replacement for
 // MgT2SpacecraftAttackDialog itself, which swarm.mjs still uses for its own (token-based) combat
@@ -55,9 +65,12 @@ export class MgT2NavalAttackDialog extends Application {
             this.weaponSelect[wpnId] = qty > 1 ? `${wpnItem.name} x${qty}` : wpnItem.name;
         }
 
+        // Only ships this shipActor has actually detected (see crew-actions.mjs's "detectTarget"
+        // special) are valid weapon targets - matches RAW's "can't shoot what you haven't found."
         this.targets = (game.combat?.combatants ?? [])
             .map(c => c.actor)
-            .filter(a => a?.type === "spacecraft" && a.id !== this.shipActor.id);
+            .filter(a => a?.type === "spacecraft" && a.id !== this.shipActor.id
+                && this.shipActor.getFlag("mgt2e-piggy", "detected_" + a.id));
         this.targetId = this.targets[0]?.id ?? null;
         this.range = this._rangeForTarget(this.targetId);
     }
