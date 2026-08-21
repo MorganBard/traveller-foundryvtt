@@ -84,31 +84,33 @@
             </div>
         {{/if}}
 
-        {{#if specialActions.length}}
-            <div class="ncp-section">
-                <label class="ncp-section-title">Maneuver &amp; Reactions</label>
-                {{#each specialActions}}
-                    <button type="button" class="ncp-special-action" data-role-id="{{this.roleId}}"
-                            data-action-id="{{this.actionId}}" data-crew-id="{{this.crewId}}"
-                            {{#if this.disabled}}disabled title="No crew assigned to this role"{{/if}}>
-                        {{this.label}}{{#unless this.disabled}} ({{this.crewName}}){{/unless}}
-                    </button>
-                {{/each}}
-            </div>
-        {{/if}}
+        <div class="ncp-section-row">
+            {{#if specialActions.length}}
+                <div class="ncp-section ncp-section-col">
+                    <label class="ncp-section-title">Maneuver &amp; Reactions</label>
+                    {{#each specialActions}}
+                        <button type="button" class="ncp-special-action" data-role-id="{{this.roleId}}"
+                                data-action-id="{{this.actionId}}" data-crew-id="{{this.crewId}}"
+                                {{#if this.disabled}}disabled title="No crew assigned to this role"{{/if}}>
+                            {{this.label}}{{#unless this.disabled}} ({{this.crewName}}){{/unless}}
+                        </button>
+                    {{/each}}
+                </div>
+            {{/if}}
 
-        {{#if genericRollActions.length}}
-            <div class="ncp-section">
-                <label class="ncp-section-title">Skill Checks</label>
-                {{#each genericRollActions}}
-                    <button type="button" class="ncp-roll-action" data-role-id="{{this.roleId}}"
-                            data-action-id="{{this.actionId}}" data-crew-id="{{this.crewId}}"
-                            {{#if this.disabled}}disabled title="No crew assigned to this role"{{/if}}>
-                        {{this.label}}
-                    </button>
-                {{/each}}
-            </div>
-        {{/if}}
+            {{#if genericRollActions.length}}
+                <div class="ncp-section ncp-section-col">
+                    <label class="ncp-section-title">Skill Checks</label>
+                    {{#each genericRollActions}}
+                        <button type="button" class="ncp-roll-action" data-role-id="{{this.roleId}}"
+                                data-action-id="{{this.actionId}}" data-crew-id="{{this.crewId}}"
+                                {{#if this.disabled}}disabled title="No crew assigned to this role"{{/if}}>
+                            {{this.label}}
+                        </button>
+                    {{/each}}
+                </div>
+            {{/if}}
+        </div>
 
         {{#unless weaponActions.length}}
             {{#unless specialActions.length}}

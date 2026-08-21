@@ -49,7 +49,7 @@ export class MgT2NavalGMPanel extends Application {
             id: "mgt2e-naval-gm-panel",
             template: "systems/mgt2e-piggy/templates/naval-gm-panel.html",
             title: "Naval Combat Control",
-            width: 380,
+            width: 560,
             height: "auto",
             resizable: true,
             popOut: true

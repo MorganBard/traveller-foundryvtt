@@ -2681,6 +2681,15 @@ ol.actor-items li.item-status- {
 #mgt2e-naval-gm-panel .ncp-section {
   margin-bottom: 12px;
 }
+#mgt2e-naval-gm-panel .ncp-section-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+#mgt2e-naval-gm-panel .ncp-section-row .ncp-section-col {
+  flex: 1 1 0;
+  min-width: 0;
+}
 #mgt2e-naval-gm-panel .ncp-section-title {
   display: block;
   font-size: 10px;
@@ -3073,6 +3082,294 @@ ol.actor-items li.item-status- {
 }
 #mgt2e-ship-console button.console-abort::before {
   background: radial-gradient(circle at 35% 30%, #e37a5c 0%, var(--svc-danger) 100%);
+}
+
+/* Traveller Sheet (Brass) - alternate PC sheet, same brass/mahogany instrument-panel language as
+   the Ship Console, re-scoped to its own class since ActorSheet windows don't get a fixed
+   Application id (each actor's sheet id is dynamic). getData()/activateListeners() are unchanged
+   from the original sheet (see traveller-brass.mjs), so most of this is a broad-brush restyle of
+   generic/shared classes reused from the original template (inputs, .resource, .items-list, skill
+   rows, etc.), not a from-scratch UI - only the sheet-chrome classes prefixed tsb- are new. */
+.mgt2e-traveller-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  /* The base theme hardcodes its "Mongoose orange" as a literal hex value in most of the ~25
+     places it's used (not routed through these two custom properties), so redefining them only
+     fixes the handful of rules that DO reference var(--title-bg)/var(--mongoose-orange) (e.g.
+     history.css's term-list header). Every other hardcoded usage needs its own explicit override
+     below, scoped to whichever reused partial actually renders it on this sheet. */
+  --title-bg: var(--svc-brass);
+  --mongoose-orange: var(--svc-brass);
+}
+
+.mgt2e-traveller-brass .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+/* Broad-brush legibility pass: form controls don't inherit `color` from an ancestor by default,
+   and the reused partials (skills/items/terms/settings) were authored for the original sheet's
+   light parchment background, so every text-bearing element under this sheet needs an explicit
+   parchment color rather than relying on inheritance alone. */
+.mgt2e-traveller-brass .window-content,
+.mgt2e-traveller-brass .window-content label,
+.mgt2e-traveller-brass .window-content span,
+.mgt2e-traveller-brass .window-content a,
+.mgt2e-traveller-brass .window-content li,
+.mgt2e-traveller-brass .window-content p,
+.mgt2e-traveller-brass .window-content h1,
+.mgt2e-traveller-brass .window-content h2,
+.mgt2e-traveller-brass .window-content h3,
+.mgt2e-traveller-brass .window-content input,
+.mgt2e-traveller-brass .window-content select,
+.mgt2e-traveller-brass .window-content textarea {
+  color: var(--svc-parchment);
+}
+.mgt2e-traveller-brass .window-content a.item.active {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-traveller-brass .window-content input,
+.mgt2e-traveller-brass .window-content select,
+.mgt2e-traveller-brass .window-content textarea {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-traveller-brass .window-content input:focus,
+.mgt2e-traveller-brass .window-content select:focus,
+.mgt2e-traveller-brass .window-content textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--svc-brass-bright);
+}
+
+.mgt2e-traveller-brass .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright), var(--svc-brass) 45%, var(--svc-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.mgt2e-traveller-brass .svc-rivet.tl { top: 4px; left: 4px; }
+.mgt2e-traveller-brass .svc-rivet.tr { top: 4px; right: 4px; }
+.mgt2e-traveller-brass .svc-rivet.bl { bottom: 4px; left: 4px; }
+.mgt2e-traveller-brass .svc-rivet.br { bottom: 4px; right: 4px; }
+
+.mgt2e-traveller-brass .tsb-sheet {
+  padding: 14px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.mgt2e-traveller-brass .tsb-left {
+  flex: 0 0 180px;
+  width: 180px;
+}
+.mgt2e-traveller-brass .tsb-right {
+  width: 100%;
+  min-width: 0;
+}
+
+.mgt2e-traveller-brass .tsb-portrait-frame {
+  padding: 4px;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-traveller-brass .tsb-portrait-frame img.profile-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: none;
+  border-radius: 2px;
+}
+
+/* Generic "recessed instrument panel" treatment shared by every stat/tab section - replaces the
+   original sheet's plain `.shadow` boxes. */
+.mgt2e-traveller-brass .tsb-panel,
+.mgt2e-traveller-brass .tsb-gauge,
+.mgt2e-traveller-brass .side-panel {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.18), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+.mgt2e-traveller-brass .tsb-gauge-title,
+.mgt2e-traveller-brass .box-title {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+  /* label.box-title (mgt2.css) hardcodes a literal #f1511b background - clear it rather than
+     just adding text styling on top, or the orange bar still shows through underneath. */
+  background: none;
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+}
+
+.mgt2e-traveller-brass .tsb-nameplate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-traveller-brass .tsb-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--svc-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+}
+.mgt2e-traveller-brass .tsb-name {
+  margin: 0;
+}
+.mgt2e-traveller-brass .tsb-name input {
+  background: transparent;
+  border: none;
+  text-align: center;
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--svc-ink);
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+
+.mgt2e-traveller-brass .tsb-dial {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 6px 4px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.18);
+}
+.mgt2e-traveller-brass .tsb-dial .characteristic-title {
+  color: var(--svc-brass-bright);
+  letter-spacing: 0.1em;
+}
+.mgt2e-traveller-brass .tsb-reroll {
+  color: var(--svc-brass-bright);
+  cursor: pointer;
+  float: right;
+}
+
+/* The base sheet's .field-label is a bright orange pill (NPC-sheet holdover) that clashes badly
+   against the wood/brass palette - restyle as a small brass eyebrow label instead. */
+.mgt2e-traveller-brass .field-label {
+  background: none;
+  color: var(--svc-brass-bright);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+}
+
+.mgt2e-traveller-brass .tsb-tabnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+  margin-bottom: 10px;
+  padding-bottom: 0;
+}
+.mgt2e-traveller-brass .tsb-tabnav a.item {
+  padding: 6px 10px;
+  border-radius: 4px 4px 0 0;
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment-dim);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--svc-brass-shadow);
+  border-bottom: none;
+}
+.mgt2e-traveller-brass .tsb-tabnav a.item.active {
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  color: var(--svc-ink);
+}
+.mgt2e-traveller-brass .tsb-tabpanel {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Equipment/item cards default to a plain light-grey card (unthemed base style) - re-panel them
+   to match the rest of the sheet's recessed-instrument look. */
+.mgt2e-traveller-brass li.item {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-traveller-brass li.item h4 {
+  background: none !important;
+  color: var(--svc-parchment);
+}
+
+/* Native <select> option popups ignore the select's own background unless styled directly -
+   without this they fall back to a light default while inheriting the light text color. */
+.mgt2e-traveller-brass .window-content select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+
+/* Rich-text editor (Biography/Finance notes) - ProseMirror renders as a real contenteditable div,
+   not an iframe, so it's directly stylable, but Foundry's own editor CSS hardcodes a light
+   background that clashes with the rest of this sheet. Cover both the read-only display state and
+   the active-edit state (ProseMirror adds its own class once editing starts), plus its toolbar. */
+.mgt2e-traveller-brass .editor {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-traveller-brass .editor-content,
+.mgt2e-traveller-brass .editor-content.ProseMirror,
+.mgt2e-traveller-brass .editor prose-mirror {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+  min-height: 100px;
+}
+.mgt2e-traveller-brass a.editor-edit {
+  background: var(--svc-brass-dim);
+}
+.mgt2e-traveller-brass .editor-content.ProseMirror a,
+.mgt2e-traveller-brass .editor-content a {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-traveller-brass .editor .editor-menu,
+.mgt2e-traveller-brass .editor menu.editor-menu {
+  background: var(--svc-brass-dim);
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-traveller-brass .editor .editor-menu button,
+.mgt2e-traveller-brass .editor menu.editor-menu button {
+  color: var(--svc-ink);
+}
+.mgt2e-traveller-brass a.editor-edit {
+  color: var(--svc-brass-bright);
 }
 
 /* Weapons status window - a lighter version of the ship console's theme (no rivets/plate),
