@@ -201,7 +201,8 @@ export class MgT2ShipConsoleApp extends Application {
             pointDefenceActionId: specials.pointDefence?.actionId,
             hasDisperseSand: !!specials.disperseSand,
             disperseSandActionId: specials.disperseSand?.actionId,
-            hasScanTarget: !!specials.scanTarget && game.settings.get("mgt2e-piggy", "detailedSensorScans"),
+            hasScanTarget: !!specials.scanTarget && (game.settings.get("mgt2e-piggy", "detailedSensorScans")
+                || game.settings.get("mgt2e-piggy", "sensorDetailModel") === "raw"),
             scanTargetActionId: specials.scanTarget?.actionId,
             hasDetectTarget: !!specials.detectTarget,
             detectTargetActionId: specials.detectTarget?.actionId,

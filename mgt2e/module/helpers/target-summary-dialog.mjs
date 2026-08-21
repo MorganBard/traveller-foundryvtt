@@ -1,5 +1,6 @@
 import { rollSkill } from "./dice-rolls.mjs";
 import { getRangeBand } from "./naval-course.mjs";
+import { sensorDetailTier } from "./sensor-detail.mjs";
 import { MGT2 } from "./config.mjs";
 
 // House-rule "Target Summary" scan (see MGT2.Settings.DetailedSensorScans) - the Core Rules only
@@ -82,9 +83,14 @@ export class MgT2TargetSummaryDialog extends Application {
             this.options.classes.push("tactical");
         }
 
+        // In RAW mode, detected_<id> (see crew-actions.mjs's "detectTarget" special) is the real
+        // prerequisite for knowing a target exists at all, so undetected ships aren't offered as
+        // pickable here. House-rule mode keeps every enemy pickable - its own roll is the gate.
+        const rawModel = game.settings.get("mgt2e-piggy", "sensorDetailModel") === "raw";
         this.targets = (game.combat?.combatants ?? [])
             .map(c => c.actor)
-            .filter(a => a?.type === "spacecraft" && a.id !== this.shipActor.id);
+            .filter(a => a?.type === "spacecraft" && a.id !== this.shipActor.id
+                && (!rawModel || this.shipActor.getFlag("mgt2e-piggy", "detected_" + a.id)));
         this.targetId = this.targets[0]?.id ?? null;
     }
 
@@ -101,7 +107,14 @@ export class MgT2TargetSummaryDialog extends Application {
         const band = getRangeBand(game.combat, this.shipActor.id, targetActor.id);
         const bandLabel = MGT2.RANGE_BANDS[band]?.label ?? "Unknown";
         const contact = this._contact(targetActor.id);
-        const tier = tierForEffect(contact?.effect);
+        const rawModel = game.settings.get("mgt2e-piggy", "sensorDetailModel") === "raw";
+        let tier;
+        if (rawModel) {
+            const isDetected = !!this.shipActor.getFlag("mgt2e-piggy", "detected_" + targetActor.id);
+            tier = isDetected ? sensorDetailTier(this.shipActor, band) : 0;
+        } else {
+            tier = tierForEffect(contact?.effect);
+        }
         const transponderActive = targetActor.system.spacecraft?.computer?.transponder === "ACTIVE";
 
         const data = {
@@ -109,6 +122,7 @@ export class MgT2TargetSummaryDialog extends Application {
             bandLabel,
             tier,
             scanned: tier > 0,
+            notDetected: tier === 0,
             failed: tier === 1,
             name: transponderActive ? targetActor.name : "Unidentified Contact"
         };
@@ -156,7 +170,10 @@ export class MgT2TargetSummaryDialog extends Application {
             hasTargets: this.targets.length > 0,
             targetList,
             targetSelected: this.targetId,
-            target: targetActor ? this._buildTargetData(targetActor) : null
+            target: targetActor ? this._buildTargetData(targetActor) : null,
+            // RAW has nothing to roll - detail is a pure range+suite lookup - so the scan button
+            // only makes sense in house-rule mode.
+            rawModel: game.settings.get("mgt2e-piggy", "sensorDetailModel") === "raw"
         };
     }
 

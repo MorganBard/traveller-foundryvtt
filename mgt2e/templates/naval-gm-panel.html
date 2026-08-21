@@ -22,8 +22,8 @@
                                     {{this.shipBName}}: {{this.bCourse}}
                                 </td>
                                 <td>
-                                    <span class="{{#if this.aDetectsB}}ncp-detected{{else}}ncp-undetected{{/if}}">{{this.shipAName}} &rarr; {{this.shipBName}}: {{#if this.aDetectsB}}Detected{{else}}Undetected{{/if}}</span><br/>
-                                    <span class="{{#if this.bDetectsA}}ncp-detected{{else}}ncp-undetected{{/if}}">{{this.shipBName}} &rarr; {{this.shipAName}}: {{#if this.bDetectsA}}Detected{{else}}Undetected{{/if}}</span>
+                                    <span class="{{#if this.aDetectsB}}ncp-detected{{else}}ncp-undetected{{/if}}">{{this.shipAName}} &rarr; {{this.shipBName}}: {{#if this.aDetectsB}}Detected{{else}}Undetected{{/if}}{{#if this.aDetailGrade}} ({{this.aDetailGrade}}){{/if}}</span><br/>
+                                    <span class="{{#if this.bDetectsA}}ncp-detected{{else}}ncp-undetected{{/if}}">{{this.shipBName}} &rarr; {{this.shipAName}}: {{#if this.bDetectsA}}Detected{{else}}Undetected{{/if}}{{#if this.bDetailGrade}} ({{this.bDetailGrade}}){{/if}}</span>
                                 </td>
                             </tr>
                         {{/each}}
@@ -48,9 +48,9 @@
                                 Band: {{this.bandLabel}}
                                 {{#if this.progress}}({{this.progress.progress}}/{{this.progress.cost}}){{/if}}
                                 &mdash;
-                                {{this.shipAName}}: {{this.aCourse}}, {{#if this.aDetectsB}}Detected{{else}}Undetected{{/if}}
+                                {{this.shipAName}}: {{this.aCourse}}, {{#if this.aDetectsB}}Detected{{else}}Undetected{{/if}}{{#if this.aDetailGrade}} ({{this.aDetailGrade}}){{/if}}
                                 &mdash;
-                                {{this.shipBName}}: {{this.bCourse}}, {{#if this.bDetectsA}}Detected{{else}}Undetected{{/if}}
+                                {{this.shipBName}}: {{this.bCourse}}, {{#if this.bDetectsA}}Detected{{else}}Undetected{{/if}}{{#if this.bDetailGrade}} ({{this.bDetailGrade}}){{/if}}
                             </p>
                         {{/with}}
                     </div>

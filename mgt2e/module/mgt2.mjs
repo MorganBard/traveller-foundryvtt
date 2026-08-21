@@ -315,6 +315,18 @@ Hooks.once('init', async function() {
         },
         default: "houseRule"
     });
+    game.settings.register('mgt2e-piggy', "sensorDetailModel", {
+        name: game.i18n.localize("MGT2.Settings.SensorDetailModel.Name"),
+        hint: game.i18n.localize("MGT2.Settings.SensorDetailModel.Hint"),
+        scope: "world",
+        config: true,
+        type: String,
+        choices: {
+            "houseRule": game.i18n.localize("MGT2.Settings.SensorDetailModel.Values.HouseRule"),
+            "raw": game.i18n.localize("MGT2.Settings.SensorDetailModel.Values.RAW")
+        },
+        default: "houseRule"
+    });
     game.settings.register('mgt2e-piggy', "splitAttackDamage", {
        name: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Name"),
        hint: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Hint"),

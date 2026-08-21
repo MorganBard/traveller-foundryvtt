@@ -1,6 +1,7 @@
 import { runCrewAction } from "./crew-actions.mjs";
 import { MgT2NavalAttackDialog, hasDetectedTarget } from "./naval-attack-dialog.mjs";
 import { getRangeBand, getRangeBandProgress } from "./naval-course.mjs";
+import { sensorDetailTier, sensorDetailGradeLabel } from "./sensor-detail.mjs";
 import { MGT2 } from "./config.mjs";
 
 // Combat-relevant "special" actions surfaced on the GM panel.
@@ -135,6 +136,9 @@ export class MgT2NavalGMPanel extends Application {
 
     _pairDetail(shipA, shipB, rawModel) {
         const band = getRangeBand(game.combat, shipA.id, shipB.id);
+        const aDetectsB = !!shipA.getFlag("mgt2e-piggy", "detected_" + shipB.id);
+        const bDetectsA = !!shipB.getFlag("mgt2e-piggy", "detected_" + shipA.id);
+        const sensorRawModel = game.settings.get("mgt2e-piggy", "sensorDetailModel") === "raw";
         return {
             shipAName: shipA.name,
             shipBName: shipB.name,
@@ -142,8 +146,12 @@ export class MgT2NavalGMPanel extends Application {
             progress: rawModel ? getRangeBandProgress(game.combat, shipA.id, shipB.id) : null,
             aCourse: this._courseLabel(shipA, shipB),
             bCourse: this._courseLabel(shipB, shipA),
-            aDetectsB: !!shipA.getFlag("mgt2e-piggy", "detected_" + shipB.id),
-            bDetectsA: !!shipB.getFlag("mgt2e-piggy", "detected_" + shipA.id)
+            aDetectsB,
+            bDetectsA,
+            // Only meaningful under the RAW sensor-detail model - a pure range+suite lookup, not a
+            // roll, so it can be computed on demand for display rather than needing a scan action.
+            aDetailGrade: (sensorRawModel && aDetectsB) ? sensorDetailGradeLabel(sensorDetailTier(shipA, band)) : null,
+            bDetailGrade: (sensorRawModel && bDetectsA) ? sensorDetailGradeLabel(sensorDetailTier(shipB, band)) : null
         };
     }
 
@@ -222,7 +230,8 @@ export class MgT2NavalGMPanel extends Application {
             const crewId = this._crewedActorIdFor(shipActor, roleId);
             for (const [actionId, action] of Object.entries(roleItem.system.role.actions)) {
                 if (action.action === "special" && action.special === "scanTarget"
-                    && !game.settings.get("mgt2e-piggy", "detailedSensorScans")) {
+                    && !game.settings.get("mgt2e-piggy", "detailedSensorScans")
+                    && game.settings.get("mgt2e-piggy", "sensorDetailModel") !== "raw") {
                     continue;
                 }
                 if (action.action === "special" && COMBAT_PANEL_SPECIALS.has(action.special)) {

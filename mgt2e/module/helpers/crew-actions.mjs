@@ -463,7 +463,11 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
                 "text": `${label} (${shipActor.name})`
             });
         } else if (action.special === "scanTarget") {
-            if (!game.settings.get("mgt2e-piggy", "detailedSensorScans")) {
+            // RAW mode isn't the house rule detailedSensorScans warns about (it has no roll at
+            // all, just a range+suite lookup), so it unlocks Scan Target on its own rather than
+            // requiring the house-rule toggle too.
+            const rawSensorDetail = game.settings.get("mgt2e-piggy", "sensorDetailModel") === "raw";
+            if (!game.settings.get("mgt2e-piggy", "detailedSensorScans") && !rawSensorDetail) {
                 ui.notifications.warn("Detailed Sensor Scans is disabled in system settings.");
                 return;
             }

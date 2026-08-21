@@ -818,6 +818,20 @@ MGT2.RANGE_BANDS = [
 // consulted when the "navalRangeBandModel" world setting is "raw" - see naval-course.mjs.
 MGT2.RANGE_BAND_THRUST_COST = [1, 1, 2, 5, 10, 25, 50];
 
+// Core Rulebook "Sensor Target" table (p.160) - the detail grade (full/limited/minimal/none) each
+// sensor suite achieves at a given Range Band. Indices match MGT2.RANGE_BANDS. Only consulted when
+// the "sensorDetailModel" world setting is "raw" - see sensor-detail.mjs. The house-rule Scan
+// Target mechanic (target-summary-dialog.mjs) is unrelated and untouched by this table.
+MGT2.SENSOR_DETAIL_GRADE = {
+    visual:            ["full", "full", "limited", "limited", "minimal", "minimal", "none"],
+    thermal:           ["full", "full", "full", "limited", "limited", "minimal", "minimal"],
+    em:                ["full", "full", "limited", "limited", "minimal", "minimal", "none"],
+    activeRadarLidar:  ["full", "full", "full", "limited", "limited", "minimal", "minimal"],
+    passiveRadarLidar: ["limited", "limited", "minimal", "minimal", "none", "none", "none"],
+    nas:               ["full", "limited", "minimal", "none", "none", "none", "none"],
+    densitometer:      ["full", "full", "limited", "minimal", "none", "none", "none"]
+};
+
 MGT2.SPACE_MOUNTS = {
     "fixed": { "multiplier": 1, "hardpoints": 1 },
     "turret": { "multiplier": 1, "hardpoints": 1 },

@@ -24,7 +24,11 @@
                     <p class="target-summary-range">{{target.bandLabel}}</p>
 
                     {{#if target.failed}}
-                        <p class="target-summary-none">No further data - the scan came back clean.</p>
+                        {{#if rawModel}}
+                            <p class="target-summary-none">Contact confirmed - no further detail at this range with current sensors.</p>
+                        {{else}}
+                            <p class="target-summary-none">No further data - the scan came back clean.</p>
+                        {{/if}}
                     {{/if}}
 
                     {{#if target.sizeClass}}
@@ -55,13 +59,17 @@
                             {{/each}}
                         </ul>
                     {{/if}}
+                {{else if target.notDetected}}
+                    <p class="target-summary-none">No sensor contact.</p>
                 {{else}}
                     <p class="target-summary-none">No scan data yet.</p>
                 {{/if}}
             </div>
         {{/if}}
 
-        <button type="button" class="console-action scan-target">Scan</button>
+        {{#unless rawModel}}
+            <button type="button" class="console-action scan-target">Scan</button>
+        {{/unless}}
     {{else}}
         <p>No targets currently detected.</p>
     {{/if}}
