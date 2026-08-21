@@ -3749,10 +3749,14 @@ ol.actor-items li.item-status- {
 .mgt2e-item-brass .window-content textarea {
   color: var(--svc-parchment);
 }
+.mgt2e-item-brass form {
+  background: none !important;
+}
 .mgt2e-item-brass .window-content input,
 .mgt2e-item-brass .window-content select,
 .mgt2e-item-brass .window-content textarea {
-  background: var(--svc-panel-inset);
+  background: var(--svc-panel-inset) !important;
+  color: var(--svc-parchment) !important;
   border: 1px solid var(--svc-brass-shadow);
   border-radius: 3px;
 }
@@ -3889,7 +3893,8 @@ ol.actor-items li.item-status- {
 .mgt2e-item-brass .weapon-pill,
 .mgt2e-item-brass .energy-pill,
 .mgt2e-item-brass .adv-pill,
-.mgt2e-item-brass .disad-pill {
+.mgt2e-item-brass .disad-pill,
+.mgt2e-item-brass .cargo-pill {
   background-color: var(--svc-brass-dim) !important;
   color: var(--svc-parchment) !important;
 }
@@ -3911,6 +3916,18 @@ ol.actor-items li.item-status- {
   background-color: var(--svc-panel-inset);
   border: 1px solid var(--svc-brass-shadow);
   color: var(--svc-brass-bright);
+}
+
+/* The base sheet's .field-label is a bright orange pill (NPC-sheet holdover) that clashes badly
+   against the wood/brass palette - restyle as a small brass eyebrow label instead. */
+.mgt2e-item-brass .field-label {
+  background: none;
+  color: var(--svc-brass-bright);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
 }
 
 .mgt2e-item-brass .window-content select option {

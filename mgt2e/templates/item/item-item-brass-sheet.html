@@ -1,0 +1,120 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+    <section class="tsb-sheet">
+        <span class="svc-rivet tl"></span>
+        <span class="svc-rivet tr"></span>
+        <span class="svc-rivet bl"></span>
+        <span class="svc-rivet br"></span>
+
+        <div class="tsb-left">
+            <div class="tsb-portrait-frame">
+                <img class="item-img shadow" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+            </div>
+
+            <div class="shadow item-side-panel">
+                <div class="resource flex-group-center">
+                    <label for="system.quantity" class="resource-label">{{localize "MGT2.Item.Quantity"}}</label>
+                    <div class="incdec">
+                        <span class="quantity-dec"><i class="fa-regular fa-square-minus"></i></span>
+                        <input class="writable" type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
+                        <span class="quantity-inc"><i class="fa-regular fa-square-plus"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            {{#unless system.component}}
+                <div class="shadow item-side-panel">
+                    <span class="button link-component">Make component</span>
+                </div>
+            {{/unless}}
+
+            <div class="shadow item-side-panel">
+                {{#if system.computer}}
+                    <select class="" name="system.computer.processing" title="Computer Power">
+                        {{selectOptions SELECT_PROCESSING selected=system.computer.processing}}
+                    </select>
+                    <div class="item-controls" style="float: right">
+                        <a class="item-control remove-computer" title="Remove computer"><i class="fas fa-trash"></i></a>
+                    </div>
+                {{else}}
+                    <span class="button embed-computer">Embed Computer</span>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="tsb-right">
+            <div class="svc-plate tsb-nameplate">
+                <p class="tsb-eyebrow">Item</p>
+                <h1 class="tsb-name">
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                    <span class="item-to-chat" data-item-id="{{item.uuid}}"
+                          title="{{localize 'MGT2.Item.ClickToChat'}}">
+                        <i class="fas fa-comment"></i>
+                    </span>
+                </h1>
+            </div>
+            <div class="tsb-panel">
+                <div class="resources grid grid-3col flex-group-center">
+                    <div class="resource">
+                        {{> "systems/mgt2e-piggy/templates/item/parts/item-techLevel.html"}}
+                    </div>
+                    <div class="resource">
+                        <label for="system.weight" class="resource-label">{{localize "MGT2.Item.Weight"}}</label>
+                        <input class="writable" type="text" name="system.weight" value="{{system.weight}}" data-dtype="Number"/>
+                    </div>
+                    <div class="resource">
+                        <label for="system.cost" class="resource-label">{{localize "MGT2.Item.Cost"}}</label>
+                        <input class="writable" type="text" name="system.cost" value="{{system.cost}}" data-dtype="Number"/>
+                    </div>
+                </div>
+                {{#if system.component}}
+                    <div class="item-controls" style="float: right">
+                        <a class="item-control unlink-component" title="Unlink"><i class="fas fa-trash"></i></a>
+                    </div>
+                    <h3>Component</h3>
+                    <div class="resources grid grid-5col flex-group-left">
+                        <div class="resource">
+                            <label for="system.component.type" class="resource-label">Type</label>
+                            <br/>
+                            <select class="writable" name="system.component.type">
+                                {{selectOptions LINK_TYPES selected=system.component.type}}
+                            </select>
+                        </div>
+                        {{#if (ifEquals system.component.type "armour")}}
+                            <div title="Battledress Slots">
+                                <label class="resource-label">Slots</label><br/>
+                                <input class="writable" type="text" name="system.component.slots" value="{{system.component.slots}}" dta-dtype="Number"/>
+                            </div>
+                        {{/if}}
+                        <div class="resource grid-span-3">
+                            <label class="resource-label">Attached To</label><br/>
+                            <select class="writable linkedTo" name="system.component.linkedTo">
+                                {{selectOptions LINK_OPTIONS selected=system.component.linkedTo}}
+                            </select>
+                        </div>
+                    </div>
+                {{/if}}
+                {{#unless system.links}}
+                    <span class="button allow-links">Components</span>
+                {{/unless}}
+                {{#unless system.showEffects}}
+                    <span class="button show-effects">Effects</span>
+                {{/unless}}
+            </div>
+
+            {{> "systems/mgt2e-piggy/templates/item/parts/item-effects.html"}}
+
+            {{#if system.links}}
+                {{> "systems/mgt2e-piggy/templates/item/parts/item-links.html"}}
+            {{/if}}
+
+            {{#if system.computer}}
+                {{> "systems/mgt2e-piggy/templates/item/parts/item-computer.html"}}
+            {{/if}}
+
+            <div class="item-description tsb-panel">
+                {{editor enrichedDescription target="system.description"
+                         button=true editable=editable}}
+            </div>
+        </div>
+    </section>
+</form>

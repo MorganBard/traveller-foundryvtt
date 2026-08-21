@@ -1,0 +1,113 @@
+<form class="{{cssClass}} item flexcol" autocomplete="off">
+    <section class="tsb-sheet">
+        <span class="svc-rivet tl"></span>
+        <span class="svc-rivet tr"></span>
+        <span class="svc-rivet bl"></span>
+        <span class="svc-rivet br"></span>
+
+        <div class="tsb-left">
+            <div class="tsb-portrait-frame">
+                <img class="item-img shadow" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+            </div>
+            <div class="shadow item-side-panel">
+                <div class="resource flex-group-center">
+                    <label for="system.quantity" class="resource-label">Quantity</label>
+                    <div class="incdec">
+                        <span class="quantity-dec"><i class="fa-regular fa-square-minus"></i></span>
+                        <input type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
+                        <span class="quantity-inc"><i class="fa-regular fa-square-plus"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="shadow item-side-panel">
+                {{#if system.computer}}
+                <select class="" name="system.computer.processing" title="Computer Power">
+                    {{selectOptions SELECT_PROCESSING selected=system.computer.processing}}
+                </select>
+                <div class="item-controls" style="float: right">
+                    <a class="item-control remove-computer" title="Remove computer"><i class="fas fa-trash"></i></a>
+                </div>
+                {{else}}
+                    <span class="button embed-computer">Embed Computer</span>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="tsb-right">
+            <div class="svc-plate tsb-nameplate">
+                <p class="tsb-eyebrow">Augment</p>
+                <h1 class="tsb-name">
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                    <span class="item-to-chat" data-item-id="{{item.uuid}}"
+                          title="{{localize 'MGT2.Item.ClickToChat'}}">
+                        <i class="fas fa-comment"></i>
+                    </span>
+                </h1>
+            </div>
+
+            <div class="tsb-panel">
+                <div class="resources grid grid-3col flex-group-left">
+                    <div class="resource">
+                        <label for="system.tl" class="resource-label">{{localize "MGT2.Item.TL"}}</label>
+                        <input type="text" name="system.tl" value="{{system.tl}}" data-dtype="Number"/>
+                    </div>
+                    <div class="resource">
+                        <label for="system.weight" class="resource-label">{{localize "MGT2.Item.Weight"}}</label>
+                        <input type="text" name="system.weight" value="{{system.weight}}" data-dtype="Number"/>
+                    </div>
+                    <div class="resource">
+                        <label for="system.cost" class="resource-label">{{localize "MGT2.Item.Cost"}}</label>
+                        <input type="text" name="system.cost" value="{{system.cost}}" data-dtype="Number"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tsb-panel">
+                <h2>{{localize "MGT2.Effects.AugmentEffects"}}</h2>
+
+                {{#if isEditable}}
+                    <div class="grid grid-3col">
+                        {{#each effectTypes as |eType e|}}
+                        <a class="effect-control augment-types flexrow" data-effectType="{{e}}">
+                            <span class="augment-name">{{localize (concat 'MGT2.Effects.Type.' e)}}</span>
+                            <i class="fas fa-plus"></i>
+                        </a>
+                        {{/each}}
+                    </div>
+                {{else}}
+                    <i>Read Only</i>
+                {{/if}}
+                <hr/>
+
+                <ol class="items-list effects-list grid grid-2col">
+                    {{#each effects as |e id|}}
+                        <li class="items effect flexrow" data-effect-id="{{e.id}}">
+                            <label>{{e.name}}</label>
+                            {{#each e.changes as | p i|}}
+                                <div class="effect-target">{{effect p.key}} {{p.value}}</div>
+                            {{/each}}
+                            {{#if ../isEditable}}
+                                <div class="item-controls effect-controls flexrow">
+                                    <a class="effect-control" data-action="edit" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a class="effect-control" data-action="delete" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            {{/if}}
+                        </li>
+                    {{/each}}
+                </ol>
+            </div>
+            {{#if system.computer}}
+                {{> "systems/mgt2e-piggy/templates/item/parts/item-computer.html"}}
+            {{/if}}
+            <div class="item-description tsb-panel">
+                {{editor
+                    enrichedDescription target="system.description"
+                    button=true editable=editable}}
+            </div>
+        </div>
+    </section>
+</form>
