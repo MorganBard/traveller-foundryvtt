@@ -7,6 +7,7 @@ import { MgT2Item } from "./documents/item.mjs";
 import { MgT2ActorSheet } from "./sheets/actor-sheet.mjs";
 import { MgT2NpcActorSheet } from "./sheets/actors/npc.mjs";
 import { MgT2TravellerBrassSheet } from "./sheets/actors/traveller-brass.mjs";
+import { MgT2SpacecraftBrassSheet } from "./sheets/actors/spacecraft-brass.mjs";
 import { MgT2CreatureActorSheet } from "./sheets/actor-sheet.mjs";
 import { MgT2WorldActorSheet } from "./sheets/actors/world.mjs";
 import { MgT2VehicleActorSheet } from "./sheets/actors/vehicle.mjs";
@@ -380,6 +381,7 @@ Hooks.once('init', async function() {
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("mgt2e-piggy", MgT2ActorSheet, { label: "Traveller Sheet", makeDefault: true });
   Actors.registerSheet("mgt2e-piggy", MgT2TravellerBrassSheet, { label: "Traveller Sheet (Brass)", types: [ "traveller"], makeDefault: false });
+  Actors.registerSheet("mgt2e-piggy", MgT2SpacecraftBrassSheet, { label: "Spacecraft Sheet (Brass)", types: [ "spacecraft"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2NpcActorSheet, { label: "NPC Sheet", types: [ "npc"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2CreatureActorSheet, { label: "Creature Sheet", types: [ "creature"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2WorldActorSheet, { label: "World Sheet", types: [ "world"], makeDefault: true });

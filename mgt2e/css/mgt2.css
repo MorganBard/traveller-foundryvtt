@@ -3372,6 +3372,340 @@ ol.actor-items li.item-status- {
   color: var(--svc-brass-bright);
 }
 
+/* Spacecraft Sheet (Brass) - same theme/pattern as .mgt2e-traveller-brass above (see
+   traveller-brass.mjs's comment for why the token set is duplicated per sheet rather than
+   shared - every existing brass surface in this codebase re-scopes its own copy). Kept as an
+   exact duplicate of the Traveller block rather than a shared selector list, matching the
+   established convention (e.g. #mgt2e-target-summary duplicating #mgt2e-ship-console's tokens). */
+.mgt2e-spacecraft-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  --title-bg: var(--svc-brass);
+  --mongoose-orange: var(--svc-brass);
+}
+
+.mgt2e-spacecraft-brass .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+.mgt2e-spacecraft-brass .window-content,
+.mgt2e-spacecraft-brass .window-content label,
+.mgt2e-spacecraft-brass .window-content span,
+.mgt2e-spacecraft-brass .window-content a,
+.mgt2e-spacecraft-brass .window-content li,
+.mgt2e-spacecraft-brass .window-content p,
+.mgt2e-spacecraft-brass .window-content h1,
+.mgt2e-spacecraft-brass .window-content h2,
+.mgt2e-spacecraft-brass .window-content h3,
+.mgt2e-spacecraft-brass .window-content input,
+.mgt2e-spacecraft-brass .window-content select,
+.mgt2e-spacecraft-brass .window-content textarea {
+  color: var(--svc-parchment);
+}
+.mgt2e-spacecraft-brass .window-content a.item.active {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-spacecraft-brass .window-content input,
+.mgt2e-spacecraft-brass .window-content select,
+.mgt2e-spacecraft-brass .window-content textarea {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-spacecraft-brass .window-content input:focus,
+.mgt2e-spacecraft-brass .window-content select:focus,
+.mgt2e-spacecraft-brass .window-content textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--svc-brass-bright);
+}
+
+.mgt2e-spacecraft-brass .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright), var(--svc-brass) 45%, var(--svc-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.mgt2e-spacecraft-brass .svc-rivet.tl { top: 4px; left: 4px; }
+.mgt2e-spacecraft-brass .svc-rivet.tr { top: 4px; right: 4px; }
+.mgt2e-spacecraft-brass .svc-rivet.bl { bottom: 4px; left: 4px; }
+.mgt2e-spacecraft-brass .svc-rivet.br { bottom: 4px; right: 4px; }
+
+.mgt2e-spacecraft-brass .tsb-sheet {
+  padding: 14px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.mgt2e-spacecraft-brass .tsb-left {
+  flex: 0 0 200px;
+  width: 200px;
+}
+.mgt2e-spacecraft-brass .tsb-right {
+  width: 100%;
+  min-width: 0;
+}
+
+.mgt2e-spacecraft-brass .tsb-portrait-frame {
+  padding: 4px;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-spacecraft-brass .tsb-portrait-frame img.profile-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: none;
+  border-radius: 2px;
+}
+
+.mgt2e-spacecraft-brass .tsb-panel,
+.mgt2e-spacecraft-brass .tsb-gauge,
+.mgt2e-spacecraft-brass .side-panel {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.18), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+.mgt2e-spacecraft-brass .tsb-gauge-title,
+.mgt2e-spacecraft-brass .box-title {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+  background: none;
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+}
+
+.mgt2e-spacecraft-brass .tsb-nameplate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-spacecraft-brass .tsb-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--svc-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+}
+.mgt2e-spacecraft-brass .tsb-name {
+  margin: 0;
+}
+.mgt2e-spacecraft-brass .tsb-name input {
+  background: transparent;
+  border: none;
+  text-align: center;
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--svc-ink);
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+
+.mgt2e-spacecraft-brass .field-label {
+  background: none;
+  color: var(--svc-brass-bright);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+}
+.mgt2e-spacecraft-brass .field-label-subtle {
+  color: var(--svc-parchment-dim);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: block;
+}
+
+.mgt2e-spacecraft-brass .tsb-tabnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+  margin-bottom: 10px;
+  padding-bottom: 0;
+}
+.mgt2e-spacecraft-brass .tsb-tabnav a.item {
+  padding: 6px 10px;
+  border-radius: 4px 4px 0 0;
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment-dim);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--svc-brass-shadow);
+  border-bottom: none;
+}
+.mgt2e-spacecraft-brass .tsb-tabnav a.item.active {
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  color: var(--svc-ink);
+}
+.mgt2e-spacecraft-brass .tsb-tabpanel {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.mgt2e-spacecraft-brass li.item {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-spacecraft-brass li.item h4 {
+  background: none !important;
+  color: var(--svc-parchment);
+}
+
+.mgt2e-spacecraft-brass .window-content select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+
+.mgt2e-spacecraft-brass .editor {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-spacecraft-brass .editor-content,
+.mgt2e-spacecraft-brass .editor-content.ProseMirror,
+.mgt2e-spacecraft-brass .editor prose-mirror {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+  min-height: 100px;
+}
+.mgt2e-spacecraft-brass a.editor-edit {
+  background: var(--svc-brass-dim);
+  color: var(--svc-brass-bright);
+}
+.mgt2e-spacecraft-brass .editor-content.ProseMirror a,
+.mgt2e-spacecraft-brass .editor-content a {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-spacecraft-brass .editor .editor-menu,
+.mgt2e-spacecraft-brass .editor menu.editor-menu {
+  background: var(--svc-brass-dim);
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-spacecraft-brass .editor .editor-menu button,
+.mgt2e-spacecraft-brass .editor menu.editor-menu button {
+  color: var(--svc-ink);
+}
+
+/* Spacecraft-only elements not present on the Traveller sheet - same hardcoded-base-theme
+   clashes as before (mini-value/bay-header/hull-pill all hardcode the base #f1511b orange). */
+.mgt2e-spacecraft-brass .mini-value {
+  display: inline-block;
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin: 0 6px 6px 0;
+}
+.mgt2e-spacecraft-brass .mini-value label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+}
+.mgt2e-spacecraft-brass .mini-value span {
+  background: var(--svc-wood-grain);
+  color: var(--svc-parchment);
+  padding: 1px 4px;
+  border-radius: 2px;
+  display: inline-block;
+}
+.mgt2e-spacecraft-brass .pill-container {
+  background: none;
+}
+.mgt2e-spacecraft-brass .bay-header {
+  background: none;
+}
+.mgt2e-spacecraft-brass .bay-head {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px 4px 0 0;
+  text-align: center;
+  padding: 4px;
+}
+.mgt2e-spacecraft-brass .bay-hover,
+.mgt2e-spacecraft-brass .bay-hover-selected {
+  color: var(--svc-parchment-dim);
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.mgt2e-spacecraft-brass .bay-hover-selected {
+  color: var(--svc-brass-bright);
+  font-weight: 700;
+}
+.mgt2e-spacecraft-brass .pill-container .hull-pill {
+  background: var(--svc-brass-dim);
+  color: var(--svc-parchment);
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-spacecraft-brass .pill-container .hull-pill .fas {
+  background: none !important;
+  color: var(--svc-parchment);
+}
+
+/* Crew roster cards (actor-starship-crew.html) - a different card component from li.item, with
+   its own hardcoded #f1511b header (items.css) and role-action pills (showCrewInfo() in mgt2.mjs,
+   also hardcoded). */
+.mgt2e-spacecraft-brass .actor-crew {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-spacecraft-brass .actor-crew h4 {
+  background: var(--svc-brass-dim) !important;
+  color: var(--svc-parchment) !important;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-spacecraft-brass .actor-crew .role-action-button {
+  background-color: var(--svc-panel-inset) !important;
+  color: var(--svc-parchment) !important;
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-spacecraft-brass .actor-crew .role-title {
+  color: var(--svc-brass-bright);
+}
+
 /* Weapons status window - a lighter version of the ship console's theme (no rivets/plate),
    opened from a ship's Ship Status section to list per-mount status individually. */
 #mgt2e-weapon-status {
