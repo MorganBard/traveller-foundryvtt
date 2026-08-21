@@ -23,8 +23,11 @@ import { MgT2AssociateItemSheet } from "./sheets/items/associate.mjs";
 import { MgT2WorldDataItemSheet } from "./sheets/items/world-data.mjs";
 import { MgT2SoftwareItemSheet } from "./sheets/items/software.mjs";
 import { MgT2eVehicleSheet } from "./sheets/v2/Vehicle.mjs";
+import { MgT2eVehicleBrassSheet } from "./sheets/v2/VehicleBrass.mjs";
 import { MgT2eRobotSheet } from "./sheets/v2/Robot.mjs";
+import { MgT2eRobotBrassSheet } from "./sheets/v2/RobotBrass.mjs";
 import { MgT2eOptionSheet } from "./sheets/items/v2/Option.mjs";
+import { MgT2eOptionBrassSheet } from "./sheets/v2/OptionBrass.mjs";
 
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
@@ -393,7 +396,9 @@ Hooks.once('init', async function() {
   Actors.registerSheet("mgt2e-piggy", MgT2WorldActorSheet, { label: "World Sheet", types: [ "world"], makeDefault: true });
   Actors.registerSheet("mgt2e-piggy", MgT2VehicleActorSheet, { label: "Vehicle Sheet", types: [ "vehicle"], makeDefault: true });
   Actors.registerSheet("mgt2e-piggy", MgT2eVehicleSheet, { label: "Vehicle Sheet 2", types: [ "vehicle"], makeDefault: false });
+  Actors.registerSheet("mgt2e-piggy", MgT2eVehicleBrassSheet, { label: "Vehicle Sheet 2 (Brass)", types: [ "vehicle"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2eRobotSheet, { label: "Robot Sheet", types: [ "robot"], makeDefault: true });
+  Actors.registerSheet("mgt2e-piggy", MgT2eRobotBrassSheet, { label: "Robot Sheet (Brass)", types: [ "robot"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2SwarmActorSheet, { label: "Swarm Sheet", types: [ "swarm"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("mgt2e-piggy", MgT2ItemSheet, { label: "Item Sheet", makeDefault: true });
@@ -405,6 +410,7 @@ Hooks.once('init', async function() {
   Items.registerSheet("mgt2e-piggy", MgT2SoftwareItemSheet, { label: "Software", types: [ "software"], makeDefault: true });
   Items.registerSheet("mgt2e-piggy", MgT2SoftwareBrassSheet, { label: "Software (Brass)", types: [ "software"], makeDefault: false });
   Items.registerSheet("mgt2e-piggy", MgT2eOptionSheet, { label: "Option", types: [ "option"], makeDefault: true });
+  Items.registerSheet("mgt2e-piggy", MgT2eOptionBrassSheet, { label: "Option (Brass)", types: [ "option"], makeDefault: false });
 
   foundry.applications.apps.DocumentSheetConfig.unregisterSheet(ActiveEffect, "core", foundry.applications.sheets.ActiveEffectConfig);
   foundry.applications.apps.DocumentSheetConfig.registerSheet(ActiveEffect, "mgt2e-piggy", MgT2EffectSheet, { makeDefault: true});

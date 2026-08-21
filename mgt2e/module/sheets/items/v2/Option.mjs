@@ -219,11 +219,11 @@ export class MgT2eOptionSheet extends MgT2eItemV2 {
 
         context.SELECT_TYPE = {};
         if (this.document.system.option.model === "vehicle") {
-            for (let t in CONFIG.MGT2.VEHICLES.OPTIONS) {
+            for (let t in CONFIG.MGT2?.VEHICLES?.OPTIONS) {
                 context.SELECT_TYPE[t] = game.i18n.localize(`MGT2.Option.Type.${t}`);
             }
         } else {
-            for (let t in CONFIG.MGT2.ROBOTS.OPTIONS) {
+            for (let t in CONFIG.MGT2?.ROBOTS?.OPTIONS) {
                 context.SELECT_TYPE[t] = game.i18n.localize(`MGT2.Option.Type.${t}`);
             }
         }

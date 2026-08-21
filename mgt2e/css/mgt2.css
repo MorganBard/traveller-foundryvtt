@@ -4480,3 +4480,157 @@ ol.actor-items li.item-status- {
   height: 100%;
   transition: width 0.2s ease;
 }
+
+/* Shared brass/mahogany theme for the ApplicationV2 sheets (Vehicle/Robot/Option options).
+   Unlike the ApplicationV1 brass sheets, these don't need reskinned template copies - the V2
+   templates already use generic structural classes (.resource, .grid, .field-label, .shadow)
+   rather than baking hardcoded colors into bespoke markup, so a CSS-only scope class is enough.
+   Reuses the same --svc-* token values as the V1 brass sheets for visual consistency. */
+.mgt2e-v2-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  --title-bg: var(--svc-brass);
+  --mongoose-orange: var(--svc-brass);
+}
+
+.mgt2e-v2-brass .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%) !important;
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+.mgt2e-v2-brass .window-content,
+.mgt2e-v2-brass .window-content label,
+.mgt2e-v2-brass .window-content span,
+.mgt2e-v2-brass .window-content a,
+.mgt2e-v2-brass .window-content li,
+.mgt2e-v2-brass .window-content p,
+.mgt2e-v2-brass .window-content h1,
+.mgt2e-v2-brass .window-content h2,
+.mgt2e-v2-brass .window-content h3,
+.mgt2e-v2-brass .window-content h4,
+.mgt2e-v2-brass .window-content input,
+.mgt2e-v2-brass .window-content select,
+.mgt2e-v2-brass .window-content textarea {
+  color: var(--svc-parchment);
+}
+
+.mgt2e-v2-brass form { background: none !important; }
+
+.mgt2e-v2-brass .window-content input,
+.mgt2e-v2-brass .window-content select,
+.mgt2e-v2-brass .window-content textarea {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  color: var(--svc-parchment) !important;
+}
+
+.mgt2e-v2-brass .window-content input:focus,
+.mgt2e-v2-brass .window-content select:focus,
+.mgt2e-v2-brass .window-content textarea:focus {
+  border-color: var(--svc-brass-bright);
+  box-shadow: 0 0 4px var(--svc-brass-bright);
+}
+
+.mgt2e-v2-brass .window-content select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+
+.mgt2e-v2-brass .shadow,
+.mgt2e-v2-brass .sheet-body,
+.mgt2e-v2-brass .item-side-panel {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+
+.mgt2e-v2-brass h1.actor-name {
+  background: none;
+  border-bottom: 2px solid var(--svc-brass) !important;
+  color: var(--svc-brass-bright) !important;
+  font-family: Georgia, "Iowan Old Style", serif;
+}
+
+.mgt2e-v2-brass h1.actor-name input {
+  background: none !important;
+  color: var(--svc-brass-bright) !important;
+}
+
+/* The base theme's .field-label/.item-label are a bright orange pill (NPC-sheet holdover) that
+   clashes against the wood/brass palette - restyle as a small brass eyebrow label instead. */
+.mgt2e-v2-brass .field-label,
+.mgt2e-v2-brass .item-label {
+  background: none;
+  color: var(--svc-brass-bright);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+}
+
+.mgt2e-v2-brass .pill-container {
+  background-color: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+}
+
+.mgt2e-v2-brass .pill-container .pill {
+  background-color: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  color: var(--svc-brass-bright);
+}
+
+.mgt2e-v2-brass li.item-block {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-v2-brass li.item-block h4 {
+  background: none;
+  color: var(--svc-parchment);
+}
+
+.mgt2e-v2-brass nav.tabs {
+  background: var(--svc-panel-inset);
+  border-bottom: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-v2-brass nav.tabs a.item {
+  color: var(--svc-parchment-dim);
+}
+.mgt2e-v2-brass nav.tabs a.item.active {
+  color: var(--svc-brass-bright);
+  border-bottom: 2px solid var(--svc-brass);
+}
+
+.mgt2e-v2-brass .editor,
+.mgt2e-v2-brass prose-mirror,
+.mgt2e-v2-brass .editor-content,
+.mgt2e-v2-brass .editor-content.ProseMirror {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-v2-brass .editor-content.ProseMirror a,
+.mgt2e-v2-brass .editor-content a {
+  color: var(--svc-verdigris);
+}
+
+.mgt2e-v2-brass span[data-action="quantityInc"],
+.mgt2e-v2-brass span[data-action="quantityDec"] {
+  color: var(--svc-brass-bright);
+}
