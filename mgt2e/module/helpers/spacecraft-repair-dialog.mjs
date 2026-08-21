@@ -1,6 +1,7 @@
 import {rollSkill} from "../helpers/dice-rolls.mjs";
 import { MGT2 } from "../helpers/config.mjs";
 import { repairLifeSupport } from "./spacecraft/life-support.mjs";
+import {dialogBrassClasses} from "./dialog-theme.mjs";
 
 // Which MGT2.SPACECRAFT_CRITICALS location each MGT2.SPACECRAFT_DAMAGE effect belongs to - used
 // to clear the Ship Status board's crit_<location> severity once every effect under that
@@ -50,6 +51,7 @@ export class MgT2SpacecraftRepairDialog extends Application {
         options.shareable = true;
         options.popOut = true;
         options.resizable = true;
+        options.classes = [...options.classes, ...dialogBrassClasses()];
 
         return options;
     }

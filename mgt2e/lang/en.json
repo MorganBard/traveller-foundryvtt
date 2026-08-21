@@ -18,6 +18,8 @@
   "MGT2.Settings.SkillFormat.Values.Columns": "Columns",
   "MGT2.Settings.UseEncumbrance.Name": "Use encumbrance",
   "MGT2.Settings.UseEncumbrance.Hint": "If enabled, automatically applies penalties due to encumbrance",
+  "MGT2.Settings.BrassDialogs.Name": "Brass/mahogany dialog theme",
+  "MGT2.Settings.BrassDialogs.Hint": "Applies the brass/mahogany theme to small roll and action dialogs (attack, damage, skill checks, etc). This is a per-player preference - each player chooses their own.",
   "MGT2.Settings.UseCoreStatusEffects.Name": "Use core status effects",
   "MGT2.Settings.UseCoreStatusEffects.Hint": "If enabled, Foundry's built-in generic status effects (blinded, invisible, paralysis, etc.) appear in the token HUD alongside this system's own conditions. If disabled, only this system's Traveller-specific conditions are shown.",
   "MGT2.Settings.CurrentYear.Name": "Year",

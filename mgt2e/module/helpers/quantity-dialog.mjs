@@ -1,4 +1,5 @@
 import {MgT2Item} from "../documents/item.mjs";
+import {dialogBrassClasses} from "./dialog-theme.mjs";
 
 export class MgT2QuantityDialog extends Application {
     static get defaultOptions() {
@@ -7,6 +8,7 @@ export class MgT2QuantityDialog extends Application {
         options.width = "400";
         options.height = "auto";
         options.title = "Move Items";
+        options.classes = [...options.classes, ...dialogBrassClasses()];
 
         return options;
     }

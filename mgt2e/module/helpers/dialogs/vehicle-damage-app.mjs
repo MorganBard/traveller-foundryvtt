@@ -2,6 +2,7 @@ import {MgT2Item} from "../../documents/item.mjs";
 import {outputTradeChat, tradeBuyFreightHandler, tradeBuyGoodsHandler} from "../utils/trade-utils.mjs";
 import {Tools} from "../chat/tools.mjs";
 import {hasTrait, rollSpaceAttack} from "../dice-rolls.mjs";
+import {dialogBrassClasses} from "../dialog-theme.mjs";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api
 
 // see: https://foundryvtt.wiki/en/development/api/applicationv2
@@ -22,6 +23,7 @@ export class MgT2VehicleDamageApp extends HandlebarsApplicationMixin(Application
         }
         this.armourFace = "front";
         this.armourFaceValue = this.targetActor.system.vehicle.armour[this.armourFace];
+        this.options.classes.push(...dialogBrassClasses());
     }
 
     static DEFAULT_OPTIONS = {

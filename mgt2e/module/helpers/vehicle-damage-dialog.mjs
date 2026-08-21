@@ -1,5 +1,6 @@
 import {hasTrait} from "../helpers/dice-rolls.mjs";
 import { MGT2 } from "../helpers/config.mjs";
+import {dialogBrassClasses} from "../helpers/dialog-theme.mjs";
 
 export class MgT2VehicleDamageDialog extends Application {
     static get defaultOptions() {
@@ -11,6 +12,7 @@ export class MgT2VehicleDamageDialog extends Application {
         options.shareable = true;
         options.popOut = true;
         options.resizable = true;
+        options.classes = [...options.classes, ...dialogBrassClasses()];
 
         return options;
     }

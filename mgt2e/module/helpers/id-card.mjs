@@ -1,3 +1,4 @@
+import {dialogBrassClasses} from "./dialog-theme.mjs";
 
 export class NpcIdCard extends Application {
 
@@ -11,7 +12,8 @@ export class NpcIdCard extends Application {
             popOut: true,
             shareable: true,
             width: 600,
-            height: 420
+            height: 420,
+            classes: [...options.classes, ...dialogBrassClasses()]
         });
         return options;
     }

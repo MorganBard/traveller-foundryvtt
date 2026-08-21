@@ -2,6 +2,7 @@ import {MgT2Item} from "../../documents/item.mjs";
 import {outputTradeChat, tradeBuyFreightHandler, tradeBuyGoodsHandler} from "../utils/trade-utils.mjs";
 import {Tools} from "../chat/tools.mjs";
 import {rollSpaceAttack} from "../dice-rolls.mjs";
+import {dialogBrassClasses} from "../dialog-theme.mjs";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api
 
 // see: https://foundryvtt.wiki/en/development/api/applicationv2
@@ -13,6 +14,7 @@ export class MgT2MissileAttackApp extends HandlebarsApplicationMixin(Application
         this.targetActor = targetActor;
         this.weaponItem = weaponItem;
         this.attackOptions = attackOptions;
+        this.options.classes.push(...dialogBrassClasses());
     }
 
     static DEFAULT_OPTIONS = {

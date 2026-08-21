@@ -3,6 +3,7 @@ import {getSkillValue} from "../helpers/dice-rolls.mjs";
 import {launchMissiles} from "./spacecraft/spacecraft-utils.mjs";
 import {MGT2} from "./config.mjs";
 import {Tools} from "./chat/tools.mjs";
+import {dialogBrassClasses} from "./dialog-theme.mjs";
 
 export class MgT2SpacecraftAttackDialog extends Application {
     static get defaultOptions() {
@@ -11,6 +12,7 @@ export class MgT2SpacecraftAttackDialog extends Application {
         options.width = "auto";
         options.height = "auto";
         options.title = "Attack";
+        options.classes = [...options.classes, ...dialogBrassClasses()];
 
         return options;
     }

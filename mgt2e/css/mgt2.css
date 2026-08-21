@@ -4634,3 +4634,113 @@ ol.actor-items li.item-status- {
 .mgt2e-v2-brass span[data-action="quantityDec"] {
   color: var(--svc-brass-bright);
 }
+
+/* Shared brass/mahogany theme for the small standalone Application dialogs (attack, damage,
+   skill roll, XP, buy/sell, crew, etc). Unlike the document sheets, these have no per-document
+   "Configure Sheet" picker to offer this as an opt-in alternate through, so applying this scope
+   class replaces their look directly rather than adding a toggle. Reuses the same --svc-* token
+   values as the other brass scopes. Overriding --title-bg/--panel-bg/--mongoose-orange here also
+   re-colors every rule elsewhere in this file that already reads those variables (e.g. .shadow's
+   border/background) without needing to redeclare each one. */
+.mgt2e-dialog-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  --title-bg: var(--svc-brass);
+  --panel-bg: var(--svc-panel-inset);
+  --mongoose-orange: var(--svc-brass);
+}
+
+.mgt2e-dialog-brass .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%) !important;
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+.mgt2e-dialog-brass .window-content,
+.mgt2e-dialog-brass .window-content label,
+.mgt2e-dialog-brass .window-content span,
+.mgt2e-dialog-brass .window-content a,
+.mgt2e-dialog-brass .window-content li,
+.mgt2e-dialog-brass .window-content p,
+.mgt2e-dialog-brass .window-content h1,
+.mgt2e-dialog-brass .window-content h2,
+.mgt2e-dialog-brass .window-content h3,
+.mgt2e-dialog-brass .window-content h4,
+.mgt2e-dialog-brass .window-content input,
+.mgt2e-dialog-brass .window-content select,
+.mgt2e-dialog-brass .window-content textarea {
+  color: var(--svc-parchment);
+}
+
+.mgt2e-dialog-brass form { background: none !important; }
+
+.mgt2e-dialog-brass .window-content input,
+.mgt2e-dialog-brass .window-content select,
+.mgt2e-dialog-brass .window-content textarea {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  color: var(--svc-parchment) !important;
+}
+
+.mgt2e-dialog-brass .window-content input:focus,
+.mgt2e-dialog-brass .window-content select:focus,
+.mgt2e-dialog-brass .window-content textarea:focus {
+  border-color: var(--svc-brass-bright);
+  box-shadow: 0 0 4px var(--svc-brass-bright);
+}
+
+.mgt2e-dialog-brass .window-content select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+
+.mgt2e-dialog-brass .shadow {
+  background-color: var(--svc-panel-inset) !important;
+  border: 2px solid var(--svc-brass) !important;
+  color: var(--svc-parchment) !important;
+}
+
+.mgt2e-dialog-brass .skillDialogLabel,
+.mgt2e-dialog-brass .field-label {
+  color: var(--svc-brass-bright);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: none;
+}
+
+.mgt2e-dialog-brass footer.sheet-footer,
+.mgt2e-dialog-brass .sheet-footer {
+  border-top: 1px solid var(--svc-brass-shadow);
+}
+
+.mgt2e-dialog-brass button,
+.mgt2e-dialog-brass button.attackRoll,
+.mgt2e-dialog-brass button.skillRoll {
+  background-color: var(--svc-brass-dim) !important;
+  color: var(--svc-brass-bright) !important;
+  border: 1px solid var(--svc-brass-shadow) !important;
+  box-shadow: none !important;
+}
+.mgt2e-dialog-brass button:hover {
+  background-color: var(--svc-brass-shadow) !important;
+  color: var(--svc-parchment) !important;
+}
+.mgt2e-dialog-brass button:disabled {
+  opacity: 0.5;
+}

@@ -6,6 +6,7 @@ import {
     tradeEmbarkPassengerHandler
 } from "../utils/trade-utils.mjs";
 import {Tools} from "../chat/tools.mjs";
+import {dialogBrassClasses} from "../dialog-theme.mjs";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api
 
 // First attempt at ApplicationV2 dialog.
@@ -18,6 +19,7 @@ export class MgT2EmbarkPassengerApp extends HandlebarsApplicationMixin(Applicati
         this.worldActor = worldActor;
         this.shipActor = shipActor;
         this.passengerItem = passengerItem;
+        this.options.classes.push(...dialogBrassClasses());
     }
 
     static DEFAULT_OPTIONS = {

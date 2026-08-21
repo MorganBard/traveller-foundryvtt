@@ -1,4 +1,5 @@
 import {MgT2Item} from "../documents/item.mjs";
+import {dialogBrassClasses} from "./dialog-theme.mjs";
 
 // Allow damage characteristics to be modified.
 export class MgT2BuyDialog extends Application {
@@ -8,6 +9,7 @@ export class MgT2BuyDialog extends Application {
         options.width = "400";
         options.height = "auto";
         options.title = "Buy Item";
+        options.classes = [...options.classes, ...dialogBrassClasses()];
 
         return options;
     }

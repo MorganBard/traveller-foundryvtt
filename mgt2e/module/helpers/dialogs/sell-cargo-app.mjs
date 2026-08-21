@@ -1,6 +1,7 @@
 import {MgT2Item} from "../../documents/item.mjs";
 import {getHighestModifier, getSalePrice, outputTradeChat, tradeSellGoodsHandler} from "../utils/trade-utils.mjs";
 import {Tools} from "../chat/tools.mjs";
+import {dialogBrassClasses} from "../dialog-theme.mjs";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api
 
 // First attempt at ApplicationV2 dialog.
@@ -13,6 +14,7 @@ export class MgT2SellCargoApp extends HandlebarsApplicationMixin(ApplicationV2) 
         this.shipActor = shipActor;
         this.worldActor = worldActor;
         this.cargoItem = cargoItem;
+        this.options.classes.push(...dialogBrassClasses());
     }
 
     static DEFAULT_OPTIONS = {

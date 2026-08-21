@@ -1,5 +1,6 @@
 import {rollAttack, hasTrait, getTraitValue, skillLabel, getMeleeTargetError, getRangedTargetError} from "../helpers/dice-rolls.mjs";
 import {getSkillValue} from "../helpers/dice-rolls.mjs";
+import {dialogBrassClasses} from "../helpers/dialog-theme.mjs";
 
 export class MgT2AttackDialog extends Application {
     static get defaultOptions() {
@@ -8,6 +9,7 @@ export class MgT2AttackDialog extends Application {
         options.width = "auto";
         options.height = "auto";
         options.title = "Attack";
+        options.classes = [...options.classes, ...dialogBrassClasses()];
 
         return options;
     }
