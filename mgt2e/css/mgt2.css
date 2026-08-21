@@ -4576,7 +4576,7 @@ ol.actor-items li.item-status- {
 .mgt2e-v2-brass .field-label,
 .mgt2e-v2-brass .item-label {
   background: none;
-  color: var(--svc-brass-bright);
+  color: var(--svc-brass-bright) !important;
   font-weight: 400;
   font-size: 10px;
   letter-spacing: 0.12em;
@@ -4603,6 +4603,25 @@ ol.actor-items li.item-status- {
 .mgt2e-v2-brass li.item-block h4 {
   background: none;
   color: var(--svc-parchment);
+}
+
+.mgt2e-v2-brass .actor-crew {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-v2-brass .actor-crew h4 {
+  background: var(--svc-brass-dim) !important;
+  color: var(--svc-parchment) !important;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-v2-brass .actor-crew .role-action-button {
+  background-color: var(--svc-panel-inset) !important;
+  color: var(--svc-parchment) !important;
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-v2-brass .actor-crew .role-title {
+  color: var(--svc-brass-bright);
 }
 
 .mgt2e-v2-brass nav.tabs {
@@ -4716,7 +4735,7 @@ ol.actor-items li.item-status- {
 
 .mgt2e-dialog-brass .skillDialogLabel,
 .mgt2e-dialog-brass .field-label {
-  color: var(--svc-brass-bright);
+  color: var(--svc-brass-bright) !important;
   font-weight: 400;
   font-size: 10px;
   letter-spacing: 0.12em;
@@ -4743,4 +4762,26 @@ ol.actor-items li.item-status- {
 }
 .mgt2e-dialog-brass button:disabled {
   opacity: 0.5;
+}
+
+.mgt2e-dialog-brass li.crew-role {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-dialog-brass .crew-role-body h4 {
+  border-bottom: 1px solid var(--svc-brass);
+}
+.mgt2e-dialog-brass li.crew-role h4 {
+  background-color: var(--svc-brass-dim) !important;
+  color: var(--svc-parchment) !important;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-dialog-brass .crew-role .inline-role {
+  background-color: var(--svc-panel-inset) !important;
+  color: var(--svc-parchment) !important;
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-dialog-brass .crew-role .inline-role:hover {
+  background-color: var(--svc-brass-shadow) !important;
 }

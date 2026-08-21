@@ -1,6 +1,8 @@
 import {MgT2AttackDialog} from "../../helpers/attack-dialog.mjs";
 import {MgT2CrewMemberDialog} from "../../helpers/crew-member-dialog.mjs";
 import {MgT2eAttackApp} from "../../helpers/dialogs/MgT2eAttackApp.mjs";
+import {createCrewRole} from "../../helpers/crew-role-builder.mjs";
+import {runCrewAction} from "../../helpers/crew-actions.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -120,6 +122,17 @@ export class MgT2eActorV2 extends HandlebarsApplicationMixin(ActorSheetV2) {
             const crew = game.actors.get(actorId);
             new MgT2CrewMemberDialog(crew, this.actor,this).render(true);
         }
+    }
+
+    // MgT2CrewMemberDialog calls these on whatever actorSheet it was opened from - see
+    // helpers/crew-role-builder.mjs for why this is shared with MgT2ActorSheet instead of
+    // duplicated.
+    _createCrewRole(roleType) {
+        return createCrewRole(this.actor, roleType);
+    }
+
+    async _runCrewAction(shipActor, actorCrewId, roleId, actionId) {
+        return runCrewAction(shipActor, actorCrewId, roleId, actionId);
     }
 
     // Vehicle or Spacecraft using a role action.

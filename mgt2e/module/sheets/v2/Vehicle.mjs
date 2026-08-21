@@ -170,6 +170,16 @@ export class MgT2eVehicleSheet extends MgT2eActorV2 {
         if (shipping !== parseInt(this.document.system.vehicle.shipping)) {
             await this.document.update({"system.vehicle.shipping": shipping});
         }
+
+        // system.vehicle.skill was never actually kept in sync with the selected Type - it just
+        // sat at whatever the schema default was. Some types offer more than one valid skill (e.g.
+        // groundVehicle: wheel/track/mole) with no UI to pick between them yet, so only correct it
+        // when the current value isn't even a valid option for this type, rather than clobbering a
+        // deliberate choice on every render.
+        const skills = typeConfig.skills || typeConfig.skill || [];
+        if (skills.length && !skills.includes(this.document.system.vehicle.skill)) {
+            await this.document.update({"system.vehicle.skill": skills[0]});
+        }
     }
 
     async _calculateHits() {
