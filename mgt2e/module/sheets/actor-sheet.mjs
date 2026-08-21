@@ -20,6 +20,7 @@ import {
 import {MgT2CharacteristicDamageApp} from "../helpers/dialogs/characteristic-damage.mjs";
 import {rollTravellerInitiative} from "../documents/combat.mjs";
 import {runCrewAction} from "../helpers/crew-actions.mjs";
+import {attachClonedComponents} from "../helpers/component-links.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -2427,60 +2428,87 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             ui.notifications.error(`Unable to find item with id [${data.uuid}]`);
             return false;
         }
-        if (["associate"].includes(item.type)) {
-            // Meta item, so just pass through to the usual item handler.
-            return super._onDropItem(event, data);
-        } else if (item.type === "term" && [ "traveller", "package"].includes(this.actor.type)) {
-            return super._onDropItem(event, data);
-        }
-
-        // If not dragged from another (different) actor, just let the normal item handler deal with things.
-        if (!item.parent || this.actor.uuid === item.parent.uuid) {
-            return super._onDropItem(event, data);
-        }
-
-        let srcActor = item.parent;
-
-        // If moving trade goods between worlds and spacecraft, use the trade system.
-        if (srcActor.type === "world" && this.actor.type === "spacecraft") {
-            if (item.type === "cargo") {
-                await buyCargoDialog(srcActor, this.actor, item);
-            } else if (item.type === "worlddata" && item.system.world.datatype === "passenger") {
-                await embarkPassengerDialog(srcActor, this.actor, item);
-            }
-            return false;
-        } else if (srcActor.type === "spacecraft" && this.actor.type === "world") {
-            if (item.type === "cargo") {
-                await sellCargoDialog(srcActor, this.actor, item);
-            }
-            return false;
-        }
-        if (["worlddata"].includes(item.type)) {
-            // Meta item, so just pass through to the usual item handler.
-            return super._onDropItem(event, data);
-        }
-
-        // If shift is held down on drop, copy rather than move. Use the standard handler.
-        if (event.shiftKey) {
-            return super._onDropItem(event, data);
-        }
-
-        console.log(`From ${srcActor.name} to ${this.actor.name}`);
-
-        if (srcActor) {
-            if (item.type === "hardware" || item.type === "role" || item.type === "term" || item.type === "software") {
-                return true;
+        // Linked components (e.g. weapon accessories) only resolve within the collection they
+        // were dropped into, so stash the source item here for _onDropItemCreate to clone them
+        // into this actor's items when the item being dropped carries any.
+        this._pendingComponentSource = item;
+        try {
+            if (["associate"].includes(item.type)) {
+                // Meta item, so just pass through to the usual item handler.
+                return await super._onDropItem(event, data);
+            } else if (item.type === "term" && [ "traveller", "package"].includes(this.actor.type)) {
+                return await super._onDropItem(event, data);
             }
 
-            if (parseInt(item.system.quantity) > 1) {
-                new MgT2QuantityDialog(srcActor, this.actor, item).render(true);
-            } else {
-                ui.notifications.info(`Moved '${item.name}' from '${srcActor.name}' to '${this.actor.name}'`);
-                srcActor.deleteEmbeddedDocuments("Item", [item._id]);
-                return super._onDropItem(event, data);
+            // If not dragged from another (different) actor, just let the normal item handler deal with things.
+            if (!item.parent || this.actor.uuid === item.parent.uuid) {
+                return await super._onDropItem(event, data);
+            }
+
+            let srcActor = item.parent;
+
+            // If moving trade goods between worlds and spacecraft, use the trade system.
+            if (srcActor.type === "world" && this.actor.type === "spacecraft") {
+                if (item.type === "cargo") {
+                    await buyCargoDialog(srcActor, this.actor, item);
+                } else if (item.type === "worlddata" && item.system.world.datatype === "passenger") {
+                    await embarkPassengerDialog(srcActor, this.actor, item);
+                }
+                return false;
+            } else if (srcActor.type === "spacecraft" && this.actor.type === "world") {
+                if (item.type === "cargo") {
+                    await sellCargoDialog(srcActor, this.actor, item);
+                }
+                return false;
+            }
+            if (["worlddata"].includes(item.type)) {
+                // Meta item, so just pass through to the usual item handler.
+                return await super._onDropItem(event, data);
+            }
+
+            // If shift is held down on drop, copy rather than move. Use the standard handler.
+            if (event.shiftKey) {
+                return await super._onDropItem(event, data);
+            }
+
+            console.log(`From ${srcActor.name} to ${this.actor.name}`);
+
+            if (srcActor) {
+                if (item.type === "hardware" || item.type === "role" || item.type === "term" || item.type === "software") {
+                    return true;
+                }
+
+                if (parseInt(item.system.quantity) > 1) {
+                    new MgT2QuantityDialog(srcActor, this.actor, item).render(true);
+                } else {
+                    ui.notifications.info(`Moved '${item.name}' from '${srcActor.name}' to '${this.actor.name}'`);
+                    srcActor.deleteEmbeddedDocuments("Item", [item._id]);
+                    return await super._onDropItem(event, data);
+                }
+            }
+            return true;
+        } finally {
+            delete this._pendingComponentSource;
+        }
+    }
+
+    /**
+     * Override to bring linked components (e.g. weapon accessories) along when a linked-parent
+     * item is dropped onto this actor from a different collection - see _onDropItem, which stashes
+     * the original source item in this._pendingComponentSource before delegating here.
+     */
+    async _onDropItemCreate(itemData) {
+        const sourceItem = this._pendingComponentSource;
+        const created = await super._onDropItemCreate(itemData);
+        if (sourceItem && sourceItem.system?.links?.components?.length) {
+            const createdArr = Array.isArray(created) ? created : [created];
+            for (const newItem of createdArr) {
+                if (newItem) {
+                    await attachClonedComponents(sourceItem, newItem, this.actor);
+                }
             }
         }
-        return true;
+        return created;
     }
 
     // Drop a Term onto an Actor. Only applies to Travellers or Packages.

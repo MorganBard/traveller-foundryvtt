@@ -651,7 +651,7 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
             context.LINKED_COMPONENTS = [];
             let found = [];
             for (let s of context.item.system.links.components) {
-                let c = context.item?.parent?.items?.get(s);
+                let c = context.item?.collection?.get(s);
                 if (c) {
                     context.LINKED_COMPONENTS.push(c);
                     found.push(s);
@@ -1167,7 +1167,7 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
         html.find(".linked-component").click(ev => {
             const p = $(ev.currentTarget).parents(".item");
             const id = p.data("id");
-            let i = this.item?.parent?.items.get(id);
+            let i = this.item?.collection?.get(id);
             if (i) {
                 i.sheet.render(true);
             }

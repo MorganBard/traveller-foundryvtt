@@ -9,6 +9,7 @@ import { MgT2NpcActorSheet } from "./sheets/actors/npc.mjs";
 import { MgT2TravellerBrassSheet } from "./sheets/actors/traveller-brass.mjs";
 import { MgT2SpacecraftBrassSheet } from "./sheets/actors/spacecraft-brass.mjs";
 import { MgT2ItemBrassSheet } from "./sheets/items/item-brass.mjs";
+import { MgT2ItemDirectory } from "./sheets/item-directory.mjs";
 import { MgT2AssociateBrassSheet } from "./sheets/items/associate-brass.mjs";
 import { MgT2SoftwareBrassSheet } from "./sheets/items/software-brass.mjs";
 import { MgT2WorldDataBrassSheet } from "./sheets/items/world-data-brass.mjs";
@@ -378,6 +379,7 @@ Hooks.once('init', async function() {
   CONFIG.Item.documentClass = MgT2Item;
   CONFIG.ActiveEffect.documentClass = MgT2Effect;
   CONFIG.Combat.documentClass = MgT2Combat;
+  CONFIG.ui.items = MgT2ItemDirectory;
 
   //CONFIG.debug.hooks = true;
 
