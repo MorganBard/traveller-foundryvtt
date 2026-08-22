@@ -3706,6 +3706,324 @@ ol.actor-items li.item-status- {
   color: var(--svc-brass-bright);
 }
 
+/* World Sheet (Brass) - same theme/pattern as Traveller/Spacecraft above (full token
+   re-declaration per surface), plus a handful of World-only elements (UWP digit strip,
+   fuel-purchase cards, trade drop zones, trade-goods table) not present on those sheets. */
+.mgt2e-world-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  --title-bg: var(--svc-brass);
+  --mongoose-orange: var(--svc-brass);
+}
+
+.mgt2e-world-brass .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+.mgt2e-world-brass .window-content,
+.mgt2e-world-brass .window-content label,
+.mgt2e-world-brass .window-content span,
+.mgt2e-world-brass .window-content a,
+.mgt2e-world-brass .window-content li,
+.mgt2e-world-brass .window-content p,
+.mgt2e-world-brass .window-content h1,
+.mgt2e-world-brass .window-content h2,
+.mgt2e-world-brass .window-content h3,
+.mgt2e-world-brass .window-content input,
+.mgt2e-world-brass .window-content select,
+.mgt2e-world-brass .window-content textarea {
+  color: var(--svc-parchment);
+}
+.mgt2e-world-brass .window-content a.item.active {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-world-brass .window-content input,
+.mgt2e-world-brass .window-content select,
+.mgt2e-world-brass .window-content textarea {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-world-brass .window-content input:focus,
+.mgt2e-world-brass .window-content select:focus,
+.mgt2e-world-brass .window-content textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--svc-brass-bright);
+}
+
+.mgt2e-world-brass .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright), var(--svc-brass) 45%, var(--svc-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.mgt2e-world-brass .svc-rivet.tl { top: 4px; left: 4px; }
+.mgt2e-world-brass .svc-rivet.tr { top: 4px; right: 4px; }
+.mgt2e-world-brass .svc-rivet.bl { bottom: 4px; left: 4px; }
+.mgt2e-world-brass .svc-rivet.br { bottom: 4px; right: 4px; }
+
+.mgt2e-world-brass .tsb-sheet {
+  padding: 14px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.mgt2e-world-brass .tsb-left {
+  flex: 0 0 200px;
+  width: 200px;
+}
+.mgt2e-world-brass .tsb-right {
+  width: 100%;
+  min-width: 0;
+}
+
+.mgt2e-world-brass .tsb-portrait-frame {
+  padding: 4px;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-world-brass .tsb-portrait-frame img.profile-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: none;
+  border-radius: 2px;
+}
+
+.mgt2e-world-brass .tsb-panel,
+.mgt2e-world-brass .side-panel {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.18), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+.mgt2e-world-brass .box-title {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+  background: none;
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+}
+
+.mgt2e-world-brass .tsb-nameplate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-world-brass .tsb-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--svc-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+}
+.mgt2e-world-brass .tsb-name {
+  margin: 0;
+}
+.mgt2e-world-brass .tsb-name input {
+  background: transparent;
+  border: none;
+  text-align: center;
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--svc-ink);
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+
+.mgt2e-world-brass .field-label {
+  background: none;
+  color: var(--svc-brass-bright) !important;
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+}
+.mgt2e-world-brass .resource-label {
+  color: var(--svc-brass-bright);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.mgt2e-world-brass .field-value {
+  color: var(--svc-parchment);
+}
+
+.mgt2e-world-brass .tsb-tabnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+  margin-bottom: 10px;
+  padding-bottom: 0;
+}
+.mgt2e-world-brass .tsb-tabnav a.item {
+  padding: 6px 10px;
+  border-radius: 4px 4px 0 0;
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment-dim);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--svc-brass-shadow);
+  border-bottom: none;
+}
+.mgt2e-world-brass .tsb-tabnav a.item.active {
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  color: var(--svc-ink);
+}
+.mgt2e-world-brass .tsb-tabpanel {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.mgt2e-world-brass li.item {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-world-brass li.item h4 {
+  background: none !important;
+  color: var(--svc-parchment);
+}
+
+.mgt2e-world-brass .window-content select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+
+.mgt2e-world-brass .editor {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-world-brass .editor-content,
+.mgt2e-world-brass .editor-content.ProseMirror,
+.mgt2e-world-brass .editor prose-mirror {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+  min-height: 100px;
+}
+.mgt2e-world-brass a.editor-edit {
+  background: var(--svc-brass-dim);
+  color: var(--svc-brass-bright);
+}
+.mgt2e-world-brass .editor-content.ProseMirror a,
+.mgt2e-world-brass .editor-content a {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-world-brass .editor .editor-menu,
+.mgt2e-world-brass .editor menu.editor-menu {
+  background: var(--svc-brass-dim);
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-world-brass .editor .editor-menu button,
+.mgt2e-world-brass .editor menu.editor-menu button {
+  color: var(--svc-ink);
+}
+
+.mgt2e-world-brass .pill-container {
+  background: none;
+}
+
+/* World-only elements: UWP digit strip, fuel-purchase cards, trade drop zones and
+   trade-goods table - all hardcode the base theme's orange/parchment colors elsewhere. */
+.mgt2e-world-brass .uwp-digits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+.mgt2e-world-brass .uwp-digit {
+  background: var(--svc-brass-dim);
+  color: var(--svc-parchment);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-weight: 700;
+}
+.mgt2e-world-brass .uwp-dash {
+  color: var(--svc-parchment-dim);
+  align-self: center;
+}
+.mgt2e-world-brass .fuelPurchase {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+  color: var(--svc-parchment);
+}
+.mgt2e-world-brass .fuelPurchase span {
+  color: var(--svc-parchment);
+}
+.mgt2e-world-brass .dropZone {
+  background: var(--svc-panel-inset) !important;
+  border: 1px dashed var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-world-brass .dropZone .trader-drop {
+  color: var(--svc-parchment-dim);
+}
+.mgt2e-world-brass .dropZone .trader-name,
+.mgt2e-world-brass .dropZone .trader-skill {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-world-brass .destination-title {
+  background: var(--svc-brass-dim);
+  color: var(--svc-parchment);
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+.mgt2e-world-brass .trade-list {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-world-brass .trade-list-header th {
+  color: var(--svc-brass-bright);
+  border-bottom: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-world-brass .trade-list .buy1, .mgt2e-world-brass .trade-list .sale1 {
+  color: var(--svc-danger);
+}
+.mgt2e-world-brass .trade-list .buy-1, .mgt2e-world-brass .trade-list .sale-1 {
+  color: var(--svc-verdigris);
+}
+
 /* Item Sheet (Brass) - Weapon and Armour, same theme/pattern as the two actor Brass sheets above
    (full token re-declaration per surface, matching the established convention). */
 .mgt2e-item-brass {

@@ -15,6 +15,7 @@ import { MgT2SoftwareBrassSheet } from "./sheets/items/software-brass.mjs";
 import { MgT2WorldDataBrassSheet } from "./sheets/items/world-data-brass.mjs";
 import { MgT2CreatureActorSheet } from "./sheets/actor-sheet.mjs";
 import { MgT2WorldActorSheet } from "./sheets/actors/world.mjs";
+import { MgT2WorldBrassSheet } from "./sheets/actors/world-brass.mjs";
 import { MgT2VehicleActorSheet } from "./sheets/actors/vehicle.mjs";
 import { MgT2SwarmActorSheet } from "./sheets/actors/swarm.mjs";
 import { MgT2ItemSheet } from "./sheets/item-sheet.mjs";
@@ -55,7 +56,7 @@ import {
     tradeSellFreightHandler,
     tradeEmbarkPassengerHandler, tradeDisembarkPassengerHandler
 } from "./helpers/utils/trade-utils.mjs";
-import { worldDropBrokerHandler } from "./helpers/utils/world-utils.mjs";
+import { worldDropBrokerHandler, createWorld } from "./helpers/utils/world-utils.mjs";
 import {generateNpc, generateText} from "./helpers/utils/npcgen-utils.mjs";
 import {
     launchSwarmHandler, showSwarmHandler
@@ -82,7 +83,8 @@ Hooks.once('init', async function() {
         rollSkillMacro,
         rollAttackMacro,
         generateNpc,
-        generateText
+        generateText,
+        createWorld
     };
 
     game.settings.register("mgt2e-piggy", "systemSchemaVersion", {
@@ -402,6 +404,7 @@ Hooks.once('init', async function() {
   Actors.registerSheet("mgt2e-piggy", MgT2NpcActorSheet, { label: "NPC Sheet", types: [ "npc"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2CreatureActorSheet, { label: "Creature Sheet", types: [ "creature"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2WorldActorSheet, { label: "World Sheet", types: [ "world"], makeDefault: true });
+  Actors.registerSheet("mgt2e-piggy", MgT2WorldBrassSheet, { label: "World Sheet (Brass)", types: [ "world"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2VehicleActorSheet, { label: "Vehicle Sheet", types: [ "vehicle"], makeDefault: true });
   Actors.registerSheet("mgt2e-piggy", MgT2eVehicleSheet, { label: "Vehicle Sheet 2", types: [ "vehicle"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2eVehicleBrassSheet, { label: "Vehicle Sheet 2 (Brass)", types: [ "vehicle"], makeDefault: false });
