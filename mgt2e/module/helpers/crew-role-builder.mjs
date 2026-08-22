@@ -56,6 +56,7 @@ export function createCrewRole(actor, roleType) {
             // over the spacecraft action list.
             const skill = actor.system.vehicle.skill;
             const isFlyer = skill.startsWith("flyer.");
+            const isSeafarer = skill.startsWith("seafarer.");
             system.role.actions[(t++).toString(36)] = {
                 "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.Pilot"),
                 "action": "skill", "cha": "DEX", "skill": skill, "target": 8, "dm": 0
@@ -79,6 +80,13 @@ export function createCrewRole(actor, roleType) {
                 system.role.actions[(t++).toString(36)] = {
                     "title": "Land Safely",
                     "action": "skill", "cha": "DEX", "skill": skill, "target": 6, "dm": 0
+                }
+            }
+            if (isSeafarer) {
+                system.role.actions[(t++).toString(36)] = {
+                    "title": "Control in a Storm",
+                    "action": "skill", "cha": "END", "skill": skill, "target": 14, "dm": 0,
+                    "text": "Keeping the vessel under control through violent weather - a long, gruelling check (hours), so it uses END rather than DEX."
                 }
             }
         } else {
