@@ -794,7 +794,7 @@ Hooks.on('renderChatMessageHTML', function(message, html, data) {
 Hooks.on('ready', () => {
     if (game.user.isGM) {
         // Do we need to run a migration?
-        const LATEST_SCHEMA_VERSION = 10;
+        const LATEST_SCHEMA_VERSION = 11;
         const currentVersion = parseInt(game.settings.get("mgt2e-piggy", "systemSchemaVersion"));
         console.log(`Schema version is ${currentVersion}`);
         if (!currentVersion || currentVersion < LATEST_SCHEMA_VERSION) {

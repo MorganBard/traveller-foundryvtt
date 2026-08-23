@@ -7,8 +7,9 @@ import { MGT2 } from "./config.mjs";
 // start-of-encounter or captain-only actions handled elsewhere) is simply not shown - the console
 // only surfaces what's relevant to running a round of combat from this one role's seat.
 const CONSOLE_SPECIALS = new Set([
-    "setCourse", "evade", "reassignCrew", "repair", "shipStatus", "scanTarget", "detectTarget",
-    "selfDestructVote", "sensorLock", "electronicWarfare", "pointDefence", "disperseSand"
+    "setCourse", "accelerate", "decelerate", "evade", "reassignCrew", "repair", "shipStatus",
+    "scanTarget", "detectTarget", "selfDestructVote", "sensorLock", "electronicWarfare",
+    "pointDefence", "disperseSand"
 ]);
 
 // Ordered rows for the Ship Status board, one per MGT2.SPACECRAFT_CRITICALS key. Order and
@@ -136,6 +137,8 @@ export class MgT2ShipConsoleApp extends Application {
                 });
             courseSection = {
                 actionId: specials.setCourse.actionId,
+                accelerateActionId: specials.accelerate?.actionId,
+                decelerateActionId: specials.decelerate?.actionId,
                 navSpeed: parseInt(shipActor.getFlag("mgt2e-piggy", "navSpeed")) || 0,
                 rawModel,
                 otherShips

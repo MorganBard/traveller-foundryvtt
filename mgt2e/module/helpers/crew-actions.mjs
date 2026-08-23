@@ -290,6 +290,43 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
             const content = await renderTemplate(
                 "systems/mgt2e-piggy/templates/chat/ship-course-set.html",
                 {
+                    title: "Set Course",
+                    actor: shipActor,
+                    rollerName: actorCrew.name,
+                    targetName: targetShip?.name ?? "No target - opening range on everyone",
+                    speed: navSpeed
+                }
+            );
+            const speaker = {
+                actor: actorCrew._id,
+                alias: game.i18n.format("MGT2.Role.ChatAlias", {
+                    "actorName": actorCrew.name, "shipName": shipActor.name
+                }),
+                scene: game.scenes.current.id
+            };
+            await ChatMessage.create({ user: game.user.id, speaker, content });
+
+        } else if (action.special === "accelerate" || action.special === "decelerate") {
+            // Quick relative nudge (+/-1 Thrust point) against whatever course is already set,
+            // rather than reopening the full Set Course target+speed dialog. navTarget is read
+            // and passed straight through unchanged - only navSpeed moves.
+            if (!game.combat) {
+                ui.notifications.error("Adjusting speed requires an active combat encounter.");
+                return;
+            }
+            const maxSpeed = parseInt(shipActor.system.spacecraft.mdrive) || 0;
+            const currentSpeed = parseInt(shipActor.getFlag("mgt2e-piggy", "navSpeed")) || 0;
+            const delta = action.special === "accelerate" ? 1 : -1;
+            const newSpeed = Math.max(0, Math.min(maxSpeed, currentSpeed + delta));
+            const currentTarget = shipActor.getFlag("mgt2e-piggy", "navTarget");
+
+            const { navTarget, navSpeed } = await setCourse(shipActor, currentTarget, newSpeed);
+            const targetShip = navTarget ? game.actors.get(navTarget) : null;
+
+            const content = await renderTemplate(
+                "systems/mgt2e-piggy/templates/chat/ship-course-set.html",
+                {
+                    title: action.special === "accelerate" ? "Accelerate" : "Decelerate",
                     actor: shipActor,
                     rollerName: actorCrew.name,
                     targetName: targetShip?.name ?? "No target - opening range on everyone",

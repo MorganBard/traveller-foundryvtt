@@ -39,6 +39,18 @@
                     {{/each}}
                 </ul>
                 <button type="button" class="console-action" data-action-id="{{courseSection.actionId}}">Set Course</button>
+                {{#if courseSection.accelerateActionId}}
+                    {{#if courseSection.decelerateActionId}}
+                        <div class="console-button-row">
+                            <button type="button" class="console-action" data-action-id="{{courseSection.accelerateActionId}}">Accelerate</button>
+                            <button type="button" class="console-action" data-action-id="{{courseSection.decelerateActionId}}">Decelerate</button>
+                        </div>
+                    {{else}}
+                        <button type="button" class="console-action" data-action-id="{{courseSection.accelerateActionId}}">Accelerate</button>
+                    {{/if}}
+                {{else if courseSection.decelerateActionId}}
+                    <button type="button" class="console-action" data-action-id="{{courseSection.decelerateActionId}}">Decelerate</button>
+                {{/if}}
             </div>
         {{/if}}
 

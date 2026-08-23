@@ -119,16 +119,8 @@ export function createCrewRole(actor, roleType) {
                 "action": "special", "special": "pilot"
             }
             system.role.actions[(t++).toString(36)] = {
-                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.ManeuverClose"),
-                "action": "special", "special": "maneuverClose"
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.ManeuverOpen"),
-                "action": "special", "special": "maneuverOpen"
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.ChangeHeading"),
-                "action": "special", "special": "changeHeading"
+                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.SetCourse"),
+                "action": "special", "special": "setCourse"
             }
             system.role.actions[(t++).toString(36)] = {
                 "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.Accelerate"),

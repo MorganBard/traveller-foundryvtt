@@ -3017,6 +3017,17 @@ ol.actor-items li.item-status- {
   font-weight: 700;
 }
 
+/* Accelerate/Decelerate share a row rather than each taking a full-width line - keeps the Pilot
+   console from growing taller for what's just a pair of quick +/-1 Thrust nudge buttons. */
+#mgt2e-ship-console .console-button-row {
+  display: flex;
+  gap: 8px;
+}
+#mgt2e-ship-console .console-button-row button.console-action {
+  width: auto;
+  flex: 1;
+}
+
 #mgt2e-ship-console button.console-action,
 #mgt2e-ship-console button.console-abort {
   appearance: none;
