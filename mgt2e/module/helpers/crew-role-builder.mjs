@@ -27,10 +27,9 @@ export function createCrewRole(actor, roleType) {
     if (roleType === "captain") {
         itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Captain");
         img = "systems/mgt2e-piggy/icons/items/roles/captain.svg";
-        system.role.actions[(t++).toString(36)] = {
-            "title": game.i18n.localize("MGT2.Role.Special.CombatTactics"),
-            "action": "special", "special": "tacticsInit"
-        }
+        // Combat Tactics (Naval) is a one-time-per-encounter check, requested automatically by
+        // the GM's Roll Initiative click (see ship-initiative.mjs's requestCombatTacticsIfNeeded)
+        // rather than a self-service console button, to avoid the Captain double-rolling.
         system.role.actions[(t++).toString(36)] = {
             "title": game.i18n.localize("MGT2.Role.Special.ImproveInitiative"),
             "action": "special", "special": "improveInit"

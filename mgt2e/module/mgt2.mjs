@@ -712,6 +712,15 @@ async function openActorSheet(actorId) {
 }
 
 Hooks.on('renderChatMessageHTML', function(message, html, data) {
+    // Chat message HTML is identical for every client once posted (it's stored/replicated, not
+    // rendered per-viewer like a dialog), so the brass/mahogany theme can't be baked into the
+    // card's own markup - instead it's applied here, per-render, from each viewer's own
+    // "brassDialogs" client setting (the same one dialog-theme.mjs uses for roll dialogs), same
+    // as any other client-side-only preference.
+    if (game.settings.get("mgt2e-piggy", "brassDialogs")) {
+        html.classList.add("mgt2e-chat-brass");
+    }
+
     // Allow actor links to be opened from chat messages.
     const actorLink = html.querySelector(".actor-uuid-link");
     if (actorLink) {
@@ -794,7 +803,7 @@ Hooks.on('renderChatMessageHTML', function(message, html, data) {
 Hooks.on('ready', () => {
     if (game.user.isGM) {
         // Do we need to run a migration?
-        const LATEST_SCHEMA_VERSION = 11;
+        const LATEST_SCHEMA_VERSION = 12;
         const currentVersion = parseInt(game.settings.get("mgt2e-piggy", "systemSchemaVersion"));
         console.log(`Schema version is ${currentVersion}`);
         if (!currentVersion || currentVersion < LATEST_SCHEMA_VERSION) {
@@ -819,6 +828,12 @@ Hooks.on('ready', () => {
         let skillOptions = $(this).data("options");
 
         Tools.requestedSkillCheck(skillFqn, skillOptions);
+    });
+    $(document).on('click', '.combat-tactics-roll', function() {
+        Tools.resolveCombatTacticsRequest($(this).data("ship-id"), $(this).data("captain-id"), "roll");
+    });
+    $(document).on('click', '.combat-tactics-decline', function() {
+        Tools.resolveCombatTacticsRequest($(this).data("ship-id"), $(this).data("captain-id"), "decline");
     });
 
 });
@@ -1169,9 +1184,20 @@ Hooks.on("combatRound", (combat, data, options) => {
             actor.unsetFlag("mgt2e-piggy", "evadeDM");
             actor.unsetFlag("mgt2e-piggy", "evadePilotName");
             if (game.settings.get("mgt2e-piggy", "shipInitiativePerRound")) {
+                // Only the Pilot base re-roll cadence is gated by this setting - Combat Tactics
+                // is a one-time-per-encounter check tracked separately via combatTacticsState,
+                // untouched by per-round resets.
                 actor.unsetFlag("mgt2e-piggy", "shipInitiativeRoll");
                 actor.unsetFlag("mgt2e-piggy", "shipInitiativePilotName");
-                actor.unsetFlag("mgt2e-piggy", "shipInitiativeTacticsName");
+            }
+            // Defensive cleanup only - pendingInitiativeBonus is deliberately NOT cleared every
+            // round (it must survive from the round it's banked in through to the round after,
+            // consumed exactly once by rollShipInitiative's own combatId/round guard). This just
+            // drops leftovers from an encounter that has since ended, so flags don't accumulate
+            // indefinitely on long-lived ship actors.
+            const pendingBonus = actor.getFlag("mgt2e-piggy", "pendingInitiativeBonus");
+            if (pendingBonus && pendingBonus.combatId !== combat.id) {
+                actor.unsetFlag("mgt2e-piggy", "pendingInitiativeBonus");
             }
             continue;
         }
@@ -1197,6 +1223,43 @@ Hooks.on("combatRound", (combat, data, options) => {
             } else {
                 stunnedEffect.delete();
             }
+        }
+    }
+});
+
+// Traveller doesn't use d20s - swap the tracker's roll-initiative icon to a two-d6 icon for
+// spacecraft combatants only (travellers/NPCs keep the default d20). The core control isn't a
+// font icon - it's a button whose background image comes from the --initiative-icon/
+// --initiative-icon-hover CSS custom properties (set inline, pointing at icons/svg/d20.svg), so
+// the swap is done the same way: an inline two-d6 SVG (data URI, no new asset file), matching
+// the flat white-silhouette-on-transparent style the core d20 icon itself uses.
+const SHIP_INITIATIVE_ICON = "data:image/svg+xml," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">' +
+    '<mask id="mgt2-d1"><rect x="20" y="146" width="220" height="220" rx="36" fill="#fff"/>' +
+    '<circle cx="82" cy="208" r="20"/><circle cx="178" cy="304" r="20"/></mask>' +
+    '<mask id="mgt2-d2"><rect x="272" y="146" width="220" height="220" rx="36" fill="#fff"/>' +
+    '<circle cx="322" cy="196" r="18"/><circle cx="442" cy="196" r="18"/><circle cx="382" cy="256" r="18"/>' +
+    '<circle cx="322" cy="316" r="18"/><circle cx="442" cy="316" r="18"/></mask>' +
+    '<rect x="20" y="146" width="220" height="220" rx="36" fill="#FILL" mask="url(#mgt2-d1)"/>' +
+    '<rect x="272" y="146" width="220" height="220" rx="36" fill="#FILL" mask="url(#mgt2-d2)"/></svg>'
+);
+const SHIP_INITIATIVE_ICON_NORMAL = SHIP_INITIATIVE_ICON.replaceAll("%23FILL", "%23ffffff");
+const SHIP_INITIATIVE_ICON_HOVER = SHIP_INITIATIVE_ICON.replaceAll("%23FILL", "%23ff6400");
+
+Hooks.on("renderCombatTracker", (app, html) => {
+    const root = html instanceof HTMLElement ? html : html[0];
+    if (!root) {
+        return;
+    }
+    for (const li of root.querySelectorAll("li.combatant")) {
+        const combatant = app.viewed?.combatants.get(li.dataset.combatantId);
+        if (combatant?.actor?.type !== "spacecraft") {
+            continue;
+        }
+        const rollButton = li.querySelector("button[data-action='rollInitiative']");
+        if (rollButton) {
+            rollButton.style.setProperty("--initiative-icon", `url('${SHIP_INITIATIVE_ICON_NORMAL}')`);
+            rollButton.style.setProperty("--initiative-icon-hover", `url('${SHIP_INITIATIVE_ICON_HOVER}')`);
         }
     }
 });

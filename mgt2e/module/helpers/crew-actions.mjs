@@ -3,6 +3,7 @@ import {MgT2NavalAttackDialog, hasDetectedTarget} from "./naval-attack-dialog.mj
 import {MgT2SpacecraftRepairDialog} from "./spacecraft-repair-dialog.mjs";
 import {setCourse} from "./naval-course.mjs";
 import {rollSkill} from "./dice-rolls.mjs";
+import {computeShipInitiativeTotal} from "./ship-initiative.mjs";
 
 // Minimal role+crew picker for the "reassignCrew" special. scope "any" (Captain, command
 // authority) lets any role be reassigned; scope "damageControl" (Engineer) restricts the target
@@ -177,16 +178,25 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
             let thrust = parseInt(shipActor.system.spacecraft.mdrive) || 0;
             let roll = await new Roll("2D6 + " + pilotSkill + " + " + thrust).evaluate();
 
-            shipActor.setFlag("mgt2e-piggy", "initPilotDM", pilotSkill);
-            shipActor.setFlag("mgt2e-piggy", "initPilotName", actorCrew.name);
-            shipActor.setFlag("mgt2e-piggy", "shipInitiativeRoll", roll.total);
-            shipActor.setFlag("mgt2e-piggy", "shipInitiativePilotName", actorCrew.name);
-            shipActor.unsetFlag("mgt2e-piggy", "shipInitiativeTacticsName");
-
             const dice = roll.dice.flatMap(die => die.results.map(result => ({
                 result: result.result,
                 cssClass: result.result === 6 ? "max" : (result.result === 1 ? "min" : "")
             })));
+
+            await shipActor.setFlag("mgt2e-piggy", "initPilotDM", pilotSkill);
+            await shipActor.setFlag("mgt2e-piggy", "initPilotName", actorCrew.name);
+            await shipActor.setFlag("mgt2e-piggy", "shipInitiativeRoll", roll.total);
+            await shipActor.setFlag("mgt2e-piggy", "shipInitiativePilotName", actorCrew.name);
+            await shipActor.setFlag("mgt2e-piggy", "shipInitiativeBaseDice", {
+                dice, pilotSkill, thrust, rollerName: actorCrew.name
+            });
+            // Only stamped when a combat is actually active - if clicked outside combat, leave
+            // it unset so the next real encounter's own auto-roll (documents/combat.mjs) still
+            // treats this as needing a fresh roll rather than mistaking it for stale data.
+            if (game.combat) {
+                await shipActor.setFlag("mgt2e-piggy", "shipInitiativeRollCombatId", game.combat.id);
+            }
+
             const content = await renderTemplate(
                 "systems/mgt2e-piggy/templates/chat/ship-pilot-initiative-roll.html",
                 {
@@ -218,63 +228,11 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
             if (game.combat) {
                 const combatant = game.combat.combatants.find(c => c.actor?.id === shipActor.id);
                 if (combatant) {
-                    await game.combat.setInitiative(combatant.id, roll.total);
+                    // Combine with any already-resolved Combat Tactics Effect, rather than
+                    // overwriting it - a manual re-roll here shouldn't drop that contribution.
+                    await game.combat.setInitiative(combatant.id, computeShipInitiativeTotal(shipActor, game.combat.id));
                 }
             }
-        } else if (action.special === "tacticsInit") {
-            let tacticsDM = actorCrew.getSkillValue("tactics.naval", { "addcha": true });
-            let roll = await new Roll("2D6 + " + tacticsDM).evaluate();
-            let effect = roll.total - 8;
-
-            let previousTotal = shipActor.getFlag("mgt2e-piggy", "shipInitiativeRoll");
-            let baseWasSet = previousTotal !== undefined && previousTotal !== null;
-            let newTotal = (baseWasSet ? previousTotal : 0) + effect;
-
-            shipActor.setFlag("mgt2e-piggy", "shipInitiativeRoll", newTotal);
-            shipActor.setFlag("mgt2e-piggy", "shipInitiativeTacticsName", actorCrew.name);
-
-            const dice = roll.dice.flatMap(die => die.results.map(result => ({
-                result: result.result,
-                cssClass: result.result === 6 ? "max" : (result.result === 1 ? "min" : "")
-            })));
-            const content = await renderTemplate(
-                "systems/mgt2e-piggy/templates/chat/ship-initiative-roll.html",
-                {
-                    actor: shipActor,
-                    dice,
-                    statModifier: tacticsDM,
-                    total: roll.total,
-                    effect,
-                    previousTotal,
-                    baseWasSet,
-                    newTotal,
-                    rollerName: actorCrew.name
-                }
-            );
-            const speaker = {
-                actor: actorCrew._id,
-                alias: game.i18n.format("MGT2.Role.ChatAlias", {
-                    "actorName": actorCrew.name, "shipName": shipActor.name
-                }),
-                scene: game.scenes.current.id
-            };
-            const messageData = await roll.toMessage(
-                {speaker},
-                {
-                    create: false,
-                    messageMode: game.settings.get("core", "rollMode")
-                }
-            );
-            messageData.content = content;
-            await ChatMessage.create(messageData);
-
-            if (game.combat) {
-                const combatant = game.combat.combatants.find(c => c.actor?.id === shipActor.id);
-                if (combatant) {
-                    await game.combat.setInitiative(combatant.id, newTotal);
-                }
-            }
-
         } else if (action.special === "setCourse") {
             if (!game.combat) {
                 ui.notifications.error("Setting course requires an active combat encounter.");
@@ -343,6 +301,56 @@ export async function runCrewAction(shipActor, actorCrewId, roleId, actionId) {
             await ChatMessage.create({ user: game.user.id, speaker, content });
 
         } else if (action.special === "improveInit") {
+            // Core rulebook: the Captain may perform a Leadership Check (8+). The Effect of this
+            // check (even if negative) is applied to the ship's initiative for the next round
+            // only - banked here, actually applied in rollShipInitiative (documents/combat.mjs)
+            // the next time that ship's initiative is set in a later round, then discarded.
+            if (!game.combat) {
+                ui.notifications.error("Improve Initiative requires an active combat encounter.");
+                return;
+            }
+            let leadershipDM = actorCrew.getSkillValue("leadership", { "addcha": true });
+            let roll = await new Roll("2D6 + " + leadershipDM).evaluate();
+            let effect = roll.total - 8;
+
+            await shipActor.setFlag("mgt2e-piggy", "pendingInitiativeBonus", {
+                combatId: game.combat.id,
+                value: effect,
+                bankedRound: game.combat.round,
+                roundApplied: null
+            });
+
+            const dice = roll.dice.flatMap(die => die.results.map(result => ({
+                result: result.result,
+                cssClass: result.result === 6 ? "max" : (result.result === 1 ? "min" : "")
+            })));
+            const content = await renderTemplate(
+                "systems/mgt2e-piggy/templates/chat/ship-improve-initiative-roll.html",
+                {
+                    actor: shipActor,
+                    dice,
+                    statModifier: leadershipDM,
+                    total: roll.total,
+                    effect,
+                    rollerName: actorCrew.name
+                }
+            );
+            const speaker = {
+                actor: actorCrew._id,
+                alias: game.i18n.format("MGT2.Role.ChatAlias", {
+                    "actorName": actorCrew.name, "shipName": shipActor.name
+                }),
+                scene: game.scenes.current.id
+            };
+            const messageData = await roll.toMessage(
+                {speaker},
+                {
+                    create: false,
+                    messageMode: game.settings.get("core", "rollMode")
+                }
+            );
+            messageData.content = content;
+            await ChatMessage.create(messageData);
 
         } else if (action.special === "evade") {
             // Core rulebook: the pilot may dodge incoming attacks so long as the ship has

@@ -60,6 +60,12 @@
             </div>
         {{/if}}
 
+        {{#if hasImproveInit}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{improveInitActionId}}">Improve Initiative</button>
+            </div>
+        {{/if}}
+
         {{#if weaponActions.length}}
             <div class="console-section">
                 <label class="console-section-title">Attack</label>

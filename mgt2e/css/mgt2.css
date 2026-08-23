@@ -928,6 +928,15 @@ button.damage-button {
   width: 100%;
 }
 
+.combat-tactics-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.combat-tactics-buttons button {
+  flex: 1;
+}
+
 div.armour-box {
 }
 
@@ -5113,4 +5122,108 @@ ol.actor-items li.item-status- {
 }
 .mgt2e-dialog-brass .crew-role .inline-role:hover {
   background-color: var(--svc-brass-shadow) !important;
+}
+
+/* Same brass/mahogany theme for chat cards (every template wrapped in .mgt2e-chat-message),
+   tied to the same per-player "brassDialogs" client setting as the dialogs above. Chat message
+   HTML is identical for every client once posted - it can't carry a per-viewer class in its own
+   markup - so the renderChatMessageHTML hook in mgt2.mjs adds .mgt2e-chat-brass to each message's
+   root element per-render, based on the viewer's own setting, and everything below is scoped
+   under that. Reuses the same --svc-* palette as .mgt2e-dialog-brass. */
+.mgt2e-chat-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-verdigris: #6f9683;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+  padding: 6px 10px;
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message h2,
+.mgt2e-chat-brass .mgt2e-chat-message h3 {
+  color: var(--svc-brass-bright);
+  border-bottom: 1px solid var(--svc-brass-shadow);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message,
+.mgt2e-chat-brass .mgt2e-chat-message p,
+.mgt2e-chat-brass .mgt2e-chat-message span,
+.mgt2e-chat-brass .mgt2e-chat-message li,
+.mgt2e-chat-brass .mgt2e-chat-message td,
+.mgt2e-chat-brass .mgt2e-chat-message th {
+  color: var(--svc-parchment);
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.mgt2e-chat-brass .mgt2e-chat-message table td,
+.mgt2e-chat-brass .mgt2e-chat-message table th {
+  border-bottom: 1px solid var(--svc-brass-shadow);
+  padding: 2px 6px;
+  text-align: left;
+}
+.mgt2e-chat-brass .mgt2e-chat-message tr.section-header th {
+  background: var(--svc-brass-dim);
+  color: var(--svc-parchment);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  padding: 3px 6px;
+  border-bottom: none;
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message .dice-rolls .roll.die {
+  background: var(--svc-panel-inset);
+  color: var(--svc-brass-bright);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-chat-brass .mgt2e-chat-message .dice-rolls .roll.die.max {
+  color: var(--svc-brass-bright);
+  border-color: var(--svc-brass-bright);
+}
+.mgt2e-chat-brass .mgt2e-chat-message .dice-rolls .roll.die.min {
+  color: var(--svc-danger);
+  border-color: var(--svc-danger);
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message .skill-success {
+  color: var(--svc-verdigris);
+}
+.mgt2e-chat-brass .mgt2e-chat-message .skill-fail {
+  color: var(--svc-danger);
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message button {
+  background-color: var(--svc-brass-dim);
+  color: var(--svc-brass-bright);
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: none;
+  font-family: inherit;
+}
+.mgt2e-chat-brass .mgt2e-chat-message button:hover {
+  background-color: var(--svc-brass-shadow);
+  color: var(--svc-parchment);
 }

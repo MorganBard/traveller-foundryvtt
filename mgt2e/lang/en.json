@@ -1499,7 +1499,6 @@
   "MGT2.Role.WeaponType": "Weapon",
   "MGT2.Role.SpecialType": "Special",
   "MGT2.Role.Special.MakePilot": "Make pilot",
-  "MGT2.Role.Special.CombatTactics": "Combat Tactics",
   "MGT2.Role.Special.ImproveInitiative": "Improve Initiative",
   "MGT2.Role.Special.Evade": "Evade",
   "MGT2.Role.Special.Repair": "Repair System",

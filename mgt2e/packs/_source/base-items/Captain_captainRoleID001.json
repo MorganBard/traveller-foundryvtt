@@ -5,11 +5,6 @@
   "system": {
     "role": {
       "actions": {
-        "cpt0001a": {
-          "title": "Combat Tactics",
-          "action": "special",
-          "special": "tacticsInit"
-        },
         "cpt0001b": {
           "title": "Improve Initiative",
           "action": "special",

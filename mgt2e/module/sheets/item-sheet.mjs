@@ -582,7 +582,6 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
 
             context.SPECIAL_ROLES = {
                 "pilot": game.i18n.localize("MGT2.Role.Special.MakePilot"),
-                "tacticsInit": game.i18n.localize("MGT2.Role.Special.CombatTactics"),
                 "improveInit": game.i18n.localize("MGT2.Role.Special.ImproveInitiative"),
                 "evade": game.i18n.localize("MGT2.Role.Special.Evade"),
                 "repair": game.i18n.localize("MGT2.Role.Special.Repair"),

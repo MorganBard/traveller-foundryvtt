@@ -3,13 +3,14 @@ import { getRangeBand, getRangeBandProgress } from "./naval-course.mjs";
 import { MGT2 } from "./config.mjs";
 
 // Combat-relevant special actions this console knows how to render a dedicated section for.
-// Anything bound to a role that ISN'T in this set (e.g. pilot/tacticsInit/improveInit, which are
-// start-of-encounter or captain-only actions handled elsewhere) is simply not shown - the console
+// Anything bound to a role that ISN'T in this set (e.g. pilot/tacticsInit, which are
+// start-of-encounter actions handled elsewhere - the Pilot base is now auto-rolled, and Combat
+// Tactics is a GM-requested chat card, not a console button) is simply not shown - the console
 // only surfaces what's relevant to running a round of combat from this one role's seat.
 const CONSOLE_SPECIALS = new Set([
     "setCourse", "accelerate", "decelerate", "evade", "reassignCrew", "repair", "shipStatus",
     "scanTarget", "detectTarget", "selfDestructVote", "sensorLock", "electronicWarfare",
-    "pointDefence", "disperseSand"
+    "pointDefence", "disperseSand", "improveInit"
 ]);
 
 // Ordered rows for the Ship Status board, one per MGT2.SPACECRAFT_CRITICALS key. Order and
@@ -190,6 +191,8 @@ export class MgT2ShipConsoleApp extends Application {
             weaponActions,
             hasEvade: !!specials.evade,
             evadeActionId: specials.evade?.actionId,
+            hasImproveInit: !!specials.improveInit,
+            improveInitActionId: specials.improveInit?.actionId,
             courseSection,
             damageSection,
             shipStatusSection,

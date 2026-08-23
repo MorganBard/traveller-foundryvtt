@@ -201,11 +201,31 @@ async function migrateItemData(item, fromVersion) {
             }
         }
     }
+    if (fromVersion < 12) {
+        // Combat Tactics (Naval) is now a one-time-per-encounter check the GM's Roll Initiative
+        // click requests directly from the Captain's player (see ship-initiative.mjs), not a
+        // self-service console button - drop the now-dead tacticsInit action from existing
+        // Captain roles so it stops showing up as a stale button. Improve Initiative is
+        // untouched - it was already present and is now genuinely implemented.
+        if (item.type === "role" && item.system?.role?.actions) {
+            const actions = item.system.role.actions;
+            const updates = {};
+            for (const [key, action] of Object.entries(actions)) {
+                if (action.action === "special" && action.special === "tacticsInit") {
+                    updates[`system.role.actions.-=${key}`] = null;
+                }
+            }
+            if (Object.keys(updates).length > 0) {
+                console.log(`Migrating role item ${item.name} to v12 (dead tacticsInit console action removed)`);
+                await item.update(updates);
+            }
+        }
+    }
     return {};
 }
 
 export async function migrateWorld(fromVersion) {
-    console.log("**** MIGRATE SCHEMA TO v11 ****");
+    console.log("**** MIGRATE SCHEMA TO v12 ****");
 
     for (let actor of game.actors.contents) {
         // migrateActorData is async - must be awaited, both so its own internal item.update()
