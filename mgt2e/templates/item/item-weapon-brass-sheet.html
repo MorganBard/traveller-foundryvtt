@@ -1,0 +1,245 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+    <section class="tsb-sheet">
+        <span class="svc-rivet tl"></span>
+        <span class="svc-rivet tr"></span>
+        <span class="svc-rivet bl"></span>
+        <span class="svc-rivet br"></span>
+
+        <div class="tsb-left">
+            <div class="tsb-portrait-frame">
+                <img class="item-img shadow" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+            </div>
+
+            {{#if (ifEquals item.parent.type "package")}}
+                <div class="tsb-panel item-side-panel">
+                    <input class="trained" type="checkbox" name="system.packageOptional"
+                           {{checked system.packageOptional}} data-type="Boolean"/>
+                    <span>Select if item is optional when added from a package</span>
+                </div>
+            {{/if}}
+
+            <div class="tsb-panel item-side-panel">
+                <div class="resource flex-group-center">
+                    <label for="system.quantity" class="resource-label">{{localize "MGT2.Item.Quantity"}}</label>
+                    <div class="incdec">
+                        <span class="quantity-dec"><i class="fa-regular fa-square-minus"></i></span>
+                        <input class="writable" type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
+                        <span class="quantity-inc"><i class="fa-regular fa-square-plus"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            {{#unless system.component}}
+                <div class="tsb-panel item-side-panel">
+                    <span class="button link-component">Make component</span>
+                </div>
+            {{/unless}}
+
+            <div class="tsb-panel item-side-panel">
+                <div class="resource flex-group-center">
+                    <label class="resource-label">{{localize "MGT2.Item.Legality"}}</label>
+                    <br/>
+                    <select class="writable" name="system.legality">
+                        {{selectOptions WEAPON_LEGALITY selected=system.legality}}
+                    </select>
+                </div>
+                <div class="resource flex-group-center">
+                    <label for="system.weapon.magazine" class="resource-label">{{localize "MGT2.Item.MagazineSize"}}</label>
+                    <input class="writable" type="text" name="system.weapon.magazine" value="{{system.weapon.magazine}}" data-dtype="Number"/>
+                </div>
+                <div class="resource flex-group-center">
+                    <label for="system.weapon.magazineCost" class="resource-label">{{localize "MGT2.Item.MagazineCost"}}</label>
+                    <input class="writable" type="text" name="system.weapon.magazineCost" value="{{system.weapon.magazineCost}}" data-dtype="Number"/>
+                </div>
+                <div class="resource flex-group-center">
+                    <label for="system.weapon.ammo" class="resource-label">{{localize "MGT2.Item.Ammo"}}</label>
+                    <input class="writable" type="text" name="system.weapon.ammo" value="{{system.weapon.ammo}}" data-dtype="Number"/>
+                </div>
+            </div>
+
+            <div class="tsb-panel item-side-panel">
+                <button type="submit" name="submit" class="damageDone">{{localize "MGT2.Damage"}} <i class="fas fa-dice"></i></button>
+            </div>
+        </div>
+
+        <div class="tsb-right">
+            <div class="svc-plate tsb-nameplate">
+                <p class="tsb-eyebrow">{{localize "MGT2.Item.WeaponScale"}}: {{system.weapon.scale}}</p>
+                <h1 class="tsb-name">
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Name">
+                    <span class="item-to-chat" data-item-id="{{item.uuid}}"
+                            title="{{localize 'MGT2.Item.ClickToChat'}}">
+                        <i class="fas fa-comment"></i>
+                    </span>
+                </h1>
+            </div>
+
+            <div class="tsb-panel">
+                <div class="resources grid grid-3col flex-group-center">
+                    <div class="resource">
+                        {{> "systems/mgt2e-piggy/templates/item/parts/item-techLevel.html"}}
+                    </div>
+                    <div class="resource">
+                        <label for="system.weight" class="resource-label">{{localize "MGT2.Item.Weight"}}</label>
+                        <input class="writable" type="text" name="system.weight" value="{{system.weight}}" data-dtype="Number"/>
+                    </div>
+                    <div class="resource">
+                        <label for="system.cost" class="resource-label">{{localize "MGT2.Item.Cost"}}</label>
+                        <input class="writable" type="text" name="system.cost" value="{{system.cost}}" data-dtype="Number"/>
+                    </div>
+
+                    <div class="resource">
+                        <label for="system.weapon.scale" class="resource-label">{{localize "MGT2.Item.WeaponScale"}}</label>
+                        <br/>
+                        <select class="expand writable" name="system.weapon.scale" title="Weapon Scale">
+                            {{selectOptions weaponScale selected=system.weapon.scale}}
+                        </select>
+                    </div>
+
+                    <div class="resource">
+                        <label for="system.weapon.damage" class="resource-label">{{localize "MGT2.Damage"}}</label>
+                        <input class="writable" type="text" name="system.weapon.damage" value="{{system.weapon.damage}}" data-dtype="String"/>
+                    </div>
+
+                    <div class="resource">
+                    {{#if (ifEquals system.weapon.scale "spacecraft")}}
+                        <label for="system.weapon.spaceRange" class="resource-label">{{localize "MGT2.Item.RangeSpace"}}</label>
+                        <select class="expand writable" name="system.weapon.spaceRange" title="Range of spacecraft weapon">
+                            {{selectOptions weaponSpaceRange selected=system.weapon.spaceRange}}
+                        </select>
+                    {{else if (ifEquals system.weapon.scale "vehicle")}}
+                        <label class="resource-label">{{localize "MGT2.Item.RangeKM"}}</label>
+                        <br/>
+                        <input class="writable" type="text" name="system.weapon.range" value="{{system.weapon.range}}" data-dtype="Number"/>
+                    {{else}}
+                        <label class="resource-label">{{localize "MGT2.Item.RangeM"}}</label>
+                        <br/>
+                        <input class="writable" type="text" name="system.weapon.range" value="{{system.weapon.range}}" data-dtype="Number"/>
+                    {{/if}}
+                    </div>
+                    {{#if (ifEquals system.weapon.scale "vehicle")}}
+                        <div class="resource">
+                            <label for="system.weapon.minRange" class="resource-label">{{localize "MGT2.Item.MinRange"}}</label>
+                            <input class="writable" type="text" name="system.weapon.minRange" value="{{system.weapon.minRange}}" data-dtype="Number"/>
+                        </div>
+                    {{/if}}
+
+                    <div class="resource grid-span-3 flex-group-left">
+                        <label for="system.weapon.traits" class="resource-label">{{localize "MGT2.Item.WeaponTraits"}}</label>
+                        {{#if (isOwner .)}}
+                            <span style="display: inline-block; float: right">
+                                <i class="fa fa-add"></i><select class="trait-selector">
+                                {{selectOptions weaponTraits }}
+                            </select>
+                            </span>
+                        {{/if}}
+                        <div class="pill-container">
+                            {{{showWeaponTraits . system.weapon.traits}}}
+                        </div>
+                    </div>
+
+                    {{#if (ifEquals system.weapon.scale "spacecraft")}}
+                        <div class="resource">
+                            <label for="system.weapon.mount" class="resource-label">{{localize "MGT2.Item.Mount"}}</label>
+                            <select class="expand writable" name="system.weapon.mount" title="Mounting">
+                                {{selectOptions weaponSpaceMount selected=system.weapon.mount}}
+                            </select>
+                        </div>
+
+                        <div class="resource">
+                            <label class="resource-label">{{localize "MGT2.Item.Power"}}</label>
+                            <br/>
+                            <input class="writable" type="text" name="system.weapon.power" value="{{system.weapon.power}}" data-dtype="Number"/>
+                        </div>
+                    {{/if}}
+                </div>
+                {{#if system.component}}
+                    <div class="item-controls" style="float: right">
+                        <a class="item-control unlink-component" title="Unlink"><i class="fas fa-trash"></i></a>
+                    </div>
+                    <h3>Component</h3>
+                    <div class="resources grid grid-5col flex-group-left">
+                        <div class="resource">
+                            <label for="system.component.type" class="resource-label">Type</label>
+                            <br/>
+                            <select class="writable" name="system.component.type">
+                                {{selectOptions LINK_TYPES selected=system.component.type}}
+                            </select>
+                        </div>
+                        {{#if (ifEquals system.component.type "armour")}}
+                        <div title="Battledress Slots">
+                            <label class="resource-label">Slots</label><br/>
+                            <input class="writable" type="text" name="system.component.slots" value="{{system.component.slots}}" dta-dtype="Number"/>
+                        </div>
+                        {{/if}}
+                        <div class="resource grid-span-3">
+                            <label class="resource-label">Attached To</label><br/>
+                            <select class="writable linkedTo" name="system.component.linkedTo">
+                                {{selectOptions LINK_OPTIONS selected=system.component.linkedTo}}
+                            </select>
+                        </div>
+                    </div>
+                {{/if}}
+                {{#unless system.links}}
+                    <span class="button allow-links">{{localize "MGT2.Item.AllowComponents"}}</span>
+                {{/unless}}
+            </div>
+
+            {{#if system.links}}
+                {{> "systems/mgt2e-piggy/templates/item/parts/item-links.html"}}
+            {{/if}}
+
+            <div class="tsb-panel">
+                <div class="resources grid grid-3col flex-group-left">
+                    <div class="resource">
+                        <label for="system.weapon.characteristic" class="resource-label">{{localize "MGT2.Characteristic"}}</label><br/>
+                        <select class="writable" name="system.weapon.characteristic">
+                            {{selectOptions weaponCha selected=system.weapon.characteristic}}
+                        </select>
+                    </div>
+                    <div class="resource grid-span-2">
+                        <label for="system.weapon.skill" class="resource-label">{{localize "MGT2.Skill"}}</label><br/>
+                        <select class="writable" name="system.weapon.skill">
+                            {{selectOptions combatSkills selected=system.weapon.skill}}
+                        </select>
+                    </div>
+                    <div class="resource">
+                        <label for="system.weapon.damageBonus" class="resource-label">{{localize 'MGT2.Item.DamageDM'}}</label><br/>
+                        <select class="writable" name="system.weapon.damageBonus">
+                            {{selectOptions weaponDamageBonus selected=system.weapon.damageBonus}}
+                        </select>
+                    </div>
+
+                    <div class="resource">
+                        <label for="system.weapon.attackBonus" class="resource-label">{{localize "MGT2.Item.AttackDM"}}</label><br/>
+                        <input class="writable" type="text" name="system.weapon.attackBonus"
+                               value="{{system.weapon.attackBonus}}" data-dtype="Number"/>
+                    </div>
+
+                    <div class="resource">
+                        <label for="system.weapon.parryBonus" class="resource-label">{{localize "MGT2.Item.ParryDM"}}</label><br/>
+                        <input class="writable" type="text" name="system.weapon.parryBonus"
+                               value="{{system.weapon.parryBonus}}" data-dtype="Number"/>
+                    </div>
+
+                    <div class="resource">
+                        <label for="system.weapon.damageType" class="resource-label">{{localize "MGT2.Item.DamageType"}}</label><br/>
+                        <select class="writable" name="system.weapon.damageType">
+                            {{selectOptions energyTypes selected=system.weapon.damageType}}
+                        </select>
+                    </div>
+                    <div class="resource grid-span-2">
+                        <label for="system.notes" class="resource-label">{{localize "MGT2.Item.Notes"}}</label><br/>
+                        <input class="writable" type="text" name="system.notes" placeholder="Text shown when used"
+                               value="{{system.notes}}" data-dtype="String"/>
+                    </div>
+                </div>
+            </div>
+            <div class="item-description tsb-panel">
+                {{editor
+                    enrichedDescription target="system.description"
+                    button=true editable=editable}}
+            </div>
+        </div>
+    </section>
+</form>

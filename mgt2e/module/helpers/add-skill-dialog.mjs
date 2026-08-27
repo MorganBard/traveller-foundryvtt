@@ -1,4 +1,5 @@
 import { skillLabel } from "./dice-rolls.mjs";
+import {dialogBrassClasses} from "./dialog-theme.mjs";
 
 // Adding a new skill to an actor.
 export class MgT2AddSkillDialog extends Application {
@@ -8,6 +9,7 @@ export class MgT2AddSkillDialog extends Application {
         options.width = "auto";
         options.height = "auto";
         options.title = "Add Skill";
+        options.classes = [...options.classes, ...dialogBrassClasses()];
 
         return options;
     }

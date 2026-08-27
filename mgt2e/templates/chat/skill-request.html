@@ -17,6 +17,10 @@
             </div>
         {{/if}}
 
+        {{#if requestedOf}}
+            <p class="skillcheck-requested-of"><em>Requested of: {{requestedOf}}</em></p>
+        {{/if}}
+
         <div class="skillcheck-message" data-skillcheck="{{skillFqn}}" data-options='{{json}}'>
             <button data-skillcheck="{{skillFqn}}" data-options='{{json}}'
                     title="{{skillTitle}}" class="skillcheck-button">

@@ -7,6 +7,7 @@ import {getShipData} from "../spacecraft/spacecraft-utils.mjs";
 import {MGT2} from "../config.mjs";
 import {setSpacecraftCriticalLevel} from "../spacecraft/criticals.mjs";
 import {getHighestModifier} from "../utils/trade-utils.mjs";
+import {computeShipInitiativeTotal} from "../ship-initiative.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 const TextEditor = foundry.applications.ux.TextEditor;
@@ -231,7 +232,19 @@ Tools.targetTokensInBlast = function(x, y, radius) {
 Tools.applyDamageToTokens = async function(baseDamage, damageOptions) {
     console.log("Tools.applyDamageToTokens:");
 
-    let tokens = Array.from(Tools.getSelected());
+    let tokens;
+    if (damageOptions.defenderActorId) {
+        // Tokenless naval combat: the attack roll already knew its target ship, so use that
+        // directly instead of a canvas token selection that will never exist in this system's
+        // map-less naval encounters. A minimal shim standing in for a Token placeable - only
+        // .actor, .isOwner, and .document.name are ever read below.
+        const defenderActor = await fromUuid(damageOptions.defenderActorId);
+        tokens = defenderActor
+            ? [{ actor: defenderActor, isOwner: defenderActor.isOwner, document: { name: defenderActor.name } }]
+            : [];
+    } else {
+        tokens = Array.from(Tools.getSelected());
+    }
     if (tokens.length === 0) {
         ui.notifications.error(game.i18n.localize("MGT2.Error.CombatNoSelection"));
         return;
@@ -427,6 +440,93 @@ Tools.rollSplitDamage = async function(damageOptions) {
         rollMode: game.settings.get("core", "rollMode")
     });
 }
+
+// Resolves a Combat Tactics (Naval) request sent by requestCombatTacticsIfNeeded
+// (ship-initiative.mjs) once the Captain's player clicks Roll or Decline on the chat card.
+// Unlike .skillcheck-button, this is a genuinely targeted request - only the assigned Captain's
+// owning player (or a GM) may resolve it.
+Tools.resolveCombatTacticsRequest = async function(shipId, captainId, choice) {
+    const shipActor = game.actors.get(shipId);
+    const captainActor = game.actors.get(captainId);
+    if (!shipActor || !captainActor) {
+        return;
+    }
+    if (!captainActor.isOwner) {
+        ui.notifications.warn(`Only ${captainActor.name}'s player (or the GM) can resolve this Combat Tactics check.`);
+        return;
+    }
+    if (!game.combat) {
+        return;
+    }
+    const state = shipActor.getFlag("mgt2e-piggy", "combatTacticsState");
+    if (!state || state.combatId !== game.combat.id || state.status !== "pending") {
+        return; // Already resolved by someone else, or a stale card from a past encounter.
+    }
+
+    if (choice === "decline") {
+        await shipActor.setFlag("mgt2e-piggy", "combatTacticsState", { ...state, status: "declined", value: 0 });
+        await ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: shipActor }),
+            content: `<strong>${shipActor.name}</strong>: ${captainActor.name} declines to attempt Combat Tactics.`
+        });
+        const combatant = game.combat.combatants.find(c => c.actor?.id === shipActor.id);
+        if (combatant) {
+            await game.combat.setInitiative(combatant.id, computeShipInitiativeTotal(shipActor, game.combat.id));
+        }
+        return;
+    }
+
+    const tacticsDM = captainActor.getSkillValue("tactics.naval", { addcha: true });
+    const roll = await new Roll("2D6 + " + tacticsDM).evaluate();
+    const effect = roll.total - 8;
+
+    const previousTotal = parseInt(shipActor.getFlag("mgt2e-piggy", "shipInitiativeRoll")) || 0;
+
+    await shipActor.setFlag("mgt2e-piggy", "combatTacticsState", { ...state, status: "resolved", value: effect });
+    const newTotal = computeShipInitiativeTotal(shipActor, game.combat.id);
+
+    const dice = roll.dice.flatMap(die => die.results.map(result => ({
+        result: result.result,
+        cssClass: result.result === 6 ? "max" : (result.result === 1 ? "min" : "")
+    })));
+    const baseDice = shipActor.getFlag("mgt2e-piggy", "shipInitiativeBaseDice");
+    const content = await renderTemplate(
+        "systems/mgt2e-piggy/templates/chat/ship-initiative-roll.html",
+        {
+            actor: shipActor,
+            dice,
+            statModifier: tacticsDM,
+            total: roll.total,
+            effect,
+            previousTotal,
+            baseWasSet: true,
+            newTotal,
+            rollerName: captainActor.name,
+            baseDice: baseDice?.dice,
+            basePilotSkill: baseDice?.pilotSkill,
+            baseThrust: baseDice?.thrust,
+            baseRollerName: baseDice?.rollerName
+        }
+    );
+    const speaker = {
+        actor: captainActor._id,
+        alias: game.i18n.format("MGT2.Role.ChatAlias", {
+            "actorName": captainActor.name, "shipName": shipActor.name
+        }),
+        scene: game.scenes.current.id
+    };
+    const messageData = await roll.toMessage(
+        { speaker },
+        { create: false, messageMode: game.settings.get("core", "rollMode") }
+    );
+    messageData.content = content;
+    await ChatMessage.create(messageData);
+
+    const combatant = game.combat.combatants.find(c => c.actor?.id === shipActor.id);
+    if (combatant) {
+        await game.combat.setInitiative(combatant.id, newTotal);
+    }
+};
 
 Tools.requestedSkillCheck = async function(skillFqn, skillOptions) {
     game.mgt2e.rollSkillMacro(skillFqn, {

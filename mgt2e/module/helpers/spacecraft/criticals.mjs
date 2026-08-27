@@ -4,6 +4,11 @@
 
 import {MGT2} from "../config.mjs";
 import {MgT2Item} from "../../documents/item.mjs";
+import {
+    startLifeSupportHourCountdown,
+    startLifeSupportRoundCountdown,
+    failLifeSupportImmediately
+} from "./life-support.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -601,6 +606,14 @@ async function applyCrewCritical(actor, effects, level) {
     await applyHullCritical(actor, effects, level);
 
     console.log("applyCrewCritical:");
+
+    if (effects["lifeSupportFails"] === "hours") {
+        await startLifeSupportHourCountdown(actor, level);
+    } else if (effects["lifeSupportFails"] === "rounds") {
+        await startLifeSupportRoundCountdown(actor, level);
+    } else if (effects["lifeSupportFails"] === "immediate") {
+        await failLifeSupportImmediately(actor, level);
+    }
 
     if (effects["crewDamaged"]) {
         let numberDice = 0; // Zero means everyone.

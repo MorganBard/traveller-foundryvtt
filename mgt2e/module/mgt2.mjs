@@ -6,8 +6,16 @@ import { MgT2Item } from "./documents/item.mjs";
 // Import sheet classes.
 import { MgT2ActorSheet } from "./sheets/actor-sheet.mjs";
 import { MgT2NpcActorSheet } from "./sheets/actors/npc.mjs";
+import { MgT2TravellerBrassSheet } from "./sheets/actors/traveller-brass.mjs";
+import { MgT2SpacecraftBrassSheet } from "./sheets/actors/spacecraft-brass.mjs";
+import { MgT2ItemBrassSheet } from "./sheets/items/item-brass.mjs";
+import { MgT2ItemDirectory } from "./sheets/item-directory.mjs";
+import { MgT2AssociateBrassSheet } from "./sheets/items/associate-brass.mjs";
+import { MgT2SoftwareBrassSheet } from "./sheets/items/software-brass.mjs";
+import { MgT2WorldDataBrassSheet } from "./sheets/items/world-data-brass.mjs";
 import { MgT2CreatureActorSheet } from "./sheets/actor-sheet.mjs";
 import { MgT2WorldActorSheet } from "./sheets/actors/world.mjs";
+import { MgT2WorldBrassSheet } from "./sheets/actors/world-brass.mjs";
 import { MgT2VehicleActorSheet } from "./sheets/actors/vehicle.mjs";
 import { MgT2SwarmActorSheet } from "./sheets/actors/swarm.mjs";
 import { MgT2ItemSheet } from "./sheets/item-sheet.mjs";
@@ -16,8 +24,11 @@ import { MgT2AssociateItemSheet } from "./sheets/items/associate.mjs";
 import { MgT2WorldDataItemSheet } from "./sheets/items/world-data.mjs";
 import { MgT2SoftwareItemSheet } from "./sheets/items/software.mjs";
 import { MgT2eVehicleSheet } from "./sheets/v2/Vehicle.mjs";
+import { MgT2eVehicleBrassSheet } from "./sheets/v2/VehicleBrass.mjs";
 import { MgT2eRobotSheet } from "./sheets/v2/Robot.mjs";
+import { MgT2eRobotBrassSheet } from "./sheets/v2/RobotBrass.mjs";
 import { MgT2eOptionSheet } from "./sheets/items/v2/Option.mjs";
+import { MgT2eOptionBrassSheet } from "./sheets/v2/OptionBrass.mjs";
 
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
@@ -31,6 +42,13 @@ import {MgT2Combat} from "./documents/combat.mjs";
 import { migrateWorld } from "./migration.mjs";
 import { NpcIdCard } from "./helpers/id-card.mjs";
 import {hasTrait} from "./helpers/dice-rolls.mjs";
+import { resolveRangeBandsForRound } from "./helpers/naval-course.mjs";
+import { MgT2NavalGMPanel } from "./helpers/naval-gm-panel.mjs";
+import { MgT2StartNavalEncounterDialog } from "./helpers/naval-encounter-dialog.mjs";
+import { MgT2ShipConsoleApp } from "./helpers/ship-console.mjs";
+import { MgT2WeaponStatusApp } from "./helpers/weapon-status.mjs";
+import { MgT2CrewStatusApp } from "./helpers/crew-status.mjs";
+import { tickLifeSupportRounds, checkLifeSupportHourDeadlines } from "./helpers/spacecraft/life-support.mjs";
 import {
     tradeBuyGoodsHandler,
     tradeSellGoodsHandler,
@@ -38,7 +56,7 @@ import {
     tradeSellFreightHandler,
     tradeEmbarkPassengerHandler, tradeDisembarkPassengerHandler
 } from "./helpers/utils/trade-utils.mjs";
-import { worldDropBrokerHandler } from "./helpers/utils/world-utils.mjs";
+import { worldDropBrokerHandler, createWorld } from "./helpers/utils/world-utils.mjs";
 import {generateNpc, generateText} from "./helpers/utils/npcgen-utils.mjs";
 import {
     launchSwarmHandler, showSwarmHandler
@@ -65,7 +83,8 @@ Hooks.once('init', async function() {
         rollSkillMacro,
         rollAttackMacro,
         generateNpc,
-        generateText
+        generateText,
+        createWorld
     };
 
     game.settings.register("mgt2e-piggy", "systemSchemaVersion", {
@@ -103,6 +122,14 @@ Hooks.once('init', async function() {
         onChange: value => {
             console.log(`Setting iconsInChat to ${value}`)
         }
+    });
+    game.settings.register('mgt2e-piggy', 'brassDialogs', {
+        name: game.i18n.localize("MGT2.Settings.BrassDialogs.Name"),
+        hint: game.i18n.localize("MGT2.Settings.BrassDialogs.Hint"),
+        scope: 'client',
+        config: true,
+        type: Boolean,
+        default: true
     });
     game.settings.register('mgt2e-piggy', 'useEncumbrance', {
         name: game.i18n.localize("MGT2.Settings.UseEncumbrance.Name"),
@@ -280,6 +307,46 @@ Hooks.once('init', async function() {
         type: Boolean,
         default: false
     });
+    game.settings.register('mgt2e-piggy', "shipInitiativePerRound", {
+        name: game.i18n.localize("MGT2.Settings.ShipInitiativePerRound.Name"),
+        hint: game.i18n.localize("MGT2.Settings.ShipInitiativePerRound.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    });
+    game.settings.register('mgt2e-piggy', "detailedSensorScans", {
+        name: game.i18n.localize("MGT2.Settings.DetailedSensorScans.Name"),
+        hint: game.i18n.localize("MGT2.Settings.DetailedSensorScans.Hint"),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    });
+    game.settings.register('mgt2e-piggy', "navalRangeBandModel", {
+        name: game.i18n.localize("MGT2.Settings.NavalRangeBandModel.Name"),
+        hint: game.i18n.localize("MGT2.Settings.NavalRangeBandModel.Hint"),
+        scope: "world",
+        config: true,
+        type: String,
+        choices: {
+            "houseRule": game.i18n.localize("MGT2.Settings.NavalRangeBandModel.Values.HouseRule"),
+            "raw": game.i18n.localize("MGT2.Settings.NavalRangeBandModel.Values.RAW")
+        },
+        default: "houseRule"
+    });
+    game.settings.register('mgt2e-piggy', "sensorDetailModel", {
+        name: game.i18n.localize("MGT2.Settings.SensorDetailModel.Name"),
+        hint: game.i18n.localize("MGT2.Settings.SensorDetailModel.Hint"),
+        scope: "world",
+        config: true,
+        type: String,
+        choices: {
+            "houseRule": game.i18n.localize("MGT2.Settings.SensorDetailModel.Values.HouseRule"),
+            "raw": game.i18n.localize("MGT2.Settings.SensorDetailModel.Values.RAW")
+        },
+        default: "houseRule"
+    });
     game.settings.register('mgt2e-piggy', "splitAttackDamage", {
        name: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Name"),
        hint: game.i18n.localize("MGT2.Settings.SplitAttackDamage.Hint"),
@@ -325,25 +392,36 @@ Hooks.once('init', async function() {
   CONFIG.Item.documentClass = MgT2Item;
   CONFIG.ActiveEffect.documentClass = MgT2Effect;
   CONFIG.Combat.documentClass = MgT2Combat;
+  CONFIG.ui.items = MgT2ItemDirectory;
 
   //CONFIG.debug.hooks = true;
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("mgt2e-piggy", MgT2ActorSheet, { label: "Traveller Sheet", makeDefault: true });
+  Actors.registerSheet("mgt2e-piggy", MgT2TravellerBrassSheet, { label: "Traveller Sheet (Brass)", types: [ "traveller"], makeDefault: false });
+  Actors.registerSheet("mgt2e-piggy", MgT2SpacecraftBrassSheet, { label: "Spacecraft Sheet (Brass)", types: [ "spacecraft"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2NpcActorSheet, { label: "NPC Sheet", types: [ "npc"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2CreatureActorSheet, { label: "Creature Sheet", types: [ "creature"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2WorldActorSheet, { label: "World Sheet", types: [ "world"], makeDefault: true });
+  Actors.registerSheet("mgt2e-piggy", MgT2WorldBrassSheet, { label: "World Sheet (Brass)", types: [ "world"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2VehicleActorSheet, { label: "Vehicle Sheet", types: [ "vehicle"], makeDefault: true });
   Actors.registerSheet("mgt2e-piggy", MgT2eVehicleSheet, { label: "Vehicle Sheet 2", types: [ "vehicle"], makeDefault: false });
+  Actors.registerSheet("mgt2e-piggy", MgT2eVehicleBrassSheet, { label: "Vehicle Sheet 2 (Brass)", types: [ "vehicle"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2eRobotSheet, { label: "Robot Sheet", types: [ "robot"], makeDefault: true });
+  Actors.registerSheet("mgt2e-piggy", MgT2eRobotBrassSheet, { label: "Robot Sheet (Brass)", types: [ "robot"], makeDefault: false });
   Actors.registerSheet("mgt2e-piggy", MgT2SwarmActorSheet, { label: "Swarm Sheet", types: [ "swarm"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("mgt2e-piggy", MgT2ItemSheet, { label: "Item Sheet", makeDefault: true });
+  Items.registerSheet("mgt2e-piggy", MgT2ItemBrassSheet, { label: "Item Sheet (Brass)", types: [ "weapon", "armour", "hardware", "cargo", "augment", "term", "role", "item"], makeDefault: false });
   Items.registerSheet("mgt2e-piggy", MgT2AssociateItemSheet, { label: "Associate Sheet", types: [ "associate"], makeDefault: true });
+  Items.registerSheet("mgt2e-piggy", MgT2AssociateBrassSheet, { label: "Associate Sheet (Brass)", types: [ "associate"], makeDefault: false });
   Items.registerSheet("mgt2e-piggy", MgT2WorldDataItemSheet, { label: "World Data Sheet", types: [ "worlddata"], makeDefault: true });
+  Items.registerSheet("mgt2e-piggy", MgT2WorldDataBrassSheet, { label: "World Data Sheet (Brass)", types: [ "worlddata"], makeDefault: false });
   Items.registerSheet("mgt2e-piggy", MgT2SoftwareItemSheet, { label: "Software", types: [ "software"], makeDefault: true });
+  Items.registerSheet("mgt2e-piggy", MgT2SoftwareBrassSheet, { label: "Software (Brass)", types: [ "software"], makeDefault: false });
   Items.registerSheet("mgt2e-piggy", MgT2eOptionSheet, { label: "Option", types: [ "option"], makeDefault: true });
+  Items.registerSheet("mgt2e-piggy", MgT2eOptionBrassSheet, { label: "Option (Brass)", types: [ "option"], makeDefault: false });
 
   foundry.applications.apps.DocumentSheetConfig.unregisterSheet(ActiveEffect, "core", foundry.applications.sheets.ActiveEffectConfig);
   foundry.applications.apps.DocumentSheetConfig.registerSheet(ActiveEffect, "mgt2e-piggy", MgT2EffectSheet, { makeDefault: true});
@@ -634,6 +712,15 @@ async function openActorSheet(actorId) {
 }
 
 Hooks.on('renderChatMessageHTML', function(message, html, data) {
+    // Chat message HTML is identical for every client once posted (it's stored/replicated, not
+    // rendered per-viewer like a dialog), so the brass/mahogany theme can't be baked into the
+    // card's own markup - instead it's applied here, per-render, from each viewer's own
+    // "brassDialogs" client setting (the same one dialog-theme.mjs uses for roll dialogs), same
+    // as any other client-side-only preference.
+    if (game.settings.get("mgt2e-piggy", "brassDialogs")) {
+        html.classList.add("mgt2e-chat-brass");
+    }
+
     // Allow actor links to be opened from chat messages.
     const actorLink = html.querySelector(".actor-uuid-link");
     if (actorLink) {
@@ -716,7 +803,7 @@ Hooks.on('renderChatMessageHTML', function(message, html, data) {
 Hooks.on('ready', () => {
     if (game.user.isGM) {
         // Do we need to run a migration?
-        const LATEST_SCHEMA_VERSION = 10;
+        const LATEST_SCHEMA_VERSION = 12;
         const currentVersion = parseInt(game.settings.get("mgt2e-piggy", "systemSchemaVersion"));
         console.log(`Schema version is ${currentVersion}`);
         if (!currentVersion || currentVersion < LATEST_SCHEMA_VERSION) {
@@ -741,6 +828,12 @@ Hooks.on('ready', () => {
         let skillOptions = $(this).data("options");
 
         Tools.requestedSkillCheck(skillFqn, skillOptions);
+    });
+    $(document).on('click', '.combat-tactics-roll', function() {
+        Tools.resolveCombatTacticsRequest($(this).data("ship-id"), $(this).data("captain-id"), "roll");
+    });
+    $(document).on('click', '.combat-tactics-decline', function() {
+        Tools.resolveCombatTacticsRequest($(this).data("ship-id"), $(this).data("captain-id"), "decline");
     });
 
 });
@@ -934,75 +1027,6 @@ Hooks.on("createActor", (actor, data, userId) => {
     }
 });
 
-Hooks.on("preUpdateActor2", (actor, changedData, options, userId) => {
-    if (game.user.id !== userId) return;
-    console.log("preUpdateActor");
-    if (foundry.utils.getProperty(changedData, "system.damage")) {
-        // The damage applied by the update.
-        const damage = foundry.utils.getProperty(changedData, "system.damage");
-        console.log(damage);
-        let endDmg = parseInt(damage.END?damage.END.value:0);
-        let strDmg = parseInt(damage.STR?damage.STR.value:0);
-        let dexDmg = parseInt(damage.DEX?damage.DEX.value:0);
-
-        // The damage before the update.
-        const currentDamage = actor.system.damage;
-        console.log(currentDamage);
-        let endCur = parseInt(currentDamage.END.value);
-        let strCur = parseInt(currentDamage.STR.value);
-        let dexCur = parseInt(currentDamage.DEX.value);
-
-        let endMax = actor.system.characteristics.END.value;
-        let strMax = actor.system.characteristics.STR.value;
-        let dexMax = actor.system.characteristics.DEX.value;
-
-        // How much damage was actually done in this attack?
-        let totalDamage = (endDmg - endCur) + (strDmg - strCur) + (dexDmg - dexCur);
-
-        console.log(`Damage is STR ${strCur} DEX ${dexCur} END ${endCur}`);
-        console.log(`Damage is STR ${strDmg} DEX ${dexDmg} END ${endDmg} TOTAL ${totalDamage}`);
-
-        let atZero = 0;
-        if (endDmg >= endMax) atZero++;
-        if (dexDmg >= dexMax) atZero++;
-        if (strDmg >= strMax) atZero++;
-        switch (atZero) {
-            case 2:
-                actor.setFlag("mgt2e-piggy", "unconscious", true);
-                actor.unsetFlag("mgt2e-piggy", "disabled");
-                actor.unsetFlag("mgt2e-piggy", "dead");
-                break;
-            case 3:
-                actor.setFlag("mgt2e-piggy", "disabled", true);
-                break;
-            default:
-                actor.unsetFlag("mgt2e-piggy", "unconscious");
-                actor.unsetFlag("mgt2e-piggy", "disabled");
-                actor.unsetFlag("mgt2e-piggy", "dead");
-        }
-    } else if (changedData?.system?.hits) {
-        console.log("NPC OR CREATURE");
-        // This is an NPC or Creature
-        const hits = foundry.utils.getProperty(changedData, "system.hits");
-        let dmg = hits.damage?hits.damage:actor.system.hits.damage;
-        let max = hits.max?hits.max:actor.system.hits.max;
-
-        if (dmg >= max) {
-            actor.setFlag("mgt2e-piggy", "dead", "true");
-            actor.unsetFlag("mgt2e-piggy", "unconscious");
-            actor.unsetFlag("mgt2e-piggy", "disabled");
-        } else if (dmg >= max * 0.667) {
-            actor.setFlag("mgt2e-piggy", "unconscious", "true");
-            actor.unsetFlag("mgt2e-piggy", "dead");
-            actor.unsetFlag("mgt2e-piggy", "disabled");
-        } else {
-            actor.unsetFlag("mgt2e-piggy", "unconscious");
-            actor.unsetFlag("mgt2e-piggy", "disabled");
-            actor.unsetFlag("mgt2e-piggy", "dead");
-        }
-    }
-});
-
 Hooks.on("updateActor", async (actor, updateData, options, userId) => {
    if (game.user._id !== userId) return;
 
@@ -1050,7 +1074,7 @@ Hooks.on("hotbarDrop", (bar, data, slot) => {
 Hooks.once("ready", async function() {
     if (game.user.isGM) {
         if (game.scenes.size === 0) {
-            const pack = game.packs.get("mgt2e.base-scenes");
+            const pack = game.packs.get("mgt2e-piggy.base-scenes");
             if (pack) {
                 const entry = await pack.getIndex();
                 const sceneId = entry?.find(e => e.name === "MgT2e")?._id;
@@ -1073,7 +1097,7 @@ Hooks.on("createCombatant", (combatant, combat, id) => {
    if (!game.user.isGM) {
        return;
    }
-   if (actor.type === "traveller") {
+   if (actor.type === "traveller" || actor.type === "spacecraft") {
        return;
    }
     console.log("createCombatant:");
@@ -1115,10 +1139,68 @@ Hooks.on("combatTurn", (combat, data, options) => {
     }
 });
 
+// Self-Destruct countdown: decrements selfDestructRoundsRemaining for every spacecraft that has
+// it set (armed via the "selfDestructVote" special once both Captain and Engineer confirm - see
+// crew-actions.mjs). At zero, the ship is wrecked (Hull to zero, matching how the rest of this
+// system already represents a destroyed spacecraft) and a detonation card posts.
+async function tickSelfDestruct(combat) {
+    for (const combatant of combat.combatants) {
+        const actor = combatant.actor;
+        if (actor?.type !== "spacecraft") {
+            continue;
+        }
+        const remaining = actor.getFlag("mgt2e-piggy", "selfDestructRoundsRemaining");
+        if (remaining === undefined || remaining === null) {
+            continue;
+        }
+        if (remaining <= 1) {
+            await actor.update({ "system.hits.damage": actor.system.hits.max });
+            await actor.unsetFlag("mgt2e-piggy", "selfDestructRoundsRemaining");
+            await actor.unsetFlag("mgt2e-piggy", "selfDestructCaptainVote");
+            await actor.unsetFlag("mgt2e-piggy", "selfDestructEngineerVote");
+            await ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({ actor }),
+                content: `<strong>${actor.name}</strong>: SELF-DESTRUCT. The ship is wrecked.`
+            });
+        } else {
+            await actor.setFlag("mgt2e-piggy", "selfDestructRoundsRemaining", remaining - 1);
+        }
+    }
+}
+
 Hooks.on("combatRound", (combat, data, options) => {
     // This is when the round changes.
+    // Resolve each ship pair's Range Band from both ships' current navTarget/navSpeed - once
+    // per pair, not once per combatant.
+    resolveRangeBandsForRound(combat);
+    tickSelfDestruct(combat);
+    tickLifeSupportRounds(combat);
+
     for (let combatant of combat.combatants) {
         const actor = combatant.actor;
+        if (actor.type === "spacecraft") {
+            actor.unsetFlag("mgt2e-piggy", "thrustSpentThisRound");
+            actor.unsetFlag("mgt2e-piggy", "evadeChargesRemaining");
+            actor.unsetFlag("mgt2e-piggy", "evadeDM");
+            actor.unsetFlag("mgt2e-piggy", "evadePilotName");
+            if (game.settings.get("mgt2e-piggy", "shipInitiativePerRound")) {
+                // Only the Pilot base re-roll cadence is gated by this setting - Combat Tactics
+                // is a one-time-per-encounter check tracked separately via combatTacticsState,
+                // untouched by per-round resets.
+                actor.unsetFlag("mgt2e-piggy", "shipInitiativeRoll");
+                actor.unsetFlag("mgt2e-piggy", "shipInitiativePilotName");
+            }
+            // Defensive cleanup only - pendingInitiativeBonus is deliberately NOT cleared every
+            // round (it must survive from the round it's banked in through to the round after,
+            // consumed exactly once by rollShipInitiative's own combatId/round guard). This just
+            // drops leftovers from an encounter that has since ended, so flags don't accumulate
+            // indefinitely on long-lived ship actors.
+            const pendingBonus = actor.getFlag("mgt2e-piggy", "pendingInitiativeBonus");
+            if (pendingBonus && pendingBonus.combatId !== combat.id) {
+                actor.unsetFlag("mgt2e-piggy", "pendingInitiativeBonus");
+            }
+            continue;
+        }
         if (actor.getEffect("surprised")) {
             actor.setSurprisedEffect(false);
             combatant.update({"initiative": combatant.initiative + 6 });
@@ -1143,6 +1225,174 @@ Hooks.on("combatRound", (combat, data, options) => {
             }
         }
     }
+});
+
+// Traveller doesn't use d20s - swap the tracker's roll-initiative icon to a two-d6 icon for
+// spacecraft combatants only (travellers/NPCs keep the default d20). The core control isn't a
+// font icon - it's a button whose background image comes from the --initiative-icon/
+// --initiative-icon-hover CSS custom properties (set inline, pointing at icons/svg/d20.svg), so
+// the swap is done the same way: an inline two-d6 SVG (data URI, no new asset file), matching
+// the flat white-silhouette-on-transparent style the core d20 icon itself uses.
+const SHIP_INITIATIVE_ICON = "data:image/svg+xml," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">' +
+    '<mask id="mgt2-d1"><rect x="20" y="146" width="220" height="220" rx="36" fill="#fff"/>' +
+    '<circle cx="82" cy="208" r="20"/><circle cx="178" cy="304" r="20"/></mask>' +
+    '<mask id="mgt2-d2"><rect x="272" y="146" width="220" height="220" rx="36" fill="#fff"/>' +
+    '<circle cx="322" cy="196" r="18"/><circle cx="442" cy="196" r="18"/><circle cx="382" cy="256" r="18"/>' +
+    '<circle cx="322" cy="316" r="18"/><circle cx="442" cy="316" r="18"/></mask>' +
+    '<rect x="20" y="146" width="220" height="220" rx="36" fill="#FILL" mask="url(#mgt2-d1)"/>' +
+    '<rect x="272" y="146" width="220" height="220" rx="36" fill="#FILL" mask="url(#mgt2-d2)"/></svg>'
+);
+const SHIP_INITIATIVE_ICON_NORMAL = SHIP_INITIATIVE_ICON.replaceAll("%23FILL", "%23ffffff");
+const SHIP_INITIATIVE_ICON_HOVER = SHIP_INITIATIVE_ICON.replaceAll("%23FILL", "%23ff6400");
+
+Hooks.on("renderCombatTracker", (app, html) => {
+    const root = html instanceof HTMLElement ? html : html[0];
+    if (!root) {
+        return;
+    }
+    for (const li of root.querySelectorAll("li.combatant")) {
+        const combatant = app.viewed?.combatants.get(li.dataset.combatantId);
+        if (combatant?.actor?.type !== "spacecraft") {
+            continue;
+        }
+        const rollButton = li.querySelector("button[data-action='rollInitiative']");
+        if (rollButton) {
+            rollButton.style.setProperty("--initiative-icon", `url('${SHIP_INITIATIVE_ICON_NORMAL}')`);
+            rollButton.style.setProperty("--initiative-icon-hover", `url('${SHIP_INITIATIVE_ICON_HOVER}')`);
+        }
+    }
+});
+
+// GM Naval Combat Control panel: live-refresh whenever the combat state or the selected ship's
+// own flags (course, thrust spent, evade charges...) change, so the panel never shows stale data.
+Hooks.on("updateCombat", () => MgT2NavalGMPanel.refresh());
+Hooks.on("combatTurn", () => MgT2NavalGMPanel.refresh());
+Hooks.on("combatRound", () => MgT2NavalGMPanel.refresh());
+Hooks.on("deleteCombat", () => MgT2NavalGMPanel.refresh());
+
+// Ship Consoles: same staleness risk as the GM panel above - Range Band state lives on the Combat
+// document, so a console left open across a round boundary needs the same combat-level refresh,
+// not just the actor-scoped one already wired up below.
+Hooks.on("updateCombat", () => MgT2ShipConsoleApp.refreshAll());
+Hooks.on("combatTurn", () => MgT2ShipConsoleApp.refreshAll());
+Hooks.on("combatRound", () => MgT2ShipConsoleApp.refreshAll());
+Hooks.on("deleteCombat", () => MgT2ShipConsoleApp.refreshAll());
+Hooks.on("updateActor", actor => {
+    if (actor.id === MgT2NavalGMPanel._selectedShipId) {
+        MgT2NavalGMPanel.refresh();
+    }
+    if (game.user.isGM) {
+        MgT2ShipConsoleApp.refreshAllForActor(actor.id);
+    }
+});
+
+// Weapon-mount status (system.status on the hardware Item) changes via updateItem, not
+// updateActor, since it's an embedded document edit - the ship console's own updateActor
+// hook above doesn't see it.
+Hooks.on("updateItem", item => {
+    if (item.parent?.documentName === "Actor") {
+        MgT2WeaponStatusApp.refreshAllForActor(item.parent.id);
+    }
+});
+
+// The hour-based life support countdown runs on the real game clock rather than combat rounds
+// (see life-support.mjs), so it's checked whenever anyone advances world time - manually, via
+// Calendaria, via Simple Calendar, whatever the table uses.
+Hooks.on("updateWorldTime", () => {
+    if (game.user.isGM) {
+        checkLifeSupportHourDeadlines();
+    }
+});
+
+// Crew health/life-support panel: refresh on any traveller update (a crew member taking damage)
+// and any spacecraft update (the ship's own life-support flags changing).
+Hooks.on("updateActor", () => MgT2CrewStatusApp.refreshAll());
+
+// Every role the current user owns the crew actor for, across every spacecraft in the world -
+// not scoped to a single ship's own sheet, since the whole point of this entry point is not
+// needing to find and open that ship's sheet first.
+function myShipConsoleRoles() {
+    const roles = [];
+    for (const shipActor of game.actors.filter(a => a.type === "spacecraft")) {
+        const crewed = shipActor.system.crewed?.crew ?? {};
+        for (const [crewId, rolesForCrew] of Object.entries(crewed)) {
+            const crewActor = game.actors.get(crewId);
+            if (!crewActor?.isOwner) {
+                continue;
+            }
+            for (const [roleId, data] of Object.entries(rolesForCrew)) {
+                const roleItem = shipActor.items.get(roleId);
+                if (data?.assigned && roleItem) {
+                    roles.push({
+                        shipActor, crewId, roleId,
+                        label: `${shipActor.name} - ${crewActor.name} - ${roleItem.name}`
+                    });
+                }
+            }
+        }
+    }
+    return roles;
+}
+
+async function openMyShipConsole() {
+    const roles = myShipConsoleRoles();
+    if (roles.length === 0) {
+        ui.notifications.warn("No crewed role found for you on any ship.");
+        return;
+    }
+    if (roles.length === 1) {
+        new MgT2ShipConsoleApp(roles[0].shipActor, roles[0].roleId, roles[0].crewId).render(true);
+        return;
+    }
+    const options = roles.map((r, i) => `<option value="${i}">${r.label}</option>`).join("");
+    const data = await foundry.applications.api.DialogV2.input({
+        window: { title: "Open Console" },
+        content: `<p>Which console?</p><select name="choice">${options}</select>`
+    });
+    if (!data) {
+        return;
+    }
+    const chosen = roles[parseInt(data.choice)];
+    new MgT2ShipConsoleApp(chosen.shipActor, chosen.roleId, chosen.crewId).render(true);
+}
+
+Hooks.on("getSceneControlButtons", controls => {
+    if (!controls.tokens) {
+        return;
+    }
+    if (myShipConsoleRoles().length > 0) {
+        controls.tokens.tools.openMyShipConsole = {
+            name: "openMyShipConsole",
+            title: "Open My Ship Console",
+            icon: "fa-solid fa-gauge-high",
+            button: true,
+            order: Object.keys(controls.tokens.tools).length,
+            onClick: () => openMyShipConsole(),
+            visible: true
+        };
+    }
+    if (!game.user.isGM) {
+        return;
+    }
+    controls.tokens.tools.navalCombatPanel = {
+        name: "navalCombatPanel",
+        title: "Naval Combat Control",
+        icon: "fa-solid fa-rocket",
+        button: true,
+        order: Object.keys(controls.tokens.tools).length,
+        onClick: () => MgT2NavalGMPanel.toggle(),
+        visible: true
+    };
+    controls.tokens.tools.startNavalEncounter = {
+        name: "startNavalEncounter",
+        title: "Start Naval Encounter",
+        icon: "fa-solid fa-satellite-dish",
+        button: true,
+        order: Object.keys(controls.tokens.tools).length,
+        onClick: () => new MgT2StartNavalEncounterDialog().render(true),
+        visible: true
+    };
 });
 
 Hooks.on("dropCanvasData", (canvas, data) =>{
@@ -2815,42 +3065,6 @@ Handlebars.registerHelper('showAttachedWeapons', function(ship, item) {
     return "";
 });
 
-Handlebars.registerHelper('showSpacecraftAttacks', function(shipActor, roles) {
-    let html = "";
-
-    let weapons = [];
-    for (let item of shipActor.items) {
-        if (item.type === "hardware" && item.system?.hardware?.system === "weapon") {
-            for (let w in item.system.hardware.weapons) {
-                // If we have at least one weapon attached, add it to the list.
-                weapons.push(item);
-                break;
-            }
-        }
-    }
-
-    if (weapons.length === 0) {
-        return "No weapons attached";
-    }
-
-    for (let wpnMount of weapons) {
-        html += `<div class="mount"><label>${wpnMount.name}</label>`;
-
-        for (let wpnId in wpnMount.system.hardware.weapons) {
-            let wpn = shipActor.items.get(wpnId);
-            html += `<span class="weapon-action-button">`;
-            html += `${wpn.name}`;
-            if (wpnMount.system.hardware.weapons[wpnId].quantity > 1) {
-                html += ` x ${wpnMount.system.hardware.weapons[wpnId].quantity}`;
-            }
-            html += `</span>`;
-        }
-
-        html += `</div>`;
-    }
-    return html;
-});
-
 // Display information about active effects on an actor.
 Handlebars.registerHelper("showEffectPill", function(actor, effect) {
     let html = "";
@@ -3093,7 +3307,7 @@ Hooks.once("ready", async function() {
 
         if (foundry.utils.isNewerVersion(currentVersion, lastVersion)) {
             let text = "";
-            let d = await fromUuid("Compendium.mgt2e.traveller-docs.JournalEntry.83nkkP7aeGF22kG6.JournalEntryPage.mXeFfBZITS7IkfPU");
+            let d = await fromUuid("Compendium.mgt2e-piggy.traveller-docs.JournalEntry.83nkkP7aeGF22kG6.JournalEntryPage.mXeFfBZITS7IkfPU");
             if (d && d.text && d.text.content) {
                 text = `<h1>MgT2e ${currentVersion}</h1>${d.text.content}`;
             } else {
@@ -3107,4 +3321,3 @@ Hooks.once("ready", async function() {
         }
     }
 });
-

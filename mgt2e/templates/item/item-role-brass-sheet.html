@@ -1,0 +1,140 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+  <section class="tsb-sheet">
+    <span class="svc-rivet tl"></span>
+    <span class="svc-rivet tr"></span>
+    <span class="svc-rivet bl"></span>
+    <span class="svc-rivet br"></span>
+
+    <div class="tsb-left">
+      <div class="tsb-portrait-frame">
+        <img class="item-img shadow" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+      </div>
+
+      <div class="shadow item-side-panel">
+          <div class="resource flex-group-center">
+              <label for="system.role.positions" class="resource-label">{{localize "MGT2.Item.Positions"}}</label>
+              <div class="incdec">
+                  <span class="quantity-dec"><i class="fa-regular fa-square-minus"></i></span>
+                  <input class="writable" type="text" name="system.role.positions" value="{{system.role.positions}}" data-dtype="Number"/>
+                  <span class="quantity-inc"><i class="fa-regular fa-square-plus"></i></span>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="tsb-right">
+      <div class="svc-plate tsb-nameplate">
+        <p class="tsb-eyebrow">Role</p>
+        <h1 class="tsb-name">
+          <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+        </h1>
+      </div>
+
+      <div class="tsb-panel">
+        <input class="trained" type="checkbox" name="system.role.department"
+               {{checked system.role.department}} data-type="Boolean"/>
+        <label for="system.role.department">{{localize "MGT2.Role.isDepartment"}}</label>
+
+        {{#if system.role.department}}
+          <select name="system.role.colour">
+            {{selectOptions COLOUR_SELECT selected=system.role.colour}}
+          </select>
+        {{/if}}
+
+          <div class="item-description">
+            {{editor
+                enrichedDescription target="system.description"
+                button=true editable=editable
+            }}
+          </div>
+      </div>
+
+      {{#each system.role.actions as |action id|}}
+        <div class="tsb-panel role-action" data-action-id="{{id}}">
+          <h2>
+            <input class="role-action-name" name="system.role.actions.{{id}}.title"
+              value="{{action.title}}"/>
+          </h2>
+          <div class="item-controls">
+            <a class="role-action-delete" title="Delete action"><i class="fas fa-trash"></i></a>
+          </div>
+
+          <div class="resource grid grid-4col flex-group-left">
+            <div class="resource">
+              <label for="system.role.actions.{{id}}.action" class="resource-label">{{localize 'MGT2.Role.ActionTitle'}}</label>
+              <br/>
+              <select class="expand writable" name="system.role.actions.{{id}}.action">
+                {{selectOptions ../ACTION_TYPE selected=action.action}}
+              </select>
+            </div>
+            {{#if (ifEquals action.action "chat") }}
+              <div class="resource grid-span-3">
+                <label for="system.role.actions.{{id}}.chat" class="resource-label">{{localize 'MGT2.Role.ChatType'}}</label>
+                <input class="writable" name="system.role.actions.{{id}}.chat" type="text" value="{{action.chat}}"/>
+              </div>
+            {{/if}}
+            {{#if (ifEquals action.action "skill") }}
+              <div class="resource">
+                <label for="system.role.actions.{{id}}.cha" class="resource-label">Cha</label>
+                <br/>
+                <select class="writable" name="system.role.actions.{{id}}.cha">
+                  {{selectOptions ../CHARACTERISTIC_SELECT selected=action.cha}}
+                </select>
+              </div>
+              <div class="resource grid-span-2">
+                <label for="system.role.actions.{{id}}.skill" class="resource-label">{{localize 'MGT2.Role.SkillType'}}</label>
+                <br/>
+                <select class="writable" name="system.role.actions.{{id}}.skill">
+                  {{selectOptions ../SKILL_SELECT selected=action.skill}}
+                </select>
+              </div>
+              <div class="resource">
+                <label for="system.role.actions.{{id}}.target" class="resource-label">Target</label>
+                <br/>
+                <input class="writable" name="system.role.actions.{{id}}.target" type="number" value="{{action.target}}"/>
+              </div>
+              <div class="resource">
+                <label for="system.role.actions.{{id}}.dm" class="resource-label">DM</label>
+                <br/>
+                <input class="writable" name="system.role.actions.{{id}}.dm" type="number" value="{{action.dm}}"/>
+              </div>
+              <div class="resource grid-span-2">
+                <label for="system.role.actions.{{id}}.text" class="resource-label">Roll Text</label>
+                <br/>
+                <input class="writable" name="system.role.actions.{{id}}.text" type="text" value="{{action.text}}"/>
+              </div>
+            {{/if}}
+            {{#if (ifEquals action.action "weapon") }}
+              <div class="resource grid-span-2">
+                <label for="system.role.actions.{{id}}.weapon" class="resource-label">{{localize 'MGT2.Role.WeaponType'}}</label>
+                <br/>
+                <select class="writable" name="system.role.actions.{{id}}.weapon">
+                  {{selectOptions ../weapons selected=(selectedWeaponId ../system.role.actions id) }}
+                </select>
+              </div>
+              <div class="resource">
+                <label for="system.role.actions.{{id}}.dm" class="resource-label">DM</label>
+                <br/>
+                <input class="writable" name="system.role.actions.{{id}}.dm" type="number" value="{{action.dm}}"/>
+              </div>
+            {{/if}}
+            {{#if (ifEquals action.action "special") }}
+              <div class="resource grid-span-2">
+                <label for="system.role.actions.{{id}}.special" class="resource-label">{{localize 'MGT2.Role.SpecialType'}}</label>
+                <br/>
+                <select class="writable" name="system.role.actions.{{id}}.special">
+                  {{selectOptions ../SPECIAL_ROLES selected=action.special}}
+                </select>
+              </div>
+            {{/if}}
+
+          </div>
+        </div>
+      {{/each}}
+
+      <div class="item-controls">
+          <a class="role-action-add" title="Add new action" data-name="Action" data-type="action"><i class="fas fa-plus"></i> Add action</a>
+      </div>
+    </div>
+  </section>
+</form>

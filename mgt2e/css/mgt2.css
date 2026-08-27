@@ -928,6 +928,15 @@ button.damage-button {
   width: 100%;
 }
 
+.combat-tactics-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.combat-tactics-buttons button {
+  flex: 1;
+}
+
 div.armour-box {
 }
 
@@ -2419,22 +2428,6 @@ div.spacecraft-attacks label {
   display: block;
 }
 
-div.spacecraft-attacks .weapon-action-button {
-  display: block;
-  border: 1px solid black;
-  padding: 2px 5px 2px 5px;
-  background-color: #f1511b;
-  color: white;
-  border-radius: 5px;
-  margin-right: 3px;
-  margin-bottom: 2px;
-  cursor: pointer;
-}
-
-div.spacecraft-attacks .weapon-action-button:hover {
-  box-shadow: 0 2px 5px #800000;
-}
-
 .swarm-left {
   float: left;
 }
@@ -2623,4 +2616,2614 @@ ol.actor-items li.item-status- {
 #hud .status-effects img.effect-control {
   width: 64px;
   height: 64px;
+}
+
+/* GM Naval surfaces - a futuristic tactical-console look, deliberately distinct from the
+   player consoles' brass/mahogany theme: this is the ship-agnostic tactical overview, not any
+   one ship's cockpit, so it reads at a glance as "the GM screen" rather than reusing a specific
+   vessel's flavor. Applies to the GM combat panel and the Start Naval Encounter dialog. */
+#mgt2e-naval-gm-panel,
+#mgt2e-naval-encounter {
+  --tac-bg-deep: #050a10;
+  --tac-bg-mid: #0a141c;
+  --tac-panel-inset: #02060a;
+  --tac-cyan: #4dd9e8;
+  --tac-cyan-bright: #8ff2ff;
+  --tac-cyan-dim: #1f5a63;
+  --tac-amber: #e8a94d;
+  --tac-amber-dim: #6b4e24;
+  --tac-text: #c9eef2;
+  --tac-text-dim: #7fa8ae;
+  --tac-danger: #e85a4d;
+  --tac-danger-dim: #4d1f18;
+}
+#mgt2e-naval-gm-panel .window-content,
+#mgt2e-naval-encounter .window-content {
+  background:
+    repeating-linear-gradient(180deg, rgba(77,217,232,0.03) 0 1px, transparent 1px 3px),
+    linear-gradient(160deg, var(--tac-bg-mid) 0%, var(--tac-bg-deep) 100%);
+  color: var(--tac-text);
+  font-family: "Consolas", "SFMono-Regular", "Courier New", monospace;
+}
+#mgt2e-naval-gm-panel .ncp-body {
+  padding: 10px;
+}
+#mgt2e-naval-gm-panel .ncp-ship-select,
+#mgt2e-naval-gm-panel .ncp-pair-attacker,
+#mgt2e-naval-gm-panel .ncp-pair-target,
+#mgt2e-naval-encounter select {
+  width: 100%;
+  background: var(--tac-panel-inset);
+  color: var(--tac-cyan-bright);
+  border: 1px solid var(--tac-cyan-dim);
+  border-radius: 2px;
+  padding: 5px 7px;
+  font-family: inherit;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+/* The dropdown's own popup list of <option>s is browser-native chrome that ignores the
+   select's background unless options are styled directly - without this it falls back to a
+   light default background while still inheriting the light text color, unreadable. */
+#mgt2e-naval-gm-panel .ncp-ship-select option,
+#mgt2e-naval-gm-panel .ncp-pair-attacker option,
+#mgt2e-naval-gm-panel .ncp-pair-target option,
+#mgt2e-naval-encounter select option {
+  background: var(--tac-panel-inset);
+  color: var(--tac-cyan-bright);
+}
+#mgt2e-naval-gm-panel .ncp-ship-name {
+  margin: 0 0 8px 0;
+  color: var(--tac-cyan-bright);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: 0 0 6px rgba(77,217,232,0.5);
+  border-bottom: 1px solid var(--tac-cyan-dim);
+  padding-bottom: 6px;
+}
+#mgt2e-naval-gm-panel .ncp-facing {
+  margin: 0 0 8px 0;
+  font-style: italic;
+  color: var(--tac-text-dim);
+}
+#mgt2e-naval-gm-panel .ncp-section {
+  margin-bottom: 12px;
+}
+#mgt2e-naval-gm-panel .ncp-section-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+#mgt2e-naval-gm-panel .ncp-section-row .ncp-section-col {
+  flex: 1 1 0;
+  min-width: 0;
+}
+#mgt2e-naval-gm-panel .ncp-section-title {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tac-amber);
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(232,169,77,0.25);
+}
+#mgt2e-naval-gm-panel button,
+#mgt2e-naval-encounter button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 4px;
+  background: var(--tac-panel-inset);
+  color: var(--tac-cyan-bright);
+  border: 1px solid var(--tac-cyan-dim);
+  border-radius: 2px;
+  padding: 7px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+#mgt2e-naval-gm-panel button:hover,
+#mgt2e-naval-encounter button:hover {
+  border-color: var(--tac-cyan);
+  box-shadow: 0 0 8px rgba(77,217,232,0.35), inset 0 0 8px rgba(77,217,232,0.08);
+}
+#mgt2e-naval-gm-panel button:disabled {
+  opacity: 0.45;
+  color: var(--tac-text-dim);
+  border-color: var(--tac-amber-dim);
+  cursor: not-allowed;
+}
+#mgt2e-naval-gm-panel button:disabled:hover {
+  box-shadow: none;
+}
+#mgt2e-naval-gm-panel .ncp-selfdestruct-armed {
+  border: 1px solid var(--tac-danger);
+  border-radius: 2px;
+  padding: 8px 10px;
+  animation: mgt2e-tac-selfdestruct-pulse 1.6s ease-in-out infinite;
+}
+#mgt2e-naval-gm-panel .ncp-selfdestruct-armed p {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--tac-danger);
+}
+#mgt2e-naval-gm-panel button.ncp-abort {
+  border-color: var(--tac-danger);
+  color: var(--tac-danger);
+  text-align: center;
+  margin-bottom: 0;
+}
+#mgt2e-naval-gm-panel button.ncp-abort:hover {
+  border-color: var(--tac-danger);
+  box-shadow: 0 0 8px rgba(232,90,77,0.4), inset 0 0 8px rgba(232,90,77,0.1);
+}
+@keyframes mgt2e-tac-selfdestruct-pulse {
+  0%, 100% { background: var(--tac-panel-inset); }
+  50% { background: var(--tac-danger-dim); }
+}
+
+#mgt2e-naval-gm-panel .ncp-fleet-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+#mgt2e-naval-gm-panel .ncp-fleet-table th,
+#mgt2e-naval-gm-panel .ncp-fleet-table td {
+  border: 1px solid var(--tac-cyan-dim);
+  padding: 4px 6px;
+  text-align: left;
+  vertical-align: top;
+}
+#mgt2e-naval-gm-panel .ncp-fleet-table th {
+  color: var(--tac-amber);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 9px;
+}
+#mgt2e-naval-gm-panel .ncp-detected {
+  color: var(--tac-cyan-bright);
+}
+#mgt2e-naval-gm-panel .ncp-undetected {
+  color: var(--tac-text-dim);
+}
+#mgt2e-naval-gm-panel .ncp-band-progress {
+  color: var(--tac-text-dim);
+  font-size: 10px;
+}
+#mgt2e-naval-gm-panel .ncp-pair-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+#mgt2e-naval-gm-panel .ncp-pair-picker select {
+  width: auto;
+  flex: 1 1 auto;
+  margin-bottom: 0;
+}
+#mgt2e-naval-gm-panel .ncp-pair-detail {
+  flex-basis: 100%;
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: var(--tac-text-dim);
+}
+
+#mgt2e-naval-encounter .start-naval-encounter-dialog {
+  padding: 12px;
+}
+#mgt2e-naval-encounter p {
+  color: var(--tac-text-dim);
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+#mgt2e-naval-encounter .encounter-ship-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  background: var(--tac-panel-inset);
+  border: 1px solid var(--tac-cyan-dim);
+  border-radius: 2px;
+}
+#mgt2e-naval-encounter .encounter-ship-list li {
+  padding: 5px 8px;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(77,217,232,0.1);
+}
+#mgt2e-naval-encounter .encounter-ship-list li:last-child {
+  border-bottom: none;
+}
+#mgt2e-naval-encounter .encounter-band-row {
+  margin-bottom: 12px;
+}
+#mgt2e-naval-encounter .encounter-band-row label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tac-amber);
+  margin-bottom: 5px;
+}
+
+/* Ship Console (per-role player panel) - brass instrument panel in dark mahogany, per the
+   approved design direction ("the Harrier is an old Sindalian noble's warship"). Deliberately
+   NOT shared with the GM's naval surfaces, which get their own distinct futuristic-tactical
+   theme below - a specific ship's cockpit flavor doesn't fit the GM's ship-agnostic overview. */
+#mgt2e-ship-console {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  /* Ship Status severity gradient, interpolated verdigris (No Damage) -> danger (Level 6), so
+     it reads as part of the same instrument-panel palette rather than a stock traffic-light red/green. */
+  --svc-sev-0: #6f9683;
+  --svc-sev-1: #788875;
+  --svc-sev-2: #817967;
+  --svc-sev-3: #8a6b59;
+  --svc-sev-4: #925d4b;
+  --svc-sev-5: #9b4e3d;
+  --svc-sev-6: #a4402f;
+}
+
+#mgt2e-ship-console .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+#mgt2e-ship-console .ship-console-body {
+  padding: 14px;
+  position: relative;
+}
+
+#mgt2e-ship-console .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright), var(--svc-brass) 45%, var(--svc-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+#mgt2e-ship-console .svc-rivet.tl { top: 4px; left: 4px; }
+#mgt2e-ship-console .svc-rivet.tr { top: 4px; right: 4px; }
+#mgt2e-ship-console .svc-rivet.bl { bottom: 4px; left: 4px; }
+#mgt2e-ship-console .svc-rivet.br { bottom: 4px; right: 4px; }
+
+#mgt2e-ship-console .svc-plate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow:
+    inset 0 1px 0 rgba(255,241,209,0.35),
+    inset 0 -3px 6px rgba(0,0,0,0.35),
+    0 3px 8px rgba(0,0,0,0.4);
+}
+#mgt2e-ship-console .console-role-name {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--svc-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+  font-style: normal;
+}
+#mgt2e-ship-console .console-ship-name {
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--svc-ink);
+  margin: 0;
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+#mgt2e-ship-console .svc-subtitle {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--svc-ink);
+  opacity: 0.68;
+  margin: 3px 0 0;
+}
+
+#mgt2e-ship-console .console-section-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+  font-family: Georgia, serif;
+  font-weight: 400;
+  display: block;
+}
+#mgt2e-ship-console .console-section {
+  margin-bottom: 12px;
+}
+
+#mgt2e-ship-console .console-band-list {
+  list-style: none;
+  margin: 0 0 8px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+#mgt2e-ship-console .console-band-list li {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.18), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+#mgt2e-ship-console .console-current-target {
+  font-weight: 700;
+  color: var(--svc-brass-bright);
+}
+#mgt2e-ship-console .console-band-progress {
+  display: block;
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+#mgt2e-ship-console .ship-status-list {
+  list-style: none;
+  margin: 0 0 8px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+#mgt2e-ship-console .ship-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  background: var(--svc-panel-inset);
+  border-left: 4px solid var(--svc-sev-0);
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12);
+}
+#mgt2e-ship-console .ship-status-row[data-severity="1"] { border-left-color: var(--svc-sev-1); }
+#mgt2e-ship-console .ship-status-row[data-severity="2"] { border-left-color: var(--svc-sev-2); }
+#mgt2e-ship-console .ship-status-row[data-severity="3"] { border-left-color: var(--svc-sev-3); }
+#mgt2e-ship-console .ship-status-row[data-severity="4"] { border-left-color: var(--svc-sev-4); }
+#mgt2e-ship-console .ship-status-row[data-severity="5"] { border-left-color: var(--svc-sev-5); }
+#mgt2e-ship-console .ship-status-row[data-severity="6"] { border-left-color: var(--svc-sev-6); }
+#mgt2e-ship-console .ship-status-label {
+  color: var(--svc-parchment-dim);
+}
+#mgt2e-ship-console .ship-status-row[data-severity="0"] .ship-status-value {
+  color: var(--svc-sev-0);
+}
+#mgt2e-ship-console .ship-status-row[data-severity="1"] .ship-status-value { color: var(--svc-sev-1); }
+#mgt2e-ship-console .ship-status-row[data-severity="2"] .ship-status-value { color: var(--svc-sev-2); }
+#mgt2e-ship-console .ship-status-row[data-severity="3"] .ship-status-value { color: var(--svc-sev-3); }
+#mgt2e-ship-console .ship-status-row[data-severity="4"] .ship-status-value { color: var(--svc-sev-4); }
+#mgt2e-ship-console .ship-status-row[data-severity="5"] .ship-status-value { color: var(--svc-sev-5); }
+#mgt2e-ship-console .ship-status-row[data-severity="6"] .ship-status-value {
+  color: var(--svc-sev-6);
+  font-weight: 700;
+}
+
+/* Accelerate/Decelerate share a row rather than each taking a full-width line - keeps the Pilot
+   console from growing taller for what's just a pair of quick +/-1 Thrust nudge buttons. */
+#mgt2e-ship-console .console-button-row {
+  display: flex;
+  gap: 8px;
+}
+#mgt2e-ship-console .console-button-row button.console-action {
+  width: auto;
+  flex: 1;
+}
+
+#mgt2e-ship-console button.console-action,
+#mgt2e-ship-console button.console-abort {
+  appearance: none;
+  width: 100%;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 5px;
+  padding: 9px 12px;
+  text-align: left;
+  cursor: pointer;
+  background: linear-gradient(180deg, #2c1710 0%, #170b04 100%);
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.22), 0 2px 6px rgba(0,0,0,0.4);
+  color: var(--svc-parchment);
+  font-family: Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+  transition: box-shadow 0.12s ease, background 0.12s ease, transform 0.08s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#mgt2e-ship-console button.console-action::before,
+#mgt2e-ship-console button.console-abort::before {
+  content: "";
+  flex: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-verdigris) 0%, var(--svc-verdigris-dim) 100%);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.5);
+}
+#mgt2e-ship-console button.console-action:hover,
+#mgt2e-ship-console button.console-abort:hover {
+  box-shadow: inset 0 0 0 1px var(--svc-brass-bright), 0 3px 8px rgba(0,0,0,0.5);
+  background: linear-gradient(180deg, #33190f 0%, #1c0d05 100%);
+}
+#mgt2e-ship-console button.console-action:active,
+#mgt2e-ship-console button.console-abort:active {
+  transform: translateY(1px);
+}
+
+/* The generic "make a roll" skill actions get a shared dice glyph instead of the plain dot, so
+   this button shape reads as "roll something" wherever it appears across every role's console. */
+#mgt2e-ship-console .console-section:last-of-type button.console-action::before {
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright) 0%, var(--svc-brass) 100%);
+}
+
+#mgt2e-ship-console .console-selfdestruct-armed {
+  border: 2px solid var(--svc-danger);
+  background: rgba(164, 64, 47, 0.15);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+#mgt2e-ship-console .console-selfdestruct-armed p {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--svc-parchment);
+}
+#mgt2e-ship-console button.console-abort {
+  border-color: var(--svc-danger);
+}
+#mgt2e-ship-console button.console-abort::before {
+  background: radial-gradient(circle at 35% 30%, #e37a5c 0%, var(--svc-danger) 100%);
+}
+
+/* Traveller Sheet (Brass) - alternate PC sheet, same brass/mahogany instrument-panel language as
+   the Ship Console, re-scoped to its own class since ActorSheet windows don't get a fixed
+   Application id (each actor's sheet id is dynamic). getData()/activateListeners() are unchanged
+   from the original sheet (see traveller-brass.mjs), so most of this is a broad-brush restyle of
+   generic/shared classes reused from the original template (inputs, .resource, .items-list, skill
+   rows, etc.), not a from-scratch UI - only the sheet-chrome classes prefixed tsb- are new. */
+.mgt2e-traveller-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  /* The base theme hardcodes its "Mongoose orange" as a literal hex value in most of the ~25
+     places it's used (not routed through these two custom properties), so redefining them only
+     fixes the handful of rules that DO reference var(--title-bg)/var(--mongoose-orange) (e.g.
+     history.css's term-list header). Every other hardcoded usage needs its own explicit override
+     below, scoped to whichever reused partial actually renders it on this sheet. */
+  --title-bg: var(--svc-brass);
+  --mongoose-orange: var(--svc-brass);
+}
+
+.mgt2e-traveller-brass .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+/* Broad-brush legibility pass: form controls don't inherit `color` from an ancestor by default,
+   and the reused partials (skills/items/terms/settings) were authored for the original sheet's
+   light parchment background, so every text-bearing element under this sheet needs an explicit
+   parchment color rather than relying on inheritance alone. */
+.mgt2e-traveller-brass .window-content,
+.mgt2e-traveller-brass .window-content label,
+.mgt2e-traveller-brass .window-content span,
+.mgt2e-traveller-brass .window-content a,
+.mgt2e-traveller-brass .window-content li,
+.mgt2e-traveller-brass .window-content p,
+.mgt2e-traveller-brass .window-content h1,
+.mgt2e-traveller-brass .window-content h2,
+.mgt2e-traveller-brass .window-content h3,
+.mgt2e-traveller-brass .window-content input,
+.mgt2e-traveller-brass .window-content select,
+.mgt2e-traveller-brass .window-content textarea {
+  color: var(--svc-parchment);
+}
+.mgt2e-traveller-brass .window-content a.item.active {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-traveller-brass .window-content input,
+.mgt2e-traveller-brass .window-content select,
+.mgt2e-traveller-brass .window-content textarea {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-traveller-brass .window-content input:focus,
+.mgt2e-traveller-brass .window-content select:focus,
+.mgt2e-traveller-brass .window-content textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--svc-brass-bright);
+}
+
+.mgt2e-traveller-brass .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright), var(--svc-brass) 45%, var(--svc-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.mgt2e-traveller-brass .svc-rivet.tl { top: 4px; left: 4px; }
+.mgt2e-traveller-brass .svc-rivet.tr { top: 4px; right: 4px; }
+.mgt2e-traveller-brass .svc-rivet.bl { bottom: 4px; left: 4px; }
+.mgt2e-traveller-brass .svc-rivet.br { bottom: 4px; right: 4px; }
+
+.mgt2e-traveller-brass .tsb-sheet {
+  padding: 14px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.mgt2e-traveller-brass .tsb-left {
+  flex: 0 0 180px;
+  width: 180px;
+}
+.mgt2e-traveller-brass .tsb-right {
+  width: 100%;
+  min-width: 0;
+}
+
+.mgt2e-traveller-brass .tsb-portrait-frame {
+  padding: 4px;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-traveller-brass .tsb-portrait-frame img.profile-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: none;
+  border-radius: 2px;
+}
+
+/* Generic "recessed instrument panel" treatment shared by every stat/tab section - replaces the
+   original sheet's plain `.shadow` boxes. */
+.mgt2e-traveller-brass .tsb-panel,
+.mgt2e-traveller-brass .tsb-gauge,
+.mgt2e-traveller-brass .side-panel {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.18), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+.mgt2e-traveller-brass .tsb-gauge-title,
+.mgt2e-traveller-brass .box-title {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+  /* label.box-title (mgt2.css) hardcodes a literal #f1511b background - clear it rather than
+     just adding text styling on top, or the orange bar still shows through underneath. */
+  background: none;
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+}
+
+.mgt2e-traveller-brass .tsb-nameplate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-traveller-brass .tsb-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--svc-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+}
+.mgt2e-traveller-brass .tsb-name {
+  margin: 0;
+}
+.mgt2e-traveller-brass .tsb-name input {
+  background: transparent;
+  border: none;
+  text-align: center;
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--svc-ink);
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+
+.mgt2e-traveller-brass .tsb-dial {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 6px 4px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.18);
+}
+.mgt2e-traveller-brass .tsb-dial .characteristic-title {
+  color: var(--svc-brass-bright);
+  letter-spacing: 0.1em;
+}
+.mgt2e-traveller-brass .tsb-reroll {
+  color: var(--svc-brass-bright);
+  cursor: pointer;
+  float: right;
+}
+
+/* The base sheet's .field-label is a bright orange pill (NPC-sheet holdover) that clashes badly
+   against the wood/brass palette - restyle as a small brass eyebrow label instead. */
+.mgt2e-traveller-brass .field-label {
+  background: none;
+  color: var(--svc-brass-bright);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+}
+
+.mgt2e-traveller-brass .tsb-tabnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+  margin-bottom: 10px;
+  padding-bottom: 0;
+}
+.mgt2e-traveller-brass .tsb-tabnav a.item {
+  padding: 6px 10px;
+  border-radius: 4px 4px 0 0;
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment-dim);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--svc-brass-shadow);
+  border-bottom: none;
+}
+.mgt2e-traveller-brass .tsb-tabnav a.item.active {
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  color: var(--svc-ink);
+}
+.mgt2e-traveller-brass .tsb-tabpanel {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Equipment/item cards default to a plain light-grey card (unthemed base style) - re-panel them
+   to match the rest of the sheet's recessed-instrument look. */
+.mgt2e-traveller-brass li.item {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-traveller-brass li.item h4 {
+  background: none !important;
+  color: var(--svc-parchment);
+}
+
+/* Native <select> option popups ignore the select's own background unless styled directly -
+   without this they fall back to a light default while inheriting the light text color. */
+.mgt2e-traveller-brass .window-content select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+
+/* Rich-text editor (Biography/Finance notes) - ProseMirror renders as a real contenteditable div,
+   not an iframe, so it's directly stylable, but Foundry's own editor CSS hardcodes a light
+   background that clashes with the rest of this sheet. Cover both the read-only display state and
+   the active-edit state (ProseMirror adds its own class once editing starts), plus its toolbar. */
+.mgt2e-traveller-brass .editor {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-traveller-brass .editor-content,
+.mgt2e-traveller-brass .editor-content.ProseMirror,
+.mgt2e-traveller-brass .editor prose-mirror {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+  min-height: 100px;
+}
+.mgt2e-traveller-brass a.editor-edit {
+  background: var(--svc-brass-dim);
+}
+.mgt2e-traveller-brass .editor-content.ProseMirror a,
+.mgt2e-traveller-brass .editor-content a {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-traveller-brass .editor .editor-menu,
+.mgt2e-traveller-brass .editor menu.editor-menu {
+  background: var(--svc-brass-dim);
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-traveller-brass .editor .editor-menu button,
+.mgt2e-traveller-brass .editor menu.editor-menu button {
+  color: var(--svc-ink);
+}
+.mgt2e-traveller-brass a.editor-edit {
+  color: var(--svc-brass-bright);
+}
+
+/* Spacecraft Sheet (Brass) - same theme/pattern as .mgt2e-traveller-brass above (see
+   traveller-brass.mjs's comment for why the token set is duplicated per sheet rather than
+   shared - every existing brass surface in this codebase re-scopes its own copy). Kept as an
+   exact duplicate of the Traveller block rather than a shared selector list, matching the
+   established convention (e.g. #mgt2e-target-summary duplicating #mgt2e-ship-console's tokens). */
+.mgt2e-spacecraft-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  --title-bg: var(--svc-brass);
+  --mongoose-orange: var(--svc-brass);
+}
+
+.mgt2e-spacecraft-brass .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+.mgt2e-spacecraft-brass .window-content,
+.mgt2e-spacecraft-brass .window-content label,
+.mgt2e-spacecraft-brass .window-content span,
+.mgt2e-spacecraft-brass .window-content a,
+.mgt2e-spacecraft-brass .window-content li,
+.mgt2e-spacecraft-brass .window-content p,
+.mgt2e-spacecraft-brass .window-content h1,
+.mgt2e-spacecraft-brass .window-content h2,
+.mgt2e-spacecraft-brass .window-content h3,
+.mgt2e-spacecraft-brass .window-content input,
+.mgt2e-spacecraft-brass .window-content select,
+.mgt2e-spacecraft-brass .window-content textarea {
+  color: var(--svc-parchment);
+}
+.mgt2e-spacecraft-brass .window-content a.item.active {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-spacecraft-brass .window-content input,
+.mgt2e-spacecraft-brass .window-content select,
+.mgt2e-spacecraft-brass .window-content textarea {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-spacecraft-brass .window-content input:focus,
+.mgt2e-spacecraft-brass .window-content select:focus,
+.mgt2e-spacecraft-brass .window-content textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--svc-brass-bright);
+}
+
+.mgt2e-spacecraft-brass .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright), var(--svc-brass) 45%, var(--svc-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.mgt2e-spacecraft-brass .svc-rivet.tl { top: 4px; left: 4px; }
+.mgt2e-spacecraft-brass .svc-rivet.tr { top: 4px; right: 4px; }
+.mgt2e-spacecraft-brass .svc-rivet.bl { bottom: 4px; left: 4px; }
+.mgt2e-spacecraft-brass .svc-rivet.br { bottom: 4px; right: 4px; }
+
+.mgt2e-spacecraft-brass .tsb-sheet {
+  padding: 14px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.mgt2e-spacecraft-brass .tsb-left {
+  flex: 0 0 200px;
+  width: 200px;
+}
+.mgt2e-spacecraft-brass .tsb-right {
+  width: 100%;
+  min-width: 0;
+}
+
+.mgt2e-spacecraft-brass .tsb-portrait-frame {
+  padding: 4px;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-spacecraft-brass .tsb-portrait-frame img.profile-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: none;
+  border-radius: 2px;
+}
+
+.mgt2e-spacecraft-brass .tsb-panel,
+.mgt2e-spacecraft-brass .tsb-gauge,
+.mgt2e-spacecraft-brass .side-panel {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.18), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+.mgt2e-spacecraft-brass .tsb-gauge-title,
+.mgt2e-spacecraft-brass .box-title {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+  background: none;
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+}
+
+.mgt2e-spacecraft-brass .tsb-nameplate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-spacecraft-brass .tsb-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--svc-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+}
+.mgt2e-spacecraft-brass .tsb-name {
+  margin: 0;
+}
+.mgt2e-spacecraft-brass .tsb-name input {
+  background: transparent;
+  border: none;
+  text-align: center;
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--svc-ink);
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+
+.mgt2e-spacecraft-brass .field-label {
+  background: none;
+  color: var(--svc-brass-bright);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+}
+.mgt2e-spacecraft-brass .field-label-subtle {
+  color: var(--svc-parchment-dim);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: block;
+}
+
+.mgt2e-spacecraft-brass .tsb-tabnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+  margin-bottom: 10px;
+  padding-bottom: 0;
+}
+.mgt2e-spacecraft-brass .tsb-tabnav a.item {
+  padding: 6px 10px;
+  border-radius: 4px 4px 0 0;
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment-dim);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--svc-brass-shadow);
+  border-bottom: none;
+}
+.mgt2e-spacecraft-brass .tsb-tabnav a.item.active {
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  color: var(--svc-ink);
+}
+.mgt2e-spacecraft-brass .tsb-tabpanel {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.mgt2e-spacecraft-brass li.item {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-spacecraft-brass li.item h4 {
+  background: none !important;
+  color: var(--svc-parchment);
+}
+
+.mgt2e-spacecraft-brass .window-content select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+
+.mgt2e-spacecraft-brass .editor {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-spacecraft-brass .editor-content,
+.mgt2e-spacecraft-brass .editor-content.ProseMirror,
+.mgt2e-spacecraft-brass .editor prose-mirror {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+  min-height: 100px;
+}
+.mgt2e-spacecraft-brass a.editor-edit {
+  background: var(--svc-brass-dim);
+  color: var(--svc-brass-bright);
+}
+.mgt2e-spacecraft-brass .editor-content.ProseMirror a,
+.mgt2e-spacecraft-brass .editor-content a {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-spacecraft-brass .editor .editor-menu,
+.mgt2e-spacecraft-brass .editor menu.editor-menu {
+  background: var(--svc-brass-dim);
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-spacecraft-brass .editor .editor-menu button,
+.mgt2e-spacecraft-brass .editor menu.editor-menu button {
+  color: var(--svc-ink);
+}
+
+/* Spacecraft-only elements not present on the Traveller sheet - same hardcoded-base-theme
+   clashes as before (mini-value/bay-header/hull-pill all hardcode the base #f1511b orange). */
+.mgt2e-spacecraft-brass .mini-value {
+  display: inline-block;
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin: 0 6px 6px 0;
+}
+.mgt2e-spacecraft-brass .mini-value label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+}
+.mgt2e-spacecraft-brass .mini-value span {
+  background: var(--svc-wood-grain);
+  color: var(--svc-parchment);
+  padding: 1px 4px;
+  border-radius: 2px;
+  display: inline-block;
+}
+.mgt2e-spacecraft-brass .pill-container {
+  background: none;
+}
+.mgt2e-spacecraft-brass .bay-header {
+  background: none;
+}
+.mgt2e-spacecraft-brass .bay-head {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px 4px 0 0;
+  text-align: center;
+  padding: 4px;
+}
+.mgt2e-spacecraft-brass .bay-hover,
+.mgt2e-spacecraft-brass .bay-hover-selected {
+  color: var(--svc-parchment-dim);
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.mgt2e-spacecraft-brass .bay-hover-selected {
+  color: var(--svc-brass-bright);
+  font-weight: 700;
+}
+.mgt2e-spacecraft-brass .pill-container .hull-pill {
+  background: var(--svc-brass-dim);
+  color: var(--svc-parchment);
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-spacecraft-brass .pill-container .hull-pill .fas {
+  background: none !important;
+  color: var(--svc-parchment);
+}
+
+/* Crew roster cards (actor-starship-crew.html) - a different card component from li.item, with
+   its own hardcoded #f1511b header (items.css) and role-action pills (showCrewInfo() in mgt2.mjs,
+   also hardcoded). */
+.mgt2e-spacecraft-brass .actor-crew {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-spacecraft-brass .actor-crew h4 {
+  background: var(--svc-brass-dim) !important;
+  color: var(--svc-parchment) !important;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-spacecraft-brass .actor-crew .role-action-button {
+  background-color: var(--svc-panel-inset) !important;
+  color: var(--svc-parchment) !important;
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-spacecraft-brass .actor-crew .role-title {
+  color: var(--svc-brass-bright);
+}
+
+/* World Sheet (Brass) - same theme/pattern as Traveller/Spacecraft above (full token
+   re-declaration per surface), plus a handful of World-only elements (UWP digit strip,
+   fuel-purchase cards, trade drop zones, trade-goods table) not present on those sheets. */
+.mgt2e-world-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  --title-bg: var(--svc-brass);
+  --mongoose-orange: var(--svc-brass);
+}
+
+.mgt2e-world-brass .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+.mgt2e-world-brass .window-content,
+.mgt2e-world-brass .window-content label,
+.mgt2e-world-brass .window-content span,
+.mgt2e-world-brass .window-content a,
+.mgt2e-world-brass .window-content li,
+.mgt2e-world-brass .window-content p,
+.mgt2e-world-brass .window-content h1,
+.mgt2e-world-brass .window-content h2,
+.mgt2e-world-brass .window-content h3,
+.mgt2e-world-brass .window-content input,
+.mgt2e-world-brass .window-content select,
+.mgt2e-world-brass .window-content textarea {
+  color: var(--svc-parchment);
+}
+.mgt2e-world-brass .window-content a.item.active {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-world-brass .window-content input,
+.mgt2e-world-brass .window-content select,
+.mgt2e-world-brass .window-content textarea {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-world-brass .window-content input:focus,
+.mgt2e-world-brass .window-content select:focus,
+.mgt2e-world-brass .window-content textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--svc-brass-bright);
+}
+
+.mgt2e-world-brass .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright), var(--svc-brass) 45%, var(--svc-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.mgt2e-world-brass .svc-rivet.tl { top: 4px; left: 4px; }
+.mgt2e-world-brass .svc-rivet.tr { top: 4px; right: 4px; }
+.mgt2e-world-brass .svc-rivet.bl { bottom: 4px; left: 4px; }
+.mgt2e-world-brass .svc-rivet.br { bottom: 4px; right: 4px; }
+
+.mgt2e-world-brass .tsb-sheet {
+  padding: 14px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.mgt2e-world-brass .tsb-left {
+  flex: 0 0 200px;
+  width: 200px;
+}
+.mgt2e-world-brass .tsb-right {
+  width: 100%;
+  min-width: 0;
+}
+
+.mgt2e-world-brass .tsb-portrait-frame {
+  padding: 4px;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-world-brass .tsb-portrait-frame img.profile-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: none;
+  border-radius: 2px;
+}
+
+.mgt2e-world-brass .tsb-panel,
+.mgt2e-world-brass .side-panel {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.18), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+.mgt2e-world-brass .box-title {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+  background: none;
+  margin-bottom: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+}
+
+.mgt2e-world-brass .tsb-nameplate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-world-brass .tsb-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--svc-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+}
+.mgt2e-world-brass .tsb-name {
+  margin: 0;
+}
+.mgt2e-world-brass .tsb-name input {
+  background: transparent;
+  border: none;
+  text-align: center;
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--svc-ink);
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+
+.mgt2e-world-brass .field-label {
+  background: none;
+  color: var(--svc-brass-bright) !important;
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+}
+.mgt2e-world-brass .resource-label {
+  color: var(--svc-brass-bright);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.mgt2e-world-brass .field-value {
+  color: var(--svc-parchment);
+}
+
+.mgt2e-world-brass .tsb-tabnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+  margin-bottom: 10px;
+  padding-bottom: 0;
+}
+.mgt2e-world-brass .tsb-tabnav a.item {
+  padding: 6px 10px;
+  border-radius: 4px 4px 0 0;
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment-dim);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--svc-brass-shadow);
+  border-bottom: none;
+}
+.mgt2e-world-brass .tsb-tabnav a.item.active {
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  color: var(--svc-ink);
+}
+.mgt2e-world-brass .tsb-tabpanel {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.mgt2e-world-brass li.item {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-world-brass li.item h4 {
+  background: none !important;
+  color: var(--svc-parchment);
+}
+
+.mgt2e-world-brass .window-content select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+
+.mgt2e-world-brass .editor {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-world-brass .editor-content,
+.mgt2e-world-brass .editor-content.ProseMirror,
+.mgt2e-world-brass .editor prose-mirror {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+  min-height: 100px;
+}
+.mgt2e-world-brass a.editor-edit {
+  background: var(--svc-brass-dim);
+  color: var(--svc-brass-bright);
+}
+.mgt2e-world-brass .editor-content.ProseMirror a,
+.mgt2e-world-brass .editor-content a {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-world-brass .editor .editor-menu,
+.mgt2e-world-brass .editor menu.editor-menu {
+  background: var(--svc-brass-dim);
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-world-brass .editor .editor-menu button,
+.mgt2e-world-brass .editor menu.editor-menu button {
+  color: var(--svc-ink);
+}
+
+.mgt2e-world-brass .pill-container {
+  background: none;
+}
+
+/* World-only elements: UWP digit strip, fuel-purchase cards, trade drop zones and
+   trade-goods table - all hardcode the base theme's orange/parchment colors elsewhere. */
+.mgt2e-world-brass .uwp-digits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+.mgt2e-world-brass .uwp-digit {
+  background: var(--svc-brass-dim);
+  color: var(--svc-parchment);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-weight: 700;
+}
+.mgt2e-world-brass .uwp-dash {
+  color: var(--svc-parchment-dim);
+  align-self: center;
+}
+.mgt2e-world-brass .fuelPurchase {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+  color: var(--svc-parchment);
+}
+.mgt2e-world-brass .fuelPurchase span {
+  color: var(--svc-parchment);
+}
+.mgt2e-world-brass .dropZone {
+  background: var(--svc-panel-inset) !important;
+  border: 1px dashed var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-world-brass .dropZone .trader-drop {
+  color: var(--svc-parchment-dim);
+}
+.mgt2e-world-brass .dropZone .trader-name,
+.mgt2e-world-brass .dropZone .trader-skill {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-world-brass .destination-title {
+  background: var(--svc-brass-dim);
+  color: var(--svc-parchment);
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+.mgt2e-world-brass .trade-list {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-world-brass .trade-list-header th {
+  color: var(--svc-brass-bright);
+  border-bottom: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-world-brass .trade-list .buy1, .mgt2e-world-brass .trade-list .sale1 {
+  color: var(--svc-danger);
+}
+.mgt2e-world-brass .trade-list .buy-1, .mgt2e-world-brass .trade-list .sale-1 {
+  color: var(--svc-verdigris);
+}
+
+/* Item Sheet (Brass) - Weapon and Armour, same theme/pattern as the two actor Brass sheets above
+   (full token re-declaration per surface, matching the established convention). */
+.mgt2e-item-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  --title-bg: var(--svc-brass);
+  --mongoose-orange: var(--svc-brass);
+}
+
+.mgt2e-item-brass .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+.mgt2e-item-brass .window-content,
+.mgt2e-item-brass .window-content label,
+.mgt2e-item-brass .window-content span,
+.mgt2e-item-brass .window-content a,
+.mgt2e-item-brass .window-content li,
+.mgt2e-item-brass .window-content p,
+.mgt2e-item-brass .window-content h1,
+.mgt2e-item-brass .window-content h2,
+.mgt2e-item-brass .window-content h3,
+.mgt2e-item-brass .window-content input,
+.mgt2e-item-brass .window-content select,
+.mgt2e-item-brass .window-content textarea {
+  color: var(--svc-parchment);
+}
+.mgt2e-item-brass form {
+  background: none !important;
+}
+.mgt2e-item-brass .window-content input,
+.mgt2e-item-brass .window-content select,
+.mgt2e-item-brass .window-content textarea {
+  background: var(--svc-panel-inset) !important;
+  color: var(--svc-parchment) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-item-brass .window-content input:focus,
+.mgt2e-item-brass .window-content select:focus,
+.mgt2e-item-brass .window-content textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--svc-brass-bright);
+}
+
+.mgt2e-item-brass .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright), var(--svc-brass) 45%, var(--svc-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.mgt2e-item-brass .svc-rivet.tl { top: 4px; left: 4px; }
+.mgt2e-item-brass .svc-rivet.tr { top: 4px; right: 4px; }
+.mgt2e-item-brass .svc-rivet.bl { bottom: 4px; left: 4px; }
+.mgt2e-item-brass .svc-rivet.br { bottom: 4px; right: 4px; }
+
+.mgt2e-item-brass .tsb-sheet {
+  padding: 14px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.mgt2e-item-brass .tsb-left {
+  flex: 0 0 160px;
+  width: 160px;
+}
+.mgt2e-item-brass .tsb-right {
+  width: 100%;
+  min-width: 0;
+}
+
+.mgt2e-item-brass .tsb-portrait-frame {
+  padding: 4px;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-item-brass .tsb-portrait-frame img.item-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: none;
+  border-radius: 2px;
+}
+
+.mgt2e-item-brass .tsb-panel,
+.mgt2e-item-brass .item-side-panel,
+.mgt2e-item-brass .shadow {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.18), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+/* item-computer.html/item-links.html (reused partials) render their own header row
+   (.software-header) with no background of its own, inheriting the base .software-list's plain
+   styling meant for the light parchment sheet - explicit override needed. */
+.mgt2e-item-brass .software-list,
+.mgt2e-item-brass li.software-header,
+.mgt2e-item-brass .software-list .software-header {
+  color: var(--svc-parchment) !important;
+  border-top-color: var(--svc-brass-shadow) !important;
+}
+.mgt2e-item-brass ol.item.software-list {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.mgt2e-item-brass .tsb-nameplate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: inset 0 1px 0 rgba(255,241,209,0.35), inset 0 -3px 6px rgba(0,0,0,0.35), 0 3px 8px rgba(0,0,0,0.4);
+}
+.mgt2e-item-brass .tsb-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--svc-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+}
+.mgt2e-item-brass .tsb-name {
+  margin: 0;
+}
+.mgt2e-item-brass .tsb-name input {
+  background: transparent;
+  border: none;
+  text-align: center;
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--svc-ink);
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+.mgt2e-item-brass .tsb-name .item-to-chat {
+  color: var(--svc-ink);
+  cursor: pointer;
+}
+
+/* h1.charname (mgt2.css) hardcodes a literal #f1511b background - already discovered/fixed once
+   for the actor Brass sheets, same fix here since item-weapon/armour-brass-sheet.html reuse the
+   same .charname class for their nameplate. */
+.mgt2e-item-brass h1.charname {
+  background: none;
+  padding: 0;
+}
+
+/* Trait/energy pill family (showWeaponTraits() in mgt2.mjs, .energy-pill in the armour template)
+   hardcodes a blue #36a0de background - restyle to the brass/verdigris palette for consistency
+   rather than leaving the stock accent color. */
+.mgt2e-item-brass .pill-container {
+  border: 1px solid var(--svc-brass-shadow);
+  background: var(--svc-panel-inset);
+}
+.mgt2e-item-brass .pill-container .pill {
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-item-brass .weapon-pill,
+.mgt2e-item-brass .energy-pill,
+.mgt2e-item-brass .adv-pill,
+.mgt2e-item-brass .disad-pill,
+.mgt2e-item-brass .cargo-pill {
+  background-color: var(--svc-brass-dim) !important;
+  color: var(--svc-parchment) !important;
+}
+.mgt2e-item-brass .pill-container .pill .fas {
+  background-color: var(--svc-brass) !important;
+}
+
+.mgt2e-item-brass li.item {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-item-brass li.item h4 {
+  background: none !important;
+  color: var(--svc-parchment);
+}
+
+.mgt2e-item-brass span.button {
+  background-color: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  color: var(--svc-brass-bright);
+}
+
+/* The base sheet's .field-label is a bright orange pill (NPC-sheet holdover) that clashes badly
+   against the wood/brass palette - restyle as a small brass eyebrow label instead. */
+.mgt2e-item-brass .field-label {
+  background: none;
+  color: var(--svc-brass-bright);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+}
+
+.mgt2e-item-brass .window-content select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+
+.mgt2e-item-brass .editor {
+  background: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-item-brass .editor-content,
+.mgt2e-item-brass .editor-content.ProseMirror,
+.mgt2e-item-brass .editor prose-mirror {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+  min-height: 100px;
+}
+.mgt2e-item-brass a.editor-edit {
+  background: var(--svc-brass-dim);
+  color: var(--svc-brass-bright);
+}
+.mgt2e-item-brass .editor-content.ProseMirror a,
+.mgt2e-item-brass .editor-content a {
+  color: var(--svc-brass-bright);
+}
+.mgt2e-item-brass .editor .editor-menu,
+.mgt2e-item-brass .editor menu.editor-menu {
+  background: var(--svc-brass-dim);
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-item-brass .editor .editor-menu button,
+.mgt2e-item-brass .editor menu.editor-menu button {
+  color: var(--svc-ink);
+}
+
+/* Weapons status window - a lighter version of the ship console's theme (no rivets/plate),
+   opened from a ship's Ship Status section to list per-mount status individually. */
+#mgt2e-weapon-status {
+  --ws-wood-dark: #241209;
+  --ws-wood-mid: #3a2011;
+  --ws-wood-grain: #170b04;
+  --ws-brass-shadow: #4a3315;
+  --ws-parchment: #ecdfc2;
+  --ws-parchment-dim: #c9b98f;
+  --ws-panel-inset: #150c05;
+  --ws-operational: #6f9683;
+  --ws-disabled: #e3b657;
+  --ws-destroyed: #a4402f;
+}
+#mgt2e-weapon-status .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--ws-wood-mid) 0%, var(--ws-wood-dark) 55%, var(--ws-wood-grain) 100%);
+  color: var(--ws-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+#mgt2e-weapon-status .weapon-status-body {
+  padding: 12px;
+}
+#mgt2e-weapon-status .weapon-status-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+#mgt2e-weapon-status .weapon-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 11px;
+  border-radius: 4px;
+  font-size: 13px;
+  background: var(--ws-panel-inset);
+  border-left: 4px solid var(--ws-operational);
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12);
+}
+#mgt2e-weapon-status .weapon-status-name {
+  color: var(--ws-parchment-dim);
+}
+#mgt2e-weapon-status .weapon-status-badge {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ws-operational);
+}
+#mgt2e-weapon-status .weapon-status-disabled {
+  border-left-color: var(--ws-disabled);
+}
+#mgt2e-weapon-status .weapon-status-disabled .weapon-status-badge {
+  color: var(--ws-disabled);
+}
+#mgt2e-weapon-status .weapon-status-destroyed {
+  border-left-color: var(--ws-destroyed);
+}
+#mgt2e-weapon-status .weapon-status-destroyed .weapon-status-badge {
+  color: var(--ws-destroyed);
+  font-weight: 700;
+}
+
+/* Naval Attack dialog - brass/mahogany, matching the Ship Console theme (opened from the
+   Gunner's own console or the GM panel; ship-flavored either way, not GM-overview-flavored). */
+#mgt2e-naval-attack {
+  --na-wood-dark: #241209;
+  --na-wood-mid: #3a2011;
+  --na-wood-grain: #170b04;
+  --na-brass: #a97c2f;
+  --na-brass-bright: #e3b657;
+  --na-brass-dim: #6e4f22;
+  --na-brass-shadow: #4a3315;
+  --na-parchment: #ecdfc2;
+  --na-parchment-dim: #c9b98f;
+  --na-ink: #1c130a;
+  --na-verdigris: #6f9683;
+  --na-verdigris-dim: #3f5a4d;
+  --na-panel-inset: #150c05;
+}
+/* GM-panel variant - same structural rules below, just repointed at the tactical palette
+   instead of brass/mahogany, since a GM firing an NPC ship's weapon isn't "in" that ship's
+   cockpit the way a player at their own console is. */
+#mgt2e-naval-attack.tactical {
+  --na-wood-dark: #050a10;
+  --na-wood-mid: #0a141c;
+  --na-wood-grain: #02060a;
+  --na-brass: #123840;
+  --na-brass-bright: #4dd9e8;
+  --na-brass-dim: #0a141c;
+  --na-brass-shadow: #1f5a63;
+  --na-parchment: #c9eef2;
+  --na-parchment-dim: #7fa8ae;
+  --na-ink: #8ff2ff;
+  --na-panel-inset: #02060a;
+}
+#mgt2e-naval-attack.tactical .window-content {
+  font-family: "Consolas", "SFMono-Regular", "Courier New", monospace;
+}
+#mgt2e-naval-attack.tactical .console-ship-name {
+  text-shadow: none;
+}
+#mgt2e-naval-attack .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--na-wood-mid) 0%, var(--na-wood-dark) 55%, var(--na-wood-grain) 100%);
+  color: var(--na-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+#mgt2e-naval-attack .naval-attack-body {
+  padding: 14px;
+  position: relative;
+}
+#mgt2e-naval-attack .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--na-brass-bright), var(--na-brass) 45%, var(--na-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+#mgt2e-naval-attack .svc-rivet.tl { top: 4px; left: 4px; }
+#mgt2e-naval-attack .svc-rivet.tr { top: 4px; right: 4px; }
+#mgt2e-naval-attack .svc-rivet.bl { bottom: 4px; left: 4px; }
+#mgt2e-naval-attack .svc-rivet.br { bottom: 4px; right: 4px; }
+#mgt2e-naval-attack .svc-plate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(180deg, var(--na-brass) 0%, var(--na-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--na-brass-shadow);
+  box-shadow:
+    inset 0 1px 0 rgba(255,241,209,0.35),
+    inset 0 -3px 6px rgba(0,0,0,0.35),
+    0 3px 8px rgba(0,0,0,0.4);
+}
+#mgt2e-naval-attack .console-role-name {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--na-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+}
+#mgt2e-naval-attack .console-ship-name {
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--na-ink);
+  margin: 0;
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+#mgt2e-naval-attack .svc-subtitle {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--na-ink);
+  opacity: 0.68;
+  margin: 3px 0 0;
+}
+#mgt2e-naval-attack .console-section {
+  margin-bottom: 12px;
+}
+#mgt2e-naval-attack .console-section-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--na-brass-bright);
+  margin: 0 0 0.4rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+  font-family: Georgia, serif;
+  font-weight: 400;
+  display: block;
+}
+#mgt2e-naval-attack .naval-attack-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+#mgt2e-naval-attack select,
+#mgt2e-naval-attack input {
+  width: 100%;
+  background: var(--na-panel-inset);
+  color: var(--na-parchment);
+  border: 1px solid var(--na-brass-shadow);
+  border-radius: 4px;
+  padding: 5px 7px;
+  font-family: Georgia, serif;
+  font-size: 12px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+/* Same fix as the GM surfaces above - the option popup ignores the select's own background
+   unless styled directly. */
+#mgt2e-naval-attack select option {
+  background: var(--na-panel-inset);
+  color: var(--na-parchment);
+}
+#mgt2e-naval-attack select:focus,
+#mgt2e-naval-attack input:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--na-brass-bright), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+#mgt2e-naval-attack button.console-action {
+  appearance: none;
+  width: 100%;
+  border: 1px solid var(--na-brass-shadow);
+  border-radius: 5px;
+  padding: 9px 12px;
+  text-align: center;
+  cursor: pointer;
+  background: linear-gradient(180deg, #2c1710 0%, #170b04 100%);
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.22), 0 2px 6px rgba(0,0,0,0.4);
+  color: var(--na-parchment);
+  font-family: Georgia, serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  transition: box-shadow 0.12s ease, background 0.12s ease, transform 0.08s ease;
+}
+#mgt2e-naval-attack button.console-action:hover {
+  box-shadow: inset 0 0 0 1px var(--na-brass-bright), 0 3px 8px rgba(0,0,0,0.5);
+  background: linear-gradient(180deg, #33190f 0%, #1c0d05 100%);
+}
+#mgt2e-naval-attack button.console-action:active {
+  transform: translateY(1px);
+}
+
+/* Target Summary dialog (house rule) - same brass/mahogany theme and svc- token/class names as
+   the attack dialog, so it reads as part of the same instrument panel family. */
+#mgt2e-target-summary {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-panel-inset: #150c05;
+}
+#mgt2e-target-summary.tactical {
+  --svc-wood-dark: #050a10;
+  --svc-wood-mid: #0a141c;
+  --svc-wood-grain: #02060a;
+  --svc-brass: #123840;
+  --svc-brass-bright: #4dd9e8;
+  --svc-brass-dim: #0a141c;
+  --svc-brass-shadow: #1f5a63;
+  --svc-parchment: #c9eef2;
+  --svc-parchment-dim: #7fa8ae;
+  --svc-ink: #8ff2ff;
+  --svc-panel-inset: #02060a;
+}
+#mgt2e-target-summary.tactical .window-content {
+  font-family: "Consolas", "SFMono-Regular", "Courier New", monospace;
+}
+#mgt2e-target-summary.tactical .console-ship-name {
+  text-shadow: none;
+}
+#mgt2e-target-summary .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+#mgt2e-target-summary .target-summary-body {
+  padding: 14px;
+  position: relative;
+}
+#mgt2e-target-summary .svc-rivet {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--svc-brass-bright), var(--svc-brass) 45%, var(--svc-brass-shadow) 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+#mgt2e-target-summary .svc-rivet.tl { top: 4px; left: 4px; }
+#mgt2e-target-summary .svc-rivet.tr { top: 4px; right: 4px; }
+#mgt2e-target-summary .svc-rivet.bl { bottom: 4px; left: 4px; }
+#mgt2e-target-summary .svc-rivet.br { bottom: 4px; right: 4px; }
+#mgt2e-target-summary .svc-plate {
+  text-align: center;
+  padding: 0.7rem 0.8rem 0.85rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(180deg, var(--svc-brass) 0%, var(--svc-brass-dim) 100%);
+  border-radius: 4px;
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow:
+    inset 0 1px 0 rgba(255,241,209,0.35),
+    inset 0 -3px 6px rgba(0,0,0,0.35),
+    0 3px 8px rgba(0,0,0,0.4);
+}
+#mgt2e-target-summary .console-role-name {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--svc-ink);
+  opacity: 0.75;
+  margin: 0 0 2px;
+}
+#mgt2e-target-summary .console-ship-name {
+  font-size: 21px;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  color: var(--svc-ink);
+  margin: 0;
+  text-shadow: 0 1px 0 rgba(255,241,209,0.4);
+}
+#mgt2e-target-summary .console-section {
+  margin-bottom: 12px;
+}
+#mgt2e-target-summary .console-section-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--svc-brass-bright);
+  margin: 0 0 0.4rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid rgba(227,182,87,0.3);
+  font-family: Georgia, serif;
+  font-weight: 400;
+  display: block;
+}
+#mgt2e-target-summary select {
+  width: 100%;
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+  padding: 5px 7px;
+  font-family: Georgia, serif;
+  font-size: 12px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12), inset 0 2px 5px rgba(0,0,0,0.5);
+}
+#mgt2e-target-summary select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+#mgt2e-target-summary .target-summary-readout {
+  background: var(--svc-panel-inset);
+  border-radius: 4px;
+  padding: 10px 12px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12);
+}
+#mgt2e-target-summary .target-summary-name {
+  margin: 0 0 2px;
+  color: var(--svc-brass-bright);
+  font-size: 16px;
+  font-weight: 400;
+}
+#mgt2e-target-summary .target-summary-range {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--svc-parchment-dim);
+}
+#mgt2e-target-summary .target-summary-none {
+  margin: 0;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--svc-parchment-dim);
+}
+#mgt2e-target-summary .target-summary-facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#mgt2e-target-summary .target-summary-facts li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(227,182,87,0.1);
+}
+#mgt2e-target-summary .target-summary-facts li:last-child {
+  border-bottom: none;
+}
+#mgt2e-target-summary .target-summary-facts li span:first-child {
+  color: var(--svc-parchment-dim);
+}
+#mgt2e-target-summary .target-summary-facts li span:last-child {
+  color: var(--svc-parchment);
+  font-weight: 600;
+}
+#mgt2e-target-summary button.console-action {
+  appearance: none;
+  width: 100%;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 5px;
+  padding: 9px 12px;
+  text-align: center;
+  cursor: pointer;
+  background: linear-gradient(180deg, #2c1710 0%, #170b04 100%);
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.22), 0 2px 6px rgba(0,0,0,0.4);
+  color: var(--svc-parchment);
+  font-family: Georgia, serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  transition: box-shadow 0.12s ease, background 0.12s ease, transform 0.08s ease;
+}
+#mgt2e-target-summary button.console-action:hover {
+  box-shadow: inset 0 0 0 1px var(--svc-brass-bright), 0 3px 8px rgba(0,0,0,0.5);
+  background: linear-gradient(180deg, #33190f 0%, #1c0d05 100%);
+}
+#mgt2e-target-summary button.console-action:active {
+  transform: translateY(1px);
+}
+
+/* Crew status window - same lighter theme as Weapons. */
+#mgt2e-crew-status {
+  --cs-wood-dark: #241209;
+  --cs-wood-mid: #3a2011;
+  --cs-wood-grain: #170b04;
+  --cs-parchment: #ecdfc2;
+  --cs-parchment-dim: #c9b98f;
+  --cs-panel-inset: #150c05;
+  --cs-nominal: #6f9683;
+  --cs-hours: #e3b657;
+  --cs-rounds: #c9603f;
+  --cs-failed: #a4402f;
+}
+#mgt2e-crew-status .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--cs-wood-mid) 0%, var(--cs-wood-dark) 55%, var(--cs-wood-grain) 100%);
+  color: var(--cs-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+#mgt2e-crew-status .crew-status-body {
+  padding: 12px;
+}
+#mgt2e-crew-status .life-support-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 11px;
+  border-radius: 4px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  background: var(--cs-panel-inset);
+  border: 1px solid var(--cs-nominal);
+  color: var(--cs-nominal);
+  margin-bottom: 12px;
+}
+#mgt2e-crew-status .life-support-hours {
+  border-color: var(--cs-hours);
+  color: var(--cs-hours);
+}
+#mgt2e-crew-status .life-support-rounds {
+  border-color: var(--cs-rounds);
+  color: var(--cs-rounds);
+}
+#mgt2e-crew-status .life-support-failed {
+  border-color: var(--cs-failed);
+  color: var(--cs-failed);
+  font-weight: 700;
+  animation: mgt2e-life-support-pulse 1.6s ease-in-out infinite;
+}
+@keyframes mgt2e-life-support-pulse {
+  0%, 100% { background: var(--cs-panel-inset); }
+  50% { background: rgba(164, 64, 47, 0.35); }
+}
+#mgt2e-crew-status .crew-status-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#mgt2e-crew-status .crew-status-row {
+  background: var(--cs-panel-inset);
+  border-radius: 4px;
+  padding: 7px 10px;
+  box-shadow: inset 0 0 0 1px rgba(227,182,87,0.12);
+}
+#mgt2e-crew-status .crew-status-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+#mgt2e-crew-status .crew-status-name {
+  color: var(--cs-parchment-dim);
+}
+#mgt2e-crew-status .crew-status-status {
+  color: var(--cs-parchment-dim);
+  opacity: 0.8;
+  font-style: italic;
+}
+#mgt2e-crew-status .crew-status-bar-track {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.5);
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+}
+#mgt2e-crew-status .crew-status-bar-fill {
+  height: 100%;
+  transition: width 0.2s ease;
+}
+
+/* Shared brass/mahogany theme for the ApplicationV2 sheets (Vehicle/Robot/Option options).
+   Unlike the ApplicationV1 brass sheets, these don't need reskinned template copies - the V2
+   templates already use generic structural classes (.resource, .grid, .field-label, .shadow)
+   rather than baking hardcoded colors into bespoke markup, so a CSS-only scope class is enough.
+   Reuses the same --svc-* token values as the V1 brass sheets for visual consistency. */
+.mgt2e-v2-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  --title-bg: var(--svc-brass);
+  --mongoose-orange: var(--svc-brass);
+}
+
+.mgt2e-v2-brass .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%) !important;
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+.mgt2e-v2-brass .window-content,
+.mgt2e-v2-brass .window-content label,
+.mgt2e-v2-brass .window-content span,
+.mgt2e-v2-brass .window-content a,
+.mgt2e-v2-brass .window-content li,
+.mgt2e-v2-brass .window-content p,
+.mgt2e-v2-brass .window-content h1,
+.mgt2e-v2-brass .window-content h2,
+.mgt2e-v2-brass .window-content h3,
+.mgt2e-v2-brass .window-content h4,
+.mgt2e-v2-brass .window-content input,
+.mgt2e-v2-brass .window-content select,
+.mgt2e-v2-brass .window-content textarea {
+  color: var(--svc-parchment);
+}
+
+.mgt2e-v2-brass form { background: none !important; }
+
+.mgt2e-v2-brass .window-content input,
+.mgt2e-v2-brass .window-content select,
+.mgt2e-v2-brass .window-content textarea {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  color: var(--svc-parchment) !important;
+}
+
+.mgt2e-v2-brass .window-content input:focus,
+.mgt2e-v2-brass .window-content select:focus,
+.mgt2e-v2-brass .window-content textarea:focus {
+  border-color: var(--svc-brass-bright);
+  box-shadow: 0 0 4px var(--svc-brass-bright);
+}
+
+.mgt2e-v2-brass .window-content select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+
+.mgt2e-v2-brass .shadow,
+.mgt2e-v2-brass .sheet-body,
+.mgt2e-v2-brass .item-side-panel {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+
+.mgt2e-v2-brass h1.actor-name {
+  background: none;
+  border-bottom: 2px solid var(--svc-brass) !important;
+  color: var(--svc-brass-bright) !important;
+  font-family: Georgia, "Iowan Old Style", serif;
+}
+
+.mgt2e-v2-brass h1.actor-name input {
+  background: none !important;
+  color: var(--svc-brass-bright) !important;
+}
+
+/* The base theme's .field-label/.item-label are a bright orange pill (NPC-sheet holdover) that
+   clashes against the wood/brass palette - restyle as a small brass eyebrow label instead. */
+.mgt2e-v2-brass .field-label,
+.mgt2e-v2-brass .item-label {
+  background: none;
+  color: var(--svc-brass-bright) !important;
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+}
+
+.mgt2e-v2-brass .pill-container {
+  background-color: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+}
+
+.mgt2e-v2-brass .pill-container .pill {
+  background-color: var(--svc-panel-inset);
+  border: 1px solid var(--svc-brass-shadow);
+  color: var(--svc-brass-bright);
+}
+
+.mgt2e-v2-brass li.item-block {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-v2-brass li.item-block h4 {
+  background: none;
+  color: var(--svc-parchment);
+}
+
+.mgt2e-v2-brass .actor-crew {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-v2-brass .actor-crew h4 {
+  background: var(--svc-brass-dim) !important;
+  color: var(--svc-parchment) !important;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-v2-brass .actor-crew .role-action-button {
+  background-color: var(--svc-panel-inset) !important;
+  color: var(--svc-parchment) !important;
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-v2-brass .actor-crew .role-title {
+  color: var(--svc-brass-bright);
+}
+
+.mgt2e-v2-brass nav.tabs {
+  background: var(--svc-panel-inset);
+  border-bottom: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-v2-brass nav.tabs a.item {
+  color: var(--svc-parchment-dim);
+}
+.mgt2e-v2-brass nav.tabs a.item.active {
+  color: var(--svc-brass-bright);
+  border-bottom: 2px solid var(--svc-brass);
+}
+
+.mgt2e-v2-brass .editor,
+.mgt2e-v2-brass prose-mirror,
+.mgt2e-v2-brass .editor-content,
+.mgt2e-v2-brass .editor-content.ProseMirror {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-v2-brass .editor-content.ProseMirror a,
+.mgt2e-v2-brass .editor-content a {
+  color: var(--svc-verdigris);
+}
+
+.mgt2e-v2-brass span[data-action="quantityInc"],
+.mgt2e-v2-brass span[data-action="quantityDec"] {
+  color: var(--svc-brass-bright);
+}
+
+/* Shared brass/mahogany theme for the small standalone Application dialogs (attack, damage,
+   skill roll, XP, buy/sell, crew, etc). Unlike the document sheets, these have no per-document
+   "Configure Sheet" picker to offer this as an opt-in alternate through, so applying this scope
+   class replaces their look directly rather than adding a toggle. Reuses the same --svc-* token
+   values as the other brass scopes. Overriding --title-bg/--panel-bg/--mongoose-orange here also
+   re-colors every rule elsewhere in this file that already reads those variables (e.g. .shadow's
+   border/background) without needing to redeclare each one. */
+.mgt2e-dialog-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-ink: #1c130a;
+  --svc-verdigris: #6f9683;
+  --svc-verdigris-dim: #3f5a4d;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+  --title-bg: var(--svc-brass);
+  --panel-bg: var(--svc-panel-inset);
+  --mongoose-orange: var(--svc-brass);
+}
+
+.mgt2e-dialog-brass .window-content {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%) !important;
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+
+.mgt2e-dialog-brass .window-content,
+.mgt2e-dialog-brass .window-content label,
+.mgt2e-dialog-brass .window-content span,
+.mgt2e-dialog-brass .window-content a,
+.mgt2e-dialog-brass .window-content li,
+.mgt2e-dialog-brass .window-content p,
+.mgt2e-dialog-brass .window-content h1,
+.mgt2e-dialog-brass .window-content h2,
+.mgt2e-dialog-brass .window-content h3,
+.mgt2e-dialog-brass .window-content h4,
+.mgt2e-dialog-brass .window-content input,
+.mgt2e-dialog-brass .window-content select,
+.mgt2e-dialog-brass .window-content textarea {
+  color: var(--svc-parchment);
+}
+
+.mgt2e-dialog-brass form { background: none !important; }
+
+.mgt2e-dialog-brass .window-content input,
+.mgt2e-dialog-brass .window-content select,
+.mgt2e-dialog-brass .window-content textarea {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  color: var(--svc-parchment) !important;
+}
+
+.mgt2e-dialog-brass .window-content input:focus,
+.mgt2e-dialog-brass .window-content select:focus,
+.mgt2e-dialog-brass .window-content textarea:focus {
+  border-color: var(--svc-brass-bright);
+  box-shadow: 0 0 4px var(--svc-brass-bright);
+}
+
+.mgt2e-dialog-brass .window-content select option {
+  background: var(--svc-panel-inset);
+  color: var(--svc-parchment);
+}
+
+.mgt2e-dialog-brass .shadow {
+  background-color: var(--svc-panel-inset) !important;
+  border: 2px solid var(--svc-brass) !important;
+  color: var(--svc-parchment) !important;
+}
+
+.mgt2e-dialog-brass .skillDialogLabel,
+.mgt2e-dialog-brass .field-label {
+  color: var(--svc-brass-bright) !important;
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: none;
+}
+
+.mgt2e-dialog-brass footer.sheet-footer,
+.mgt2e-dialog-brass .sheet-footer {
+  border-top: 1px solid var(--svc-brass-shadow);
+}
+
+.mgt2e-dialog-brass button,
+.mgt2e-dialog-brass button.attackRoll,
+.mgt2e-dialog-brass button.skillRoll {
+  background-color: var(--svc-brass-dim) !important;
+  color: var(--svc-brass-bright) !important;
+  border: 1px solid var(--svc-brass-shadow) !important;
+  box-shadow: none !important;
+}
+.mgt2e-dialog-brass button:hover {
+  background-color: var(--svc-brass-shadow) !important;
+  color: var(--svc-parchment) !important;
+}
+.mgt2e-dialog-brass button:disabled {
+  opacity: 0.5;
+}
+
+.mgt2e-dialog-brass li.crew-role {
+  background: var(--svc-panel-inset) !important;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+}
+.mgt2e-dialog-brass .crew-role-body h4 {
+  border-bottom: 1px solid var(--svc-brass);
+}
+.mgt2e-dialog-brass li.crew-role h4 {
+  background-color: var(--svc-brass-dim) !important;
+  color: var(--svc-parchment) !important;
+  border-bottom: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-dialog-brass .crew-role .inline-role {
+  background-color: var(--svc-panel-inset) !important;
+  color: var(--svc-parchment) !important;
+  border: 1px solid var(--svc-brass-shadow);
+}
+.mgt2e-dialog-brass .crew-role .inline-role:hover {
+  background-color: var(--svc-brass-shadow) !important;
+}
+
+/* Same brass/mahogany theme for chat cards (every template wrapped in .mgt2e-chat-message),
+   tied to the same per-player "brassDialogs" client setting as the dialogs above. Chat message
+   HTML is identical for every client once posted - it can't carry a per-viewer class in its own
+   markup - so the renderChatMessageHTML hook in mgt2.mjs adds .mgt2e-chat-brass to each message's
+   root element per-render, based on the viewer's own setting, and everything below is scoped
+   under that. Reuses the same --svc-* palette as .mgt2e-dialog-brass. */
+.mgt2e-chat-brass {
+  --svc-wood-dark: #241209;
+  --svc-wood-mid: #3a2011;
+  --svc-wood-grain: #170b04;
+  --svc-brass: #a97c2f;
+  --svc-brass-bright: #e3b657;
+  --svc-brass-dim: #6e4f22;
+  --svc-brass-shadow: #4a3315;
+  --svc-parchment: #ecdfc2;
+  --svc-parchment-dim: #c9b98f;
+  --svc-verdigris: #6f9683;
+  --svc-danger: #a4402f;
+  --svc-panel-inset: #150c05;
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message {
+  background:
+    repeating-linear-gradient(100deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg, var(--svc-wood-mid) 0%, var(--svc-wood-dark) 55%, var(--svc-wood-grain) 100%);
+  color: var(--svc-parchment);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 4px;
+  padding: 6px 10px;
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message h2,
+.mgt2e-chat-brass .mgt2e-chat-message h3 {
+  color: var(--svc-brass-bright);
+  border-bottom: 1px solid var(--svc-brass-shadow);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message,
+.mgt2e-chat-brass .mgt2e-chat-message p,
+.mgt2e-chat-brass .mgt2e-chat-message span,
+.mgt2e-chat-brass .mgt2e-chat-message li,
+.mgt2e-chat-brass .mgt2e-chat-message td,
+.mgt2e-chat-brass .mgt2e-chat-message th {
+  color: var(--svc-parchment);
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.mgt2e-chat-brass .mgt2e-chat-message table td,
+.mgt2e-chat-brass .mgt2e-chat-message table th {
+  border-bottom: 1px solid var(--svc-brass-shadow);
+  padding: 2px 6px;
+  text-align: left;
+}
+.mgt2e-chat-brass .mgt2e-chat-message tr.section-header th {
+  background: var(--svc-brass-dim);
+  color: var(--svc-parchment);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  padding: 3px 6px;
+  border-bottom: none;
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message .dice-rolls .roll.die {
+  background: var(--svc-panel-inset);
+  color: var(--svc-brass-bright);
+  border: 1px solid var(--svc-brass-shadow);
+  border-radius: 3px;
+}
+.mgt2e-chat-brass .mgt2e-chat-message .dice-rolls .roll.die.max {
+  color: var(--svc-brass-bright);
+  border-color: var(--svc-brass-bright);
+}
+.mgt2e-chat-brass .mgt2e-chat-message .dice-rolls .roll.die.min {
+  color: var(--svc-danger);
+  border-color: var(--svc-danger);
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message .skill-success {
+  color: var(--svc-verdigris);
+}
+.mgt2e-chat-brass .mgt2e-chat-message .skill-fail {
+  color: var(--svc-danger);
+}
+
+.mgt2e-chat-brass .mgt2e-chat-message button {
+  background-color: var(--svc-brass-dim);
+  color: var(--svc-brass-bright);
+  border: 1px solid var(--svc-brass-shadow);
+  box-shadow: none;
+  font-family: inherit;
+}
+.mgt2e-chat-brass .mgt2e-chat-message button:hover {
+  background-color: var(--svc-brass-shadow);
+  color: var(--svc-parchment);
 }

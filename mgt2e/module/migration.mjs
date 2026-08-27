@@ -149,14 +149,91 @@ async function migrateItemData(item, fromVersion) {
            }
         });
     }
+    if (fromVersion < 11) {
+        // Pilot roles: the maneuverClose/maneuverOpen/changeHeading actions were never wired to
+        // any handler in crew-actions.mjs - dead buttons that looked clickable but did nothing.
+        // Drop them, and backfill setCourse/accelerate/decelerate (the real, working mechanic)
+        // if this role doesn't already have them, matching crew-role-builder.mjs's current output.
+        if (item.type === "role" && item.system?.role?.actions) {
+            const actions = item.system.role.actions;
+            const isPilotRole = Object.values(actions).some(a => a.action === "special" && a.special === "pilot");
+            if (isPilotRole) {
+                const deadSpecials = ["maneuverClose", "maneuverOpen", "changeHeading"];
+                const updates = {};
+                for (const [key, action] of Object.entries(actions)) {
+                    if (action.action === "special" && deadSpecials.includes(action.special)) {
+                        updates[`system.role.actions.-=${key}`] = null;
+                    }
+                }
+
+                const hasSpecial = (special) => Object.values(actions).some(a => a.action === "special" && a.special === special);
+                // Not every role's action keys are the small sequential counter
+                // crew-role-builder.mjs assigns (e.g. "0", "1", "2") - a hand-edited role's keys
+                // can be arbitrary strings like "setCourseAction". Since every a-z/0-9 character
+                // is technically a valid base36 digit, treating those as a sequence to continue
+                // computed an astronomically large "next key" that silently failed Foundry's
+                // update validation. A real random ID sidesteps the problem entirely.
+                const nextActionId = () => foundry.utils.randomID();
+
+                if (!hasSpecial("setCourse")) {
+                    updates[`system.role.actions.${nextActionId()}`] = {
+                        "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.SetCourse"),
+                        "action": "special", "special": "setCourse"
+                    };
+                }
+                if (!hasSpecial("accelerate")) {
+                    updates[`system.role.actions.${nextActionId()}`] = {
+                        "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.Accelerate"),
+                        "action": "special", "special": "accelerate"
+                    };
+                }
+                if (!hasSpecial("decelerate")) {
+                    updates[`system.role.actions.${nextActionId()}`] = {
+                        "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.Decelerate"),
+                        "action": "special", "special": "decelerate"
+                    };
+                }
+
+                if (Object.keys(updates).length > 0) {
+                    console.log(`Migrating Pilot role item ${item.name} to v11 (dead maneuver actions removed, setCourse/accelerate/decelerate backfilled)`);
+                    await item.update(updates);
+                }
+            }
+        }
+    }
+    if (fromVersion < 12) {
+        // Combat Tactics (Naval) is now a one-time-per-encounter check the GM's Roll Initiative
+        // click requests directly from the Captain's player (see ship-initiative.mjs), not a
+        // self-service console button - drop the now-dead tacticsInit action from existing
+        // Captain roles so it stops showing up as a stale button. Improve Initiative is
+        // untouched - it was already present and is now genuinely implemented.
+        if (item.type === "role" && item.system?.role?.actions) {
+            const actions = item.system.role.actions;
+            const updates = {};
+            for (const [key, action] of Object.entries(actions)) {
+                if (action.action === "special" && action.special === "tacticsInit") {
+                    updates[`system.role.actions.-=${key}`] = null;
+                }
+            }
+            if (Object.keys(updates).length > 0) {
+                console.log(`Migrating role item ${item.name} to v12 (dead tacticsInit console action removed)`);
+                await item.update(updates);
+            }
+        }
+    }
     return {};
 }
 
 export async function migrateWorld(fromVersion) {
-    console.log("**** MIGRATE SCHEMA TO v10 ****");
+    console.log("**** MIGRATE SCHEMA TO v12 ****");
 
     for (let actor of game.actors.contents) {
-        const updateData = migrateActorData(actor, fromVersion);
+        // migrateActorData is async - must be awaited, both so its own internal item.update()
+        // calls finish before moving to the next actor, and because leaving this unawaited was
+        // passing a raw Promise into actor.update() below (a Promise is never "empty" per
+        // foundry.utils.isEmpty, so this ran and threw "must be constructed with a DataModel or
+        // Object" on every migration, aborting the loop at the first actor).
+        const updateData = await migrateActorData(actor, fromVersion);
         if (!foundry.utils.isEmpty(updateData)) {
             //console.log(`Migrating Actor entity ${actor.name} from ${fromVersion}`);
             await actor.update(updateData);
@@ -165,7 +242,7 @@ export async function migrateWorld(fromVersion) {
 
 
     for (let item of game.items.contents) {
-        const updateData = migrateItemData(item, fromVersion);
+        const updateData = await migrateItemData(item, fromVersion);
         if (!foundry.utils.isEmpty(updateData)) {
             //console.log(`Migrating Item entity ${item.name} from ${fromVersion}`);
             await item.update(updateData);

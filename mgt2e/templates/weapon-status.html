@@ -1,0 +1,14 @@
+<div class="weapon-status-body">
+    {{#if mounts.length}}
+        <ul class="weapon-status-list">
+            {{#each mounts}}
+                <li class="weapon-status-row weapon-status-{{this.cls}}">
+                    <span class="weapon-status-name">{{this.name}}</span>
+                    <span class="weapon-status-badge">{{this.label}}</span>
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>This ship has no weapon mounts.</p>
+    {{/if}}
+</div>

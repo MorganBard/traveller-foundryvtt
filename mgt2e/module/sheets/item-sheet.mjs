@@ -541,7 +541,7 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
 
             context.weapons = {};
             context.weapons[""] = "";
-            if (context.item.parent && context.item.parent.type === "spacecraft" || context.item.parent.type === "vehicle") {
+            if (context.item.parent && (context.item.parent.type === "spacecraft" || context.item.parent.type === "vehicle")) {
                 const spacecraft = context.item.parent;
                 for (let i of spacecraft.items) {
                     if (i.type === "hardware" && i.system.hardware.system === "weapon") {
@@ -582,10 +582,12 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
 
             context.SPECIAL_ROLES = {
                 "pilot": game.i18n.localize("MGT2.Role.Special.MakePilot"),
-                "tacticsInit": game.i18n.localize("MGT2.Role.Special.CombatTactics"),
                 "improveInit": game.i18n.localize("MGT2.Role.Special.ImproveInitiative"),
                 "evade": game.i18n.localize("MGT2.Role.Special.Evade"),
                 "repair": game.i18n.localize("MGT2.Role.Special.Repair"),
+                "setCourse": game.i18n.localize("MGT2.Role.Special.SetCourse"),
+                "accelerate": game.i18n.localize("MGT2.Role.Special.Accelerate"),
+                "decelerate": game.i18n.localize("MGT2.Role.Special.Decelerate"),
             }
         }
         if (context.item.system.computer && context.item.parent) {
@@ -646,7 +648,7 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
             context.LINKED_COMPONENTS = [];
             let found = [];
             for (let s of context.item.system.links.components) {
-                let c = context.item?.parent?.items?.get(s);
+                let c = context.item?.collection?.get(s);
                 if (c) {
                     context.LINKED_COMPONENTS.push(c);
                     found.push(s);
@@ -831,14 +833,18 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
             let tons = parseFloat(item.system.hardware.tons);
             let rating = parseFloat(item.system.hardware.rating);
 
-            if (powerPerTon < 1) {
-                item.system.hardware.powerPerTon = 1
-                item.update({"system.hardware.powerPerTon": 1});
-            } else {
-                if (parseFloat(rating / powerPerTon) !== tons) {
-                    tons = parseFloat(rating / powerPerTon);
-                    if (tons < 1) tons = 1;
-                }
+            if (item.system.hardware.tonnage?.tonCalc === "fixedTons") {
+                // A GM-chosen exact tonnage (e.g. matching a book design)
+                // overrides the rating/powerPerTon-derived value below.
+                tons = parseFloat(item.system.hardware.tonnage.tons);
+            } else if (powerPerTon < 1) {
+                // Only normalise the local value used for this calculation -
+                // getData() shouldn't persist changes as a side effect of
+                // merely rendering (see the weapon-mount pruning fix above).
+                powerPerTon = 1;
+            } else if (parseFloat(rating / powerPerTon) !== tons) {
+                tons = parseFloat(rating / powerPerTon);
+                if (tons < 1) tons = 1;
             }
             let cost = item.system.hardware.tonnage.cost * tons;
             let advancement = item.system.hardware.advancement
@@ -860,9 +866,15 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
                     if (wpn) {
                         activeWeapons.push(wpn);
                     } else {
-                        console.log(`Weapon [${wpnId}] does not exist in [${item.name}]`);
-                        delete item.system.hardware.weapons[wpnId];
-                        item.update({"system.hardware.weapons": item.system.hardware.weapons});
+                        // Don't self-heal by deleting here: getData()/render should be
+                        // read-only. A weapon can appear briefly "missing" from a stale
+                        // or not-yet-settled items collection reference on ship (e.g.
+                        // right after other embedded documents were just updated), and
+                        // persisting a delete on a false positive silently un-mounts a
+                        // weapon the player never removed. Just skip it for display;
+                        // truly orphaned entries (from an actually-deleted weapon) are
+                        // harmless left in the data and can be cleaned up explicitly.
+                        console.log(`Weapon [${wpnId}] not found on [${item.name}]'s parent - skipping display, not deleting the link.`);
                     }
                 }
             }
@@ -1110,7 +1122,7 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
             this.item.system.component = null;
             this.item.update({[`system.-=component`]: null});
         });
-        html.find(".linkedTo").click(ev => {
+        html.find(".linkedTo").change(ev => {
             let selected = $(ev.currentTarget).val();
 
             // Remove from previous parent
@@ -1152,7 +1164,7 @@ export class MgT2ItemSheet extends foundry.appv1.sheets.ItemSheet {
         html.find(".linked-component").click(ev => {
             const p = $(ev.currentTarget).parents(".item");
             const id = p.data("id");
-            let i = this.item?.parent?.items.get(id);
+            let i = this.item?.collection?.get(id);
             if (i) {
                 i.sheet.render(true);
             }

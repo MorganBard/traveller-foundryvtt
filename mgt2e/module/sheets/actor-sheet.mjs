@@ -5,8 +5,6 @@ import {MgT2XPDialog } from "../helpers/xp-dialog.mjs";
 import {MgT2QuantityDialog } from "../helpers/quantity-dialog.mjs";
 import {MgT2AddSkillDialog } from "../helpers/add-skill-dialog.mjs";
 import {MgT2CrewMemberDialog } from "../helpers/crew-member-dialog.mjs";
-import {MgT2SpacecraftAttackDialog } from "../helpers/spacecraft-attack-dialog.mjs";
-import {MgT2SpacecraftRepairDialog } from "../helpers/spacecraft-repair-dialog.mjs";
 import {rollSkill} from "../helpers/dice-rolls.mjs";
 import {skillLabel} from "../helpers/dice-rolls.mjs";
 import {getSkillValue, hasTrait, getTraitValue} from "../helpers/dice-rolls.mjs";
@@ -21,6 +19,9 @@ import {
 } from "../helpers/spacecraft/spacecraft-utils.mjs";
 import {MgT2CharacteristicDamageApp} from "../helpers/dialogs/characteristic-damage.mjs";
 import {rollTravellerInitiative} from "../documents/combat.mjs";
+import {runCrewAction} from "../helpers/crew-actions.mjs";
+import {attachClonedComponents} from "../helpers/component-links.mjs";
+import {createCrewRole} from "../helpers/crew-role-builder.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -44,6 +45,64 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
     /** @override */
     get template() {
         return `systems/mgt2e-piggy/templates/actor/actor-${this.actor.type}-sheet.html`;
+    }
+
+    /** @override */
+    _getHeaderButtons() {
+        const buttons = super._getHeaderButtons();
+        if (this.actor.type === "spacecraft" && (this.actor.isOwner || game.user.isGM)) {
+            buttons.unshift({
+                label: "Console",
+                class: "open-ship-console",
+                icon: "fa-solid fa-satellite-dish",
+                onclick: () => this._openShipConsole()
+            });
+        }
+        return buttons;
+    }
+
+    // Opens the calling user's own ship console: if they're crewing exactly one role on this
+    // ship, opens it directly; otherwise (GM, or crewing multiple roles) prompts which.
+    async _openShipConsole() {
+        const { MgT2ShipConsoleApp } = await import("../helpers/ship-console.mjs");
+        const shipActor = this.actor;
+        const crewed = shipActor.system.crewed?.crew ?? {};
+
+        const myRoles = [];
+        for (const [crewId, roles] of Object.entries(crewed)) {
+            const crewActor = game.actors.get(crewId);
+            if (!crewActor?.isOwner && !game.user.isGM) {
+                continue;
+            }
+            for (const [roleId, data] of Object.entries(roles)) {
+                const roleItem = shipActor.items.get(roleId);
+                // Skip orphaned assignments left behind when a role Item was deleted/replaced
+                // without clearing the crewed.crew entry that pointed to it.
+                if (data?.assigned && roleItem) {
+                    myRoles.push({ crewId, roleId, label: `${crewActor?.name ?? "Unknown"} - ${roleItem.name}` });
+                }
+            }
+        }
+
+        if (myRoles.length === 0) {
+            ui.notifications.warn("No crewed role found for you on this ship.");
+            return;
+        }
+        if (myRoles.length === 1) {
+            new MgT2ShipConsoleApp(shipActor, myRoles[0].roleId, myRoles[0].crewId).render(true);
+            return;
+        }
+
+        const options = myRoles.map((r, i) => `<option value="${i}">${r.label}</option>`).join("");
+        const data = await foundry.applications.api.DialogV2.input({
+            window: { title: "Open Console" },
+            content: `<p>Which console?</p><select name="choice">${options}</select>`
+        });
+        if (!data) {
+            return;
+        }
+        const chosen = myRoles[parseInt(data.choice)];
+        new MgT2ShipConsoleApp(shipActor, chosen.roleId, chosen.crewId).render(true);
     }
 
     /* -------------------------------------------- */
@@ -308,6 +367,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             };
             context.selectRoleTypes = {
                 "": "",
+                "captain": game.i18n.localize("MGT2.Role.BuiltIn.Name.Captain"),
                 "navigator": game.i18n.localize("MGT2.Role.BuiltIn.Name.Navigator"),
                 "broker": game.i18n.localize("MGT2.Role.BuiltIn.Name.Broker"),
                 "engineer": game.i18n.localize("MGT2.Role.BuiltIn.Name.Engineer"),
@@ -457,12 +517,12 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
                 }
             } else if (i.type === "role") {
                 roles.push(i);
-                if (i.system.role.department) {
+                if (i.system.role?.department) {
                     departments.push(i);
                 }
             } else if (i.type === "software") {
                 software.push(i);
-                if (parseInt(i.system.software.bandwidth) > 0 && i.system.status === MgT2Item.RUNNING) {
+                if (parseInt(i.system.software?.bandwidth) > 0 && i.system.status === MgT2Item.RUNNING) {
                     bandwidthUsed += parseInt(i.system.software.bandwidth);
                 }
             } else if (i.type === 'hardware') {
@@ -1849,97 +1909,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
 
     async _runCrewAction(shipActor, actorCrewId, roleId, actionId) {
-        console.log("_runCrewAction: " + actorCrewId);
-        const actorCrew = game.actors.get(actorCrewId);
-        if (!actorCrew) {
-            ui.notifications.warn(game.i18n.format("MGT2.Warn.Crew.NoCrewActor", { crewId: actorCrewId}));
-            return;
-        }
-        const itemRole = shipActor.items.get(roleId);
-        if (!itemRole) {
-            ui.notifications.warn(game.i18n.format("MGT2.Warn.Crew.NoCrewActor", { roleId: roleId}));
-            return;
-        }
-        const action = itemRole.system.role.actions[actionId];
-
-        if (action.action === "chat") {
-            let chatData = {
-                user: game.user.id,
-                speaker: {
-                    actor: actorCrew._id,
-                    alias: game.i18n.format("MGT2.Role.ChatAlias", {
-                        "actorName": actorCrew.name, "shipName": shipActor.name
-                    }),
-                    scene: game.scenes.current.id
-                },
-                content: `${action.chat}`
-            }
-            ChatMessage.create(chatData, {});
-        } else if (action.action === "skill") {
-            let skill = action.skill;
-            let cha = action.cha;
-            let target = isNaN(action.target)?null:parseInt(action.target);
-            let dm = action.dm?action.dm:0;
-
-            if (!skill) {
-                return;
-            } else if (skill.startsWith("pilot")) {
-                if (shipActor.getFlag("mgt2e-piggy", "damage_pilotDM")) {
-                    dm += parseInt(shipActor.getFlag("mgt2e-piggy", "damage_pilotDM"));
-                }
-            } else if (skill === "engineer.jDrive") {
-                if (shipActor.getFlag("mgt2e-piggy", "damage_jumpDM")) {
-                    dm += parseInt(shipActor.getFlag("mgt2e-piggy", "damage_jumpDM"));
-                }
-            }
-
-            new MgT2SkillDialog(actorCrew, skill, {
-                "dm": dm,
-                "cha": cha,
-                "difficulty": target,
-                "text": action.text
-            }).render(true);
-        } else if (action.action === "weapon") {
-            let weaponId = action.weapon;
-            let weaponItem = shipActor.items.get(weaponId);
-            let dm = parseInt(action.dm);
-            console.log(weaponItem);
-            new MgT2SpacecraftAttackDialog(shipActor, actorCrew, weaponItem, dm).render(true);
-        } else if (action.action === "special") {
-            if (action.special === "pilot") {
-                let pilotDM = actorCrew.getSkillValue("pilot.spacecraft");
-                shipActor.setFlag("mgt2e-piggy", "initPilotDM", pilotDM);
-                shipActor.setFlag("mgt2e-piggy", "initPilotName", actorCrew.name);
-            } else if (action.special === "tacticsInit") {
-                let tacticsDM = actorCrew.getSkillValue("tactics.naval", { "addcha": true });
-                console.log(tacticsDM);
-                let roll = await new Roll("2D6 - 8 + " + tacticsDM).evaluate();
-
-                shipActor.setFlag("mgt2e-piggy", "initTacticsDM", roll.total);
-                shipActor.setFlag("mgt2e-piggy", "initTacticsName", actorCrew.name);
-
-                let chatData = {
-                    user: game.user.id,
-                    speaker: {
-                        actor: actorCrew._id,
-                        alias: game.i18n.format("MGT2.Role.ChatAlias", {
-                            "actorName": actorCrew.name, "shipName": shipActor.name
-                        }),
-                        scene: game.scenes.current.id
-                    },
-                    content: `Rolling Tactics (Naval) for ship initiative.`
-                }
-                ChatMessage.create(chatData, {});
-
-            } else if (action.special === "improveInit") {
-
-            } else if (action.special === "evade") {
-
-            } else if (action.special === "repair") {
-                // Open ship repair dialog.
-                new MgT2SpacecraftRepairDialog(shipActor, actorCrew).render(true);
-            }
-        }
+        return runCrewAction(shipActor, actorCrewId, roleId, actionId);
     }
 
     // Add a new deck plan.
@@ -2459,60 +2429,87 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             ui.notifications.error(`Unable to find item with id [${data.uuid}]`);
             return false;
         }
-        if (["associate"].includes(item.type)) {
-            // Meta item, so just pass through to the usual item handler.
-            return super._onDropItem(event, data);
-        } else if (item.type === "term" && [ "traveller", "package"].includes(this.actor.type)) {
-            return super._onDropItem(event, data);
-        }
-
-        // If not dragged from another (different) actor, just let the normal item handler deal with things.
-        if (!item.parent || this.actor.uuid === item.parent.uuid) {
-            return super._onDropItem(event, data);
-        }
-
-        let srcActor = item.parent;
-
-        // If moving trade goods between worlds and spacecraft, use the trade system.
-        if (srcActor.type === "world" && this.actor.type === "spacecraft") {
-            if (item.type === "cargo") {
-                await buyCargoDialog(srcActor, this.actor, item);
-            } else if (item.type === "worlddata" && item.system.world.datatype === "passenger") {
-                await embarkPassengerDialog(srcActor, this.actor, item);
-            }
-            return false;
-        } else if (srcActor.type === "spacecraft" && this.actor.type === "world") {
-            if (item.type === "cargo") {
-                await sellCargoDialog(srcActor, this.actor, item);
-            }
-            return false;
-        }
-        if (["worlddata"].includes(item.type)) {
-            // Meta item, so just pass through to the usual item handler.
-            return super._onDropItem(event, data);
-        }
-
-        // If shift is held down on drop, copy rather than move. Use the standard handler.
-        if (event.shiftKey) {
-            return super._onDropItem(event, data);
-        }
-
-        console.log(`From ${srcActor.name} to ${this.actor.name}`);
-
-        if (srcActor) {
-            if (item.type === "hardware" || item.type === "role" || item.type === "term" || item.type === "software") {
-                return true;
+        // Linked components (e.g. weapon accessories) only resolve within the collection they
+        // were dropped into, so stash the source item here for _onDropItemCreate to clone them
+        // into this actor's items when the item being dropped carries any.
+        this._pendingComponentSource = item;
+        try {
+            if (["associate"].includes(item.type)) {
+                // Meta item, so just pass through to the usual item handler.
+                return await super._onDropItem(event, data);
+            } else if (item.type === "term" && [ "traveller", "package"].includes(this.actor.type)) {
+                return await super._onDropItem(event, data);
             }
 
-            if (parseInt(item.system.quantity) > 1) {
-                new MgT2QuantityDialog(srcActor, this.actor, item).render(true);
-            } else {
-                ui.notifications.info(`Moved '${item.name}' from '${srcActor.name}' to '${this.actor.name}'`);
-                srcActor.deleteEmbeddedDocuments("Item", [item._id]);
-                return super._onDropItem(event, data);
+            // If not dragged from another (different) actor, just let the normal item handler deal with things.
+            if (!item.parent || this.actor.uuid === item.parent.uuid) {
+                return await super._onDropItem(event, data);
+            }
+
+            let srcActor = item.parent;
+
+            // If moving trade goods between worlds and spacecraft, use the trade system.
+            if (srcActor.type === "world" && this.actor.type === "spacecraft") {
+                if (item.type === "cargo") {
+                    await buyCargoDialog(srcActor, this.actor, item);
+                } else if (item.type === "worlddata" && item.system.world.datatype === "passenger") {
+                    await embarkPassengerDialog(srcActor, this.actor, item);
+                }
+                return false;
+            } else if (srcActor.type === "spacecraft" && this.actor.type === "world") {
+                if (item.type === "cargo") {
+                    await sellCargoDialog(srcActor, this.actor, item);
+                }
+                return false;
+            }
+            if (["worlddata"].includes(item.type)) {
+                // Meta item, so just pass through to the usual item handler.
+                return await super._onDropItem(event, data);
+            }
+
+            // If shift is held down on drop, copy rather than move. Use the standard handler.
+            if (event.shiftKey) {
+                return await super._onDropItem(event, data);
+            }
+
+            console.log(`From ${srcActor.name} to ${this.actor.name}`);
+
+            if (srcActor) {
+                if (item.type === "hardware" || item.type === "role" || item.type === "term" || item.type === "software") {
+                    return true;
+                }
+
+                if (parseInt(item.system.quantity) > 1) {
+                    new MgT2QuantityDialog(srcActor, this.actor, item).render(true);
+                } else {
+                    ui.notifications.info(`Moved '${item.name}' from '${srcActor.name}' to '${this.actor.name}'`);
+                    srcActor.deleteEmbeddedDocuments("Item", [item._id]);
+                    return await super._onDropItem(event, data);
+                }
+            }
+            return true;
+        } finally {
+            delete this._pendingComponentSource;
+        }
+    }
+
+    /**
+     * Override to bring linked components (e.g. weapon accessories) along when a linked-parent
+     * item is dropped onto this actor from a different collection - see _onDropItem, which stashes
+     * the original source item in this._pendingComponentSource before delegating here.
+     */
+    async _onDropItemCreate(itemData) {
+        const sourceItem = this._pendingComponentSource;
+        const created = await super._onDropItemCreate(itemData);
+        if (sourceItem && sourceItem.system?.links?.components?.length) {
+            const createdArr = Array.isArray(created) ? created : [created];
+            for (const newItem of createdArr) {
+                if (newItem) {
+                    await attachClonedComponents(sourceItem, newItem, this.actor);
+                }
             }
         }
-        return true;
+        return created;
     }
 
     // Drop a Term onto an Actor. Only applies to Travellers or Packages.
@@ -2727,142 +2724,7 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
 
     _createCrewRole(roleType) {
-        let system = {
-            "description": "",
-            "role": {
-                "actions": {},
-                "department": false,
-                "colour": null,
-                "dei": 0
-            }
-        }
-        let itemName = "Role";
-        let img = null;
-
-        let t = Date.now();
-        if (roleType === "gunner") {
-            itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Gunner");
-            img = "systems/mgt2e-piggy/icons/items/roles/gunner.svg";
-            system.role.actions[(t++).toString(36)]= {
-                "title": "Gunner",
-                "action": "weapon",
-                "dm": 0,
-                "weapon": null
-            };
-        } else if (roleType === "pilot") {
-            itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Pilot");
-            img = "systems/mgt2e-piggy/icons/items/roles/pilot.svg";
-            let skill = "pilot.spacecraft";
-            if (this.actor.system.spacecraft.dtons < 100) {
-                skill = "pilot.smallCraft";
-            } else if (this.actor.system.spacecraft.dtons > 5000) {
-                skill = "pilot.capitalShips";
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.Pilot"),
-                "action": "skill", "cha": "DEX", "skill": skill, "target": 8, "dm": 0
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.PortLanding"),
-                "action": "skill", "cha": "DEX", "skill": skill, "target": 6, "dm": 0
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.WildLanding"),
-                "action": "skill", "cha": "DEX", "skill": skill, "target": 10, "dm": 0
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.Evade"),
-                "action": "special", "special": "evade"
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": game.i18n.localize("MGT2.Role.BuiltIn.Action.MakePilot"),
-                "action": "special", "special": "pilot"
-            }
-        } else if (roleType === "engineer") {
-            itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Engineer");
-            img = "systems/mgt2e-piggy/icons/items/roles/engineer.svg";
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Activate Jump",
-                "action": "skill", "cha": "EDU", "skill": "engineer.jDrive",
-                "target": 4, "dm": 0,
-                "text": "Active Jump Drive"
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Offline System",
-                "action": "skill", "cha": "EDU", "skill": "engineer.power",
-                "target": 8, "dm": 0,
-                "text": "Take systems offline"
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Overload Drive",
-                "action": "skill", "cha": "INT", "skill": "engineer.mDrive",
-                "target": 10, "dm": 0,
-                "text": "Overload drive"
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Repair",
-                "action": "special", "special": "repair"
-            }
-        } else if (roleType === "sensors") {
-            itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Sensors");
-            img = "systems/mgt2e-piggy/icons/items/roles/sensors.svg";
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Sensors",
-                "action": "skill", "cha": "INT", "skill": "electronics.sensors", "target": 8, "dm": 0
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Comms",
-                "action": "skill", "cha": "INT", "skill": "electronics.comms", "target": 8, "dm": 0
-            }
-        } else if (roleType === "navigator") {
-            itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Navigator");
-            img = "systems/mgt2e-piggy/icons/items/roles/navigator.svg";
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Jump-1",
-                "action": "skill", "cha": "EDU", "skill": "astrogation", "target": 4, "dm": -1
-            }
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Jump-2",
-                "action": "skill", "cha": "EDU", "skill": "astrogation", "target": 4, "dm": -2
-            }
-        } else if (roleType === "broker") {
-            itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Broker");
-            img = "systems/mgt2e-piggy/icons/items/roles/broker.svg";
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Broker",
-                "action": "skill", "cha": "INT", "skill": "broker", "target": 8, "dm": 0
-            }
-        } else if (roleType === "medic") {
-            itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Medic");
-            img = "systems/mgt2e-piggy/icons/items/roles/medic.svg";
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Medic",
-                "action": "skill", "cha": "INT", "skill": "medic", "target": 8, "dm": 0
-            }
-        } else if (roleType === "steward") {
-            itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Steward");
-            img = "systems/mgt2e-piggy/icons/items/roles/steward.svg";
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Steward",
-                "action": "skill", "cha": "INT", "skill": "steward", "target": 8, "dm": 0
-            }
-        } else if (roleType === "mechanic") {
-            itemName = game.i18n.localize("MGT2.Role.BuiltIn.Name.Mechanic");
-            img = "systems/mgt2e-piggy/icons/items/roles/maintenance.svg";
-            system.role.actions[(t++).toString(36)] = {
-                "title": "Mechanic",
-                "action": "skill", "cha": "INT", "skill": "mechanic", "target": 8, "dm": 0
-            }
-        } else {
-            return;
-        }
-        const itemData = {
-            "name": itemName,
-            "img": img,
-            "type": "role",
-            "system": system
-        };
-        Item.create(itemData, { parent: this.actor } );
+        return createCrewRole(this.actor, roleType);
     }
 
     _createEquipmentItem(itemType) {

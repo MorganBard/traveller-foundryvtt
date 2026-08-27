@@ -1,0 +1,74 @@
+<form class="{{cssClass}} item flexcol" autocomplete="off">
+    <section class="tsb-sheet tsb-single-column">
+        <span class="svc-rivet tl"></span>
+        <span class="svc-rivet tr"></span>
+        <span class="svc-rivet bl"></span>
+        <span class="svc-rivet br"></span>
+
+        <div class="tsb-right">
+            <div class="svc-plate tsb-nameplate">
+                <p class="tsb-eyebrow">
+                    <select class="relationship-type" name="system.associate.relationship">
+                        {{selectOptions RELATIONSHIP_SELECT selected=system.associate.relationship}}
+                    </select>
+                </p>
+                <h1 class="tsb-name">
+                    <input class="associate-name" name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                </h1>
+            </div>
+
+            <div class="tsb-panel">
+                <div class="resources grid grid-2col flex-group-left">
+                    <div class="resource">
+                        <label for="system.associate.affinity" class="resource-label">{{localize 'MGT2.History.Relation.Affinity'}}</label>
+                        <br/>
+                        <select name="system.associate.affinity">
+                            {{selectOptions AFFINITY_SELECT selected=system.associate.affinity}}
+                        </select>
+                    </div>
+                    <div class="resource">
+                        <label for="system.associate.enmity" class="resource-label">{{localize 'MGT2.History.Relation.Enmity'}}</label>
+                        <br/>
+                        <select name="system.associate.enmity">
+                            {{selectOptions ENMITY_SELECT selected=system.associate.enmity}}
+                        </select>
+                    </div>
+                    <div class="resource">
+                        <label for="system.associate.power" class="resource-label">{{localize 'MGT2.History.Relation.Power'}}</label>
+                        <br/>
+                        <select name="system.associate.power">
+                            {{selectOptions POWER_SELECT selected=system.associate.power}}
+                        </select>
+                    </div>
+                    <div class="resource">
+                        <label for="system.associate.influence" class="resource-label">{{localize 'MGT2.History.Relation.Influence'}}</label>
+                        <br/>
+                        <select name="system.associate.influence">
+                            {{selectOptions INFLUENCE_SELECT selected=system.associate.influence}}
+                        </select>
+                    </div>
+                    <div>
+                        <span class="rollable randomiseRelationship button" title="Randomise relationship">
+                            <i class="fa fa-dice"> </i>
+                            Randomise relationship
+                        </span>
+                    </div>
+                    {{#if (ifEquals item.parent.type "package")}}
+                        <div>
+                            <span class="" title="">
+                                Quantity
+                                <input class="quantity" name="system.quantity"
+                                       type="text" value="{{#if item.system.quantity includeZero=false}}{{item.system.quantity}}{{else}}1{{/if}}"
+                                       placeholder="1"/>
+                            </span>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+
+            <section class="item-description tsb-panel">
+                {{editor enrichedDescription target="system.description" button=true editable=editable}}
+            </section>
+        </div>
+    </section>
+</form>

@@ -14,6 +14,9 @@
       "url": "https://www.notasnark.net/",
       "email": "sam@notasnark.net",
       "discord": "notasnark"
+    },
+    {
+      "name": "Morgan Haldane"
     }
   ],
   "esmodules": ["module/mgt2.mjs" ],

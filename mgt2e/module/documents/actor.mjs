@@ -1999,9 +1999,6 @@ export class MgT2Actor extends Actor {
                 { key: "system.modifiers.armour.effect", mode: 2, priority: 0, value: parseInt(value) }
             ]);
     }
-    async setInCoverEffect(value) {
-        await this.setEffect("inCover", value, false, false, "Good");
-    }
     async setHidingEffect(value) {
         await this.setEffect("hiding", value, false, false, "Good",
             [

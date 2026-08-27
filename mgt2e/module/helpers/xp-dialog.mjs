@@ -1,5 +1,6 @@
 import { skillLabel } from "./dice-rolls.mjs";
 import {MgT2AddSkillDialog} from "./add-skill-dialog.mjs";
+import {dialogBrassClasses} from "./dialog-theme.mjs";
 
 export class MgT2XPDialog extends Application {
     static get defaultOptions() {
@@ -8,6 +9,7 @@ export class MgT2XPDialog extends Application {
         options.width = "auto";
         options.height = "auto";
         options.title = "Make a roll";
+        options.classes = [...options.classes, ...dialogBrassClasses()];
 
         return options;
     }

@@ -236,6 +236,7 @@
     },
     "spacecraft": {
         "templates": [ "crewed" ],
+        "description": "",
         "hits": {
             "value": 80,
             "max": 80,

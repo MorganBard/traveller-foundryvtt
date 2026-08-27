@@ -1,4 +1,5 @@
 import {rollSkill} from "../helpers/dice-rolls.mjs";
+import {dialogBrassClasses} from "../helpers/dialog-theme.mjs";
 
 // Adding a new skill to an actor.
 export class MgT2CrewMemberDialog extends Application {
@@ -8,6 +9,7 @@ export class MgT2CrewMemberDialog extends Application {
         options.width = "600px";
         options.height = "auto";
         options.title = "Crew Member";
+        options.classes = [...options.classes, ...dialogBrassClasses()];
 
         return options;
     }
@@ -28,6 +30,7 @@ export class MgT2CrewMemberDialog extends Application {
 
         this.selectRoleTypes = {
             "": "",
+            "captain": game.i18n.localize("MGT2.Role.BuiltIn.Name.Captain"),
             "pilot": game.i18n.localize("MGT2.Role.BuiltIn.Name.Pilot"),
             "gunner": game.i18n.localize("MGT2.Role.BuiltIn.Name.Gunner"),
             "engineer": game.i18n.localize("MGT2.Role.BuiltIn.Name.Engineer"),

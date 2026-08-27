@@ -3,6 +3,7 @@ import {getSkillValue} from "../helpers/dice-rolls.mjs";
 import {launchMissiles} from "./spacecraft/spacecraft-utils.mjs";
 import {MGT2} from "./config.mjs";
 import {Tools} from "./chat/tools.mjs";
+import {dialogBrassClasses} from "./dialog-theme.mjs";
 
 export class MgT2SpacecraftAttackDialog extends Application {
     static get defaultOptions() {
@@ -11,6 +12,7 @@ export class MgT2SpacecraftAttackDialog extends Application {
         options.width = "auto";
         options.height = "auto";
         options.title = "Attack";
+        options.classes = [...options.classes, ...dialogBrassClasses()];
 
         return options;
     }
@@ -268,11 +270,13 @@ export class MgT2SpacecraftAttackDialog extends Application {
             }
             rangeDM = parseInt(CONFIG.MGT2.SPACE_RANGES[range].dm);
         }
+        let defenderShip = null;
         if (html.find(".attackDialogTargets")[0]) {
             let targetId = html.find(".attackDialogTargets")[0].value;
             let target = this.TARGETS.filter(t => { return t.id === targetId })[0];
             range = target.range;
             rangeDM = parseInt(target.dm);
+            defenderShip = canvas.tokens.get(targetId)?.actor ?? null;
         }
 
         let options = {
@@ -280,7 +284,8 @@ export class MgT2SpacecraftAttackDialog extends Application {
             "skill": 0,
             "range": range,
             "rangeDM": rangeDM,
-            "boon": rollType
+            "boon": rollType,
+            "defenderShip": defenderShip
         }
         let weapons = this.mount.system.hardware.weapons
         if (weapons[this.weaponItem.id].quantity > 1) {

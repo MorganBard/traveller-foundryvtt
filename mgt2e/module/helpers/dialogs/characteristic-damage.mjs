@@ -1,3 +1,4 @@
+import {dialogBrassClasses} from "../dialog-theme.mjs";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api
 
 export class MgT2CharacteristicDamageApp extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -5,6 +6,7 @@ export class MgT2CharacteristicDamageApp extends HandlebarsApplicationMixin(Appl
     constructor(actor) {
         super();
         this.actor = actor;
+        this.options.classes.push(...dialogBrassClasses());
     }
 
     static DEFAULT_OPTIONS = {

@@ -636,7 +636,7 @@ export async function createSpeculativeGoods(worldActor, illegal) {
     let tradeFolder = game.items.folders.getName(tradeFolderName);
     if (!tradeFolder) {
         // Need to look for a compendium entry instead.
-        tradeFolder = game.packs.get("mgt2e.base-items")?.folders?.getName("Trade Goods");
+        tradeFolder = game.packs.get("mgt2e-piggy.base-items")?.folders?.getName("Trade Goods");
         if (!tradeFolder) {
             ui.notifications.error("Unable to find Trade Goods item folder");
             return;

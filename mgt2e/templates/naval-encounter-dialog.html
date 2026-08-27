@@ -1,0 +1,25 @@
+<form class="flexcol start-naval-encounter-dialog">
+    <p>Select every ship involved (player and NPC alike):</p>
+
+    <ol class="items-list encounter-ship-list" style="flex: 0 0 auto; height: auto; max-height: 220px; overflow-y: auto;">
+        {{#each ships}}
+            <li class="item">
+                <label>
+                    <input type="checkbox" class="encounter-ship-checkbox" value="{{this.id}}"/>
+                    {{this.name}}{{#if this.isPC}} (PC){{/if}}
+                </label>
+            </li>
+        {{/each}}
+    </ol>
+
+    <div class="encounter-band-row">
+        <label for="starting-band">Starting Range Band</label>
+        <select id="starting-band" class="starting-band">
+            {{#each rangeBands}}
+                <option value="{{this.index}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <button type="button" class="start-encounter">Start Encounter</button>
+</form>

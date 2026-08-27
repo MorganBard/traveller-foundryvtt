@@ -26,7 +26,7 @@
                     </div>
                     <div class="resource flex-group-center">
                         <label class="field-label">{{localize 'MGT2.Robot.Locomotion'}}</label>
-                        <span>{{localize (concat "MGT2.Robot.LocomotionType." system.robot.locomotion)}}</span>
+                        <span>{{#if system.robot.locomotion}}{{localize (concat "MGT2.Robot.LocomotionType." system.robot.locomotion)}}{{else}}-{{/if}}</span>
                     </div>
                     <div class="resource flex-group-center">
                         <label class="field-label">{{localize 'MGT2.TravellerSheet.Speed'}}</label>

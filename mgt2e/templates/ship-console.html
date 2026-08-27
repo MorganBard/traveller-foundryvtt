@@ -1,0 +1,173 @@
+<div class="ship-console-body">
+    {{#if notOwner}}
+        <p>You do not have access to this ship's console.</p>
+    {{else if missingRole}}
+        <p>This role no longer exists on this ship.</p>
+    {{else}}
+        <span class="svc-rivet tl"></span>
+        <span class="svc-rivet tr"></span>
+        <span class="svc-rivet bl"></span>
+        <span class="svc-rivet br"></span>
+
+        <div class="svc-plate">
+            <p class="console-role-name">{{roleName}}{{#if crewActor}} &middot; {{crewActor.name}}{{/if}}</p>
+            <h3 class="console-ship-name">{{shipActor.name}}</h3>
+            {{#if shipDescription}}
+                <p class="svc-subtitle">{{shipDescription}}</p>
+            {{/if}}
+        </div>
+
+        {{#if selfDestructArmed}}
+            <div class="console-section console-selfdestruct-armed">
+                <p><strong>SELF-DESTRUCT ARMED</strong> &mdash; {{selfDestructRoundsRemaining}} round(s) remaining</p>
+                <button type="button" class="console-abort">Abort</button>
+            </div>
+        {{/if}}
+
+        {{#if courseSection}}
+            <div class="console-section">
+                <label class="console-section-title">Set Course</label>
+                <p>Current speed: {{courseSection.navSpeed}}</p>
+                <ul class="console-band-list">
+                    {{#each courseSection.otherShips}}
+                        <li{{#if this.isTarget}} class="console-current-target"{{/if}}>
+                            {{this.name}}{{#if this.isTarget}} (target){{/if}} &mdash; {{this.band}}
+                            {{#if this.progress}}
+                                <span class="console-band-progress">({{this.progress.progress}} / {{this.progress.cost}} Thrust banked toward next shift)</span>
+                            {{/if}}
+                        </li>
+                    {{/each}}
+                </ul>
+                <button type="button" class="console-action" data-action-id="{{courseSection.actionId}}">Set Course</button>
+                {{#if courseSection.accelerateActionId}}
+                    {{#if courseSection.decelerateActionId}}
+                        <div class="console-button-row">
+                            <button type="button" class="console-action" data-action-id="{{courseSection.accelerateActionId}}">Accelerate</button>
+                            <button type="button" class="console-action" data-action-id="{{courseSection.decelerateActionId}}">Decelerate</button>
+                        </div>
+                    {{else}}
+                        <button type="button" class="console-action" data-action-id="{{courseSection.accelerateActionId}}">Accelerate</button>
+                    {{/if}}
+                {{else if courseSection.decelerateActionId}}
+                    <button type="button" class="console-action" data-action-id="{{courseSection.decelerateActionId}}">Decelerate</button>
+                {{/if}}
+            </div>
+        {{/if}}
+
+        {{#if hasEvade}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{evadeActionId}}">Evasive Action</button>
+            </div>
+        {{/if}}
+
+        {{#if hasImproveInit}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{improveInitActionId}}">Improve Initiative</button>
+            </div>
+        {{/if}}
+
+        {{#if weaponActions.length}}
+            <div class="console-section">
+                <label class="console-section-title">Attack</label>
+                {{#each weaponActions}}
+                    <button type="button" class="console-action" data-action-id="{{this.actionId}}">{{this.label}} ({{this.weaponName}})</button>
+                {{/each}}
+            </div>
+        {{/if}}
+
+        {{#if hasPointDefence}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{pointDefenceActionId}}">Point Defence</button>
+                {{#if hasDisperseSand}}
+                    <button type="button" class="console-action" data-action-id="{{disperseSandActionId}}">Disperse Sand</button>
+                {{/if}}
+            </div>
+        {{else if hasDisperseSand}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{disperseSandActionId}}">Disperse Sand</button>
+            </div>
+        {{/if}}
+
+        {{#if hasDetectTarget}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{detectTargetActionId}}">Sensors</button>
+            </div>
+        {{/if}}
+
+        {{#if hasSensorLock}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{sensorLockActionId}}">Sensor Lock</button>
+                {{#if hasElectronicWarfare}}
+                    <button type="button" class="console-action" data-action-id="{{electronicWarfareActionId}}">Electronic Warfare</button>
+                {{/if}}
+            </div>
+        {{else if hasElectronicWarfare}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{electronicWarfareActionId}}">Electronic Warfare</button>
+            </div>
+        {{/if}}
+
+        {{#if hasScanTarget}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{scanTargetActionId}}">Scan Target</button>
+            </div>
+        {{/if}}
+
+        {{#if damageSection}}
+            <div class="console-section">
+                <label class="console-section-title">Damage</label>
+                <p>Hull: {{damageSection.hull.value}} / {{damageSection.hull.max}} &middot; Armour: {{damageSection.armour}} &middot; Fuel: {{damageSection.fuel.value}} / {{damageSection.fuel.max}}</p>
+                {{#if damageSection.activeCriticals.length}}
+                    <ul class="console-band-list">
+                        {{#each damageSection.activeCriticals}}
+                            <li>{{this.location}} (severity {{this.severity}})</li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+                <button type="button" class="console-action" data-action-id="{{damageSection.actionId}}">Repair Console</button>
+            </div>
+        {{/if}}
+
+        {{#if shipStatusSection}}
+            <div class="console-section">
+                <label class="console-section-title">Ship Status</label>
+                <ul class="ship-status-list">
+                    {{#each shipStatusSection.rows}}
+                        <li class="ship-status-row" data-severity="{{this.severity}}">
+                            <span class="ship-status-label">{{this.label}}</span>
+                            <span class="ship-status-value">{{this.statusLabel}}</span>
+                        </li>
+                    {{/each}}
+                </ul>
+                {{#if shipStatusSection.hasWeaponMounts}}
+                    <button type="button" class="console-action console-open-weapons">View Weapons</button>
+                {{/if}}
+                {{#if shipStatusSection.hasCrew}}
+                    <button type="button" class="console-action console-open-crew">View Crew</button>
+                {{/if}}
+            </div>
+        {{/if}}
+
+        {{#if reassignSection}}
+            <div class="console-section">
+                <label class="console-section-title">Reassign Crew</label>
+                <button type="button" class="console-action" data-action-id="{{reassignSection.actionId}}">Reassign</button>
+            </div>
+        {{/if}}
+
+        {{#if hasSelfDestructVote}}
+            <div class="console-section">
+                <button type="button" class="console-action" data-action-id="{{selfDestructVoteActionId}}">Self-Destruct</button>
+            </div>
+        {{/if}}
+
+        {{#if genericRollActions.length}}
+            <div class="console-section">
+                <label class="console-section-title">Skill Checks</label>
+                {{#each genericRollActions}}
+                    <button type="button" class="console-action" data-action-id="{{this.actionId}}">{{this.label}}</button>
+                {{/each}}
+            </div>
+        {{/if}}
+    {{/if}}
+</div>

@@ -1,0 +1,82 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+    <section class="tsb-sheet">
+        <span class="svc-rivet tl"></span>
+        <span class="svc-rivet tr"></span>
+        <span class="svc-rivet bl"></span>
+        <span class="svc-rivet br"></span>
+
+        <div class="tsb-left">
+            <div class="tsb-portrait-frame">
+                <img class="item-img shadow" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+            </div>
+
+            {{#if system.status}}
+                <div class="item-status item-status-{{system.status}}">{{system.status}}</div>
+            {{/if}}
+
+            <div class="shadow item-side-panel">
+                <div class="resource flex-group-center">
+                    <label for="system.quantity" class="resource-label">{{localize "MGT2.Item.Quantity"}}</label>
+                    <div class="incdec">
+                        <span class="quantity-dec"><i class="fa-regular fa-square-minus"></i></span>
+                        <input class="writable" type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
+                        <span class="quantity-inc"><i class="fa-regular fa-square-plus"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tsb-right">
+            <div class="svc-plate tsb-nameplate">
+                <p class="tsb-eyebrow">Software</p>
+                <h1 class="tsb-name">
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                    <span class="item-to-chat" data-item-id="{{item.uuid}}"
+                          title="{{localize 'MGT2.Item.ClickToChat'}}">
+                        <i class="fas fa-comment"></i>
+                    </span>
+                </h1>
+            </div>
+            <div class="tsb-panel">
+                <div class="resources grid grid-3col flex-group-center">
+                    <div class="resource">
+                        {{> "systems/mgt2e-piggy/templates/item/parts/item-techLevel.html"}}
+                    </div>
+                    <div class="resource">
+                        <label for="system.software.bandwidth" class="resource-label">{{localize "MGT2.Item.Bandwidth"}}</label>
+                        <input class="writable" type="text" name="system.software.bandwidth" value="{{system.software.bandwidth}}" data-dtype="Number"/>
+                    </div>
+                    <div class="resource">
+                        <label for="system.cost" class="resource-label">{{localize "MGT2.Item.Cost"}}</label>
+                        <input class="writable" type="text" name="system.cost" value="{{system.cost}}" data-dtype="Number"/>
+                    </div>
+                    <div class="resource flex-group-left">
+                        <label for="system.software.class" class="resource-label">Software Class</label>
+                        <select class="writable" name="system.software.class">
+                            {{selectOptions SOFTWARE_CLASS selected=system.software.class}}
+                        </select>
+                    </div>
+                    <div class="resource flex-group-left">
+                        <label for="system.software.interface" class="resource-label">Interface Type</label>
+                        <select class="writable" name="system.software.interface">
+                            {{selectOptions SOFTWARE_INTERFACE selected=system.software.interface}}
+                        </select>
+                    </div>
+                    <div class="resource flex-group-left">
+                        <label for="system.installedOn" class="resource-label">{{localize "MGT2.Item.InstalledOn"}}</label>
+                        <select class="writable installedOn" name="system.installedOn">
+                            {{selectOptions INSTALL_OPTIONS selected=system.installedOn}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            {{> "systems/mgt2e-piggy/templates/item/parts/item-software.html"}}
+
+            <div class="item-description tsb-panel">
+                {{editor enrichedDescription target="system.description"
+                         button=true editable=editable}}
+            </div>
+        </div>
+    </section>
+</form>

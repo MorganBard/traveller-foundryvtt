@@ -1,0 +1,395 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+  <section class="tsb-sheet">
+    <span class="svc-rivet tl"></span>
+    <span class="svc-rivet tr"></span>
+    <span class="svc-rivet bl"></span>
+    <span class="svc-rivet br"></span>
+
+    <div class="tsb-left">
+        <div class="tsb-portrait-frame">
+            <img class="item-img shadow" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        </div>
+
+        {{#if system.status}}
+            <div class="item-status item-status-{{system.status}}">{{system.status}}</div>
+        {{/if}}
+
+        <div class="shadow item-side-panel">
+          <div class="resource flex-group-center">
+            <label for="system.quantity" class="resource-label">Quantity</label>
+            <div class="incdec">
+              <span class="quantity-dec"><i class="fa-regular fa-square-minus"></i></span>
+              <input type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number"/>
+              <span class="quantity-inc"><i class="fa-regular fa-square-plus"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="shadow item-side-panel">
+            <div class="resources flex-group-center">
+                <div class="resource">
+                    <label for="system.hardware.tons" class="resource-label">TONS</label>
+                    <input type="text" name="system.hardware.tons" value="{{system.hardware.tons}}" data-dtype="Number"/>
+                </div>
+                <div class="resource">
+                    <label for="system.hardware.power" class="resource-label">POWER</label>
+                    <input type="text" name="system.hardware.power" value="{{system.hardware.power}}" data-dtype="Number"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tsb-right">
+        <div class="svc-plate tsb-nameplate">
+            <p class="tsb-eyebrow">System: {{system.hardware.system}}</p>
+            <h1 class="tsb-name">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                <span class="item-to-chat" data-item-id="{{item.uuid}}"
+                      title="{{localize 'MGT2.Item.ClickToChat'}}">
+                        <i class="fas fa-comment"></i>
+                </span>
+            </h1>
+        </div>
+        <div class="tsb-panel">
+            <div class="resources grid grid-4col flex-group-center">
+                <div class="resource">
+                    <label for="system.cost" class="resource-label">Cost (MCr)</label>
+                    <input type="text" name="system.cost" value="{{system.cost}}" data-dtype="Number"/>
+                </div>
+                <div class="resource">
+                    <label for="system.tl" class="resource-label">TL</label>
+                    <br/>
+                    {{#if HARDWARE_RATING}}
+                        <input type="text" name="system.tl" value="{{system.tl}}" readonly data-dtype="Number"/>
+                    {{else}}
+                        <select class="hardwareTL" name="system.tl">
+                            {{selectOptions SHIP_TL selected=system.tl}}
+                        </select>
+                    {{/if}}
+                </div>
+                <div class="resource">
+                    <label for="system.hardware.system" class="resource-label">System</label>
+                    <select class="hardwareSystemType" name="system.hardware.system">
+                      {{selectOptions selectSystemTypes selected=system.hardware.system}}
+                    </select>
+                </div>
+                <div class="resource">
+                    {{#if (ifEquals system.hardware.system "j-drive")}}
+                      <label class="resource-label">Jump</label>
+                    {{else if (ifEquals system.hardware.system "m-drive")}}
+                      <label class="resource-label">Thrust</label>
+                    {{else if (ifEquals system.hardware.system "r-drive")}}
+                      <label class="resource-label">Thrust</label>
+                    {{else if (ifEquals system.hardware.system "power")}}
+                      <label class="resource-label">Power</label>
+                    {{else if (ifEquals system.hardware.system "sensor")}}
+                    <label class="resource-label">Sensor DM</label>
+                    {{else if (ifEquals system.hardware.system "armour")}}
+                      <label class="resource-label">Armour</label>
+                    {{else if (ifEquals system.hardware.system "fuel")}}
+                      <label class="resource-label">Fuel (t)</label>
+                    {{else if (ifEquals system.hardware.system "cargo")}}
+                      <label class="resource-label">Cargo (t)</label>
+                    {{else if (ifEquals system.hardware.system "weapon")}}
+                      <label class="resource-label">Mount</label>
+                    {{else if (ifEquals system.hardware.system "computer")}}
+                        <label class="resource-label">Processing</label>
+                    {{else if (ifEquals system.hardware.system "stateroom")}}
+                        <label class="resource-label">Passengers</label>
+                    {{else if (ifEquals system.hardware.system "common")}}
+                        <label class="resource-label">Tonnage</label>
+                    {{else}}
+                      <label class="resource-label">Rating</label>
+                    {{/if}}
+
+                    {{#if (ifEquals system.hardware.system "weapon")}}
+                        <select class="hardwareSystemType" name="system.hardware.mount">
+                            {{selectOptions WEAPON_MOUNT selected=system.hardware.mount }}
+                        </select>
+                    {{else if HARDWARE_RATING}}
+                        <br/>
+                        <select class="hardwareSystemRating" name="system.hardware.rating">
+                            {{selectOptions HARDWARE_RATING selected=system.hardware.rating}}
+                        </select>
+                    {{else}}
+                        <input type="text" name="system.hardware.rating" value="{{system.hardware.rating}}" data-dtype="Number"/>
+                    {{/if}}
+                </div>
+
+                {{#if ADVANTAGES}}
+                <div class="resource grid-span-4 flex-group-left">
+                    <label for="system.hardware.advancement" class="resource-label">{{localize "MGT2.Spacecraft.AdvantagesTitle"}}</label>
+                    {{#if (isOwner .)}}
+                    <br/>
+                    <select name="system.hardware.advancement">
+                        {{selectOptions ADVANCES_LIST selected=system.hardware.advancement}}
+                    </select>
+                    <span style="display: inline-block; float: right">
+                        <i class="fa fa-add"></i><select class="hardwareSystemType advantage-selector">
+                            {{selectOptions ADVANTAGES_LIST }}
+                        </select>
+                    </span>
+                    {{/if}}
+                    <br/>
+                    <div class="pill-container">
+                        {{{showAdvantages . system.hardware.advantages}}}
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+            <div>
+                <input type="checkbox" name="system.hardware.armouredBulkhead" {{checked system.hardware.armouredBulkhead}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.ArmouredBulkhead'}}</label>
+            </div>
+            {{#if (ifEquals system.hardware.system "common")}}
+                <div>
+                    <input type="checkbox" name="system.hardware.autoCost" {{checked system.hardware.autoCost}} data-dtype="Boolean" />
+                    <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.AutoCost'}}</label>
+                </div>
+            {{/if}}
+            {{#if (ifEquals system.hardware.system "m-drive")}}
+                <div>
+                    <input type="checkbox" name="system.hardware.concealedDrive" {{checked system.hardware.concealedDrive}} data-dtype="Boolean" />
+                    <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.ConcealedDrive'}}</label>
+                </div>
+            {{/if}}
+            {{#if (ifEquals system.hardware.system "m-drive" "j-drive" "r-drive")}}
+                <div class="grid grid-3col" title="{{localize 'MGT2.Spacecraft.ExtendedDriveTitle'}}">
+                    <div>
+                        <input type="checkbox" name="system.hardware.extendedDrive" {{checked system.hardware.extendedDrive}} data-dtype="Boolean" />
+                        <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.ExtendedDrive'}}</label>
+                    </div>
+                    {{#if system.hardware.extendedDrive}}
+                        <div>
+                            {{localize 'MGT2.Spacecraft.ExtendedDriveTons'}}<input type="text" name="system.hardware.extendedDriveTons" value="{{system.hardware.extendedDriveTons}}" data-dtype="Number"/>
+                        </div>
+                    {{/if}}
+                </div>
+            {{/if}}
+        </div>
+
+        {{#if (itemHasStatus item)}}
+        <div class="shadow">
+            {{#if item.flags.[mgt2e-piggy].damaged}}{{{showItemStatus item "damaged"}}}{{/if}}
+            {{#if item.flags.[mgt2e-piggy].destroyed}}{{{showItemStatus item "destroyed"}}}{{/if}}
+        </div>
+        {{/if}}
+
+        {{#if (ifEquals system.hardware.system "fuel")}}
+        {{else if (ifEquals system.hardware.system "cargo")}}
+        {{else if (ifEquals system.hardware.system "bridge")}}
+            <div class="shadow grid grid-3col">
+                <div class="resource flex-group-center checkbox-resource" title="{{localize 'MGT2.TravellerSheet.bridgeType'}}">
+                    <label class="resource-label checkbox-label">{{localize 'MGT2.TravellerSheet.BridgeTypeLabel'}}</label>
+                    <select name="system.hardware.bridgeType">
+                        {{selectOptions BRIDGE_LIST selected=system.hardware.bridgeType}}
+                    </select>
+                </div>
+                <div class="resource checkbox-resource grid-span-2">
+                    <input type="checkbox" name="system.hardware.holographicControls" {{checked system.hardware.holographicControls}} data-dtype="Boolean" />
+                    <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.HolographicControls'}}</label>
+                </div>
+            </div>
+        {{else if (ifEquals system.hardware.system "stateroom")}}
+        {{else if (ifEquals system.hardware.system "common")}}
+        {{else if (ifEquals system.hardware.system "j-drive")}}
+        {{else if (ifEquals system.hardware.system "m-drive")}}
+        {{else if (ifEquals system.hardware.system "r-drive")}}
+        {{else if (ifEquals system.hardware.system "sensor")}}
+        <div class="shadow grid grid-3col">
+            <div class="resource flex-group-left checkbox-resource" title="{localize 'MGT2.Spacecraft.SensorSuite.visual">
+                <input type="checkbox" name="system.hardware.hasVisual" {{checked system.hardware.hasVisual}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.SensorSuite.visual'}}</label>
+            </div>
+            <div class="resource flex-group-left checkbox-resource" title="{localize 'MGT2.Spacecraft.SensorSuite.thermal">
+                <input type="checkbox" name="system.hardware.hasThermal" {{checked system.hardware.hasThermal}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.SensorSuite.thermal'}}</label>
+            </div>
+            <div class="resource flex-group-left checkbox-resource" title="{localize 'MGT2.Spacecraft.SensorSuite.em">
+                <input type="checkbox" name="system.hardware.hasEM" {{checked system.hardware.hasEM}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.SensorSuite.em'}}</label>
+            </div>
+            <div class="resource flex-group-left checkbox-resource" title="{localize 'MGT2.Spacecraft.SensorSuite.lidar">
+                <input type="checkbox" name="system.hardware.hasLidar" {{checked system.hardware.hasLidar}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.SensorSuite.lidar'}}</label>
+            </div>
+            <div class="resource flex-group-left checkbox-resource" title="{localize 'MGT2.Spacecraft.SensorSuite.radar">
+                <input type="checkbox" name="system.hardware.hasRadar" {{checked system.hardware.hasRadar}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.SensorSuite.radar'}}</label>
+            </div>
+            <div class="resource flex-group-left checkbox-resource" title="{localize 'MGT2.Spacecraft.SensorSuite.nas">
+                <input type="checkbox" name="system.hardware.hasNAS" {{checked system.hardware.hasNAS}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.SensorSuite.nas'}}</label>
+            </div>
+            <div class="resource flex-group-left checkbox-resource" title="{localize 'MGT2.Spacecraft.SensorSuite.activeLidar">
+                <input type="checkbox" name="system.hardware.hasActiveLidar" {{checked system.hardware.hasActiveLidar}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.SensorSuite.activeLidar'}}</label>
+            </div>
+            <div class="resource flex-group-left checkbox-resource" title="{localize 'MGT2.Spacecraft.SensorSuite.activeRadar">
+                <input type="checkbox" name="system.hardware.hasActiveRadar" {{checked system.hardware.hasActiveRadar}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.SensorSuite.activeRadar'}}</label>
+            </div>
+            <div class="resource flex-group-left checkbox-resource" title="{localize 'MGT2.Spacecraft.SensorSuite.densitometer">
+                <input type="checkbox" name="system.hardware.hasDensitometer" {{checked system.hardware.hasDensitometer}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.SensorSuite.densitometer'}}</label>
+            </div>
+            <div class="resource flex-group-left checkbox-resource" title="{localize 'MGT2.Spacecraft.SensorSuite.jammers">
+                <input type="checkbox" name="system.hardware.hasJammers" {{checked system.hardware.hasJammers}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.SensorSuite.jammers'}}</label>
+            </div>
+        </div>
+        {{else if (ifEquals system.hardware.system "computer")}}
+        <div class="shadow grid grid-4col">
+            <div class="resource flex-group-center checkbox-resource" title="{{localize 'MGT2.TravellerSheet.coreTitle'}}">
+                <input type="checkbox" name="system.hardware.isComputerCore" {{checked system.hardware.isComputerCore}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.TravellerSheet.ComputerCore'}}</label>
+            </div>
+            <div class="resource flex-group-center" title="{{localize 'MGT2.TravellerSheet.bisTitle'}}">
+                <input type="checkbox" name="system.hardware.isComputerBis" {{checked system.hardware.isComputerBis}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.TravellerSheet.bis'}}</label>
+            </div>
+            <div class="resource flex-group-center" title="{{localize 'MGT2.TravellerSheet.fibTitle'}}">
+                <input type="checkbox" name="system.hardware.isComputerFib" {{checked system.hardware.isComputerFib}} data-dtype="Boolean" />
+                <label class="resource-label checkbox-label">{{localize 'MGT2.TravellerSheet.fib'}}</label>
+            </div>
+        </div>
+        {{else if (ifEquals system.hardware.system "defence")}}
+            <div class="shadow grid grid-3col">
+                <div class="resource">
+                    <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.DefenceTypeLabel'}}</label>
+                    <select name="system.hardware.defenceType">
+                        {{selectOptions DEFENCE_LIST selected=system.hardware.defenceType}}
+                    </select>
+                </div>
+
+                <div class="resource">
+                    <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.DefenceEffectLabel'}}</label>
+                    <input type="text" name="system.hardware.defenceEffect"
+                           value="{{system.hardware.defenceEffect}}" data-type="String"/>
+                </div>
+            </div>
+        {{else if (ifEquals system.hardware.system "weapon")}}
+            <div class="shadow">
+                {{#if activeWeapons}}
+                    <h4>Mounted Weapons</h4>
+                    <ol class="items-list actor-items grid grid-3col">
+                        {{#each activeWeapons as |wpn|}}
+                        <li class="item item-gear ship-weapon" data-item-id="{{wpn._id}}">
+                            <h4>{{wpn.name}} {{mountedWeaponsCount ../system wpn}}</h4>
+                            <div>{{localize (concat "MGT2.Item.SpaceRange." wpn.system.weapon.spaceRange)}}</div>
+                            <div>{{wpn.system.weapon.damage}}</div>
+                            <div class="item-controls">
+                                <a class="item-control item-del-wpn" title="Remove from mount"><i class="fas fa-minus"></i></a>
+                            </div>
+                        </li>
+                        {{/each}}
+                    </ol>
+                {{/if}}
+                {{#if availableWeapons}}
+                    <h4>Available</h4>
+                    <ol class="items-list actor-items grid grid-3col">
+                        {{#each availableWeapons as |wpn|}}
+                            {{#if (ifStartsWith ../system.hardware.mount wpn.system.weapon.mount)}}
+                                <li class="item item-gear ship-weapon" data-item-id="{{wpn._id}}">
+                                    <h4>{{wpn.name}}</h4>
+                                    <div>{{localize (concat "MGT2.Item.SpaceRange." wpn.system.weapon.spaceRange)}}</div>
+                                    <div>{{wpn.system.weapon.damage}}</div>
+                                    <div class="item-controls">
+                                        <a class="item-control item-add-wpn" title="Add to mount"><i class="fas fa-plus"></i></a>
+                                    </div>
+                                </li>
+                            {{/if}}
+                        {{/each}}
+                    </ol>
+                {{else}}
+                    <p>Add some spacecraft scale weapons to the ship</p>
+                {{/if}}
+            </div>
+        {{else}}
+        <div class="shadow">
+            <div class="resources grid grid-4col flex-group-center">
+                {{#if (ifEquals system.hardware.system "armour")}}
+                    <div class="resource">
+                        <label class="resource-label">%</label>
+                        <input type="text" name="system.hardware.tonnage.percent"
+                               value="{{system.hardware.tonnage.percent}}" data-type="Number"/>
+                    </div>
+                    <div class="resource">
+                        <label class="resource-label">MCr/TON</label>
+                        <input type="text" name="system.hardware.tonnage.cost"
+                               value="{{system.hardware.tonnage.cost}}" data-type="Number"/>
+                    </div>
+                {{else if (ifEquals system.hardware.system "power")}}
+                    <div class="resource">
+                        <label class="resource-label">Power/TON</label>
+                        <input type="text" name="system.hardware.powerPerTon"
+                               value="{{system.hardware.powerPerTon}}" data-type="Number"/>
+                    </div>
+                    <div class="resource">
+                        <label class="resource-label">MCr/TON</label>
+                        <input type="text" name="system.hardware.tonnage.cost"
+                               value="{{system.hardware.tonnage.cost}}" data-type="Number"/>
+                    </div>
+                    <div class="resource">
+                        <input type="checkbox" name="system.hardware.battery" {{checked system.hardware.battery}} data-dtype="Boolean" />
+                        <label class="resource-label checkbox-label">{{localize 'MGT2.Spacecraft.Battery'}}</label>
+                    </div>
+                {{else}}
+                    <div class="resource">
+                        <label class="resource-label">Base TONS</label>
+                        <input type="text" name="system.hardware.tonnage.tons"
+                               value="{{system.hardware.tonnage.tons}}" data-type="Number"/>
+                    </div>
+                    <div class="resource">
+                        <label class="resource-label">Minimum TONS</label>
+                        <input type="text" name="system.hardware.tonnage.minimum"
+                               value="{{system.hardware.tonnage.minimum}}" data-type="Number"/>
+                    </div>
+                    <div class="resource" title="{{TON_TITLE}}">
+                        <label class="resource-label">Ton Method</label>
+                        <select name="system.hardware.tonnage.tonCalc">
+                            {{selectOptions selectTonOptions selected=system.hardware.tonnage.tonCalc}}
+                        </select>
+                    </div>
+                    <div class="resource" title="{{TON_TITLE}}">
+                        {{#unless (ifEquals TON_LABEL "-")}}
+                        <label class="resource-label">{{TON_LABEL}}</label>
+                        <input type="text" name="system.hardware.tonnage.percent"
+                               value="{{system.hardware.tonnage.percent}}" data-type="Number"/>
+                        {{/unless}}
+                    </div>
+                    <div class="resource" title="{{COST_TITLE}}">
+                        <label class="resource-label">Cost Method</label>
+                        <select name="system.hardware.tonnage.costCalc">
+                            {{selectOptions selectCostOptions selected=system.hardware.tonnage.costCalc}}
+                        </select>
+                    </div>
+                    <div class="resource" title="{{COST_TITLE}}">
+                        <label class="resource-label">{{COST_LABEL}}</label>
+                        <input type="text" name="system.hardware.tonnage.cost"
+                               value="{{system.hardware.tonnage.cost}}" data-type="Number"/>
+                    </div>
+
+                    <div class="resource" title="{{POWER_TITLE}}">
+                        <label class="resource-label">Power Method</label>
+                        <select name="system.hardware.tonnage.powerCalc">
+                            {{selectOptions selectPowerOptions selected=system.hardware.tonnage.powerCalc}}
+                        </select>
+                    </div>
+                    <div class="resource" title="{{POWER_TITLE}}">
+                        <label class="resource-label">{{POWER_LABEL}}</label>
+                        <input type="text" name="system.hardware.powerPerTon"
+                               value="{{system.hardware.powerPerTon}}" data-type="Number"/>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+        {{/if}}
+
+        <div class="item-description tsb-panel">
+            {{editor enrichedDescription target="system.description"
+            button=true editable=editable}}
+        </div>
+    </div>
+  </section>
+</form>
