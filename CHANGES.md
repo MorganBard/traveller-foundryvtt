@@ -1,5 +1,29 @@
 # Release Notes
 
+# 0.23.0 (BardMorgan custom build)
+
+* Full naval combat system: Range Band positioning (house-rule and RAW models), sensors/
+  detection, per-role Ship Console panels for players, and a GM Naval Combat Control panel.
+* Ship initiative simplified: the Pilot's base roll (2D6 + Pilot skill + Thrust) now happens
+  automatically with no player interaction; Combat Tactics (Naval) is a one-time-per-encounter
+  Roll/Decline request sent to the Captain's player; Improve Initiative (Leadership Check) is
+  now implemented, banking its Effect for the following round.
+* Set Course / Accelerate / Decelerate replace the old non-functional maneuver buttons.
+* Evasive Action, Self-Destruct vote, per-mount weapon consoles, life support countdown, and a
+  Crew status window.
+* Brass/mahogany alternate sheets for Traveller, Spacecraft, World, Vehicle, Robot, Option, and
+  every Item type, extended to the small roll dialogs and chat cards via a per-player setting.
+* The Skill Request macro can now target a specific player and be sent privately (whisper-only).
+  A new Skill Request (Multiple Players) macro requests a roll from several players at once,
+  with per-player checkboxes defaulting to whoever's selected on the canvas.
+
+# 0.22.1.2 (BardMorgan custom build)
+
+* Rebuilt release artifacts from current source - the v0.22.1.1 zip was built from a stale
+  checkout that predated the mgt2e -> mgt2e-piggy settings-namespace rename fully landing,
+  causing every setting to show under "Unmapped" in Foundry's Settings config on hosted
+  installs. No source changes, just a corrected build.
+
 # 0.22.1.1 (BardMorgan custom build)
 
 * Renamed the system id from `mgt2e` to `mgt2e-piggy` to stop this custom build being
