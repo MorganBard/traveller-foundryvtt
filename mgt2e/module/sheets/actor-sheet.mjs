@@ -1328,41 +1328,46 @@ export class MgT2ActorSheet extends foundry.appv1.sheets.ActorSheet {
             html.find('.roll-upp').click(ev => {
                this.actor.rollUPP({ "shift": ev.shiftKey, "ctrl": ev.ctrlKey });
             });
-
-            html.find('.effect-remove').click(ev => {
-                let e = $(ev.currentTarget).parents("label.mgt2e-effect");
-                if (e && e.data("statusId")) {
-                    const statusId = e.data("statusId");
-                    console.log(statusId);
-                    this._clearStatus(this.actor, statusId);
-                } else {
-                    const t = $(ev.currentTarget).parents(".effectPill");
-                    void this._removeEffect(t.data("effectId"));
-                }
-            });
-            html.find('.effect-plus').click(ev => {
-                let e = $(ev.currentTarget).parents();
-                const statusId = e.data("statusId");
-                this._modifyStatus(this.actor, statusId, +1);
-            });
-            html.find('.effect-minus').click(ev => {
-                let e = $(ev.currentTarget).parents();
-                const statusId = e.data("statusId");
-                this._modifyStatus(this.actor, statusId, -1);
-            });
-            html.find('.addEffectSelect').click(ev => {
-                const status = $(ev.currentTarget).val();
-                if (CONFIG.MGT2.STATUS_EFFECTS[status]) {
-                    let value = true;
-                    if (CONFIG.MGT2.STATUS_EFFECTS[status].value !== undefined) {
-                        value = CONFIG.MGT2.STATUS_EFFECTS[status].value;
-                    }
-                    this.actor.addStatusEffect(status, value);
-
-                }
-            });
-
         }
+
+        // Effect-pill controls (Dodge/Reaction and other stacked statuses via actor-status.html) -
+        // unconditional rather than gated to traveller/npc, since Creature (and anything else
+        // rendering that partial) needs to be able to remove/decrement a stacked effect too, not
+        // just add one. Previously only traveller/npc got these bound, so a Creature's Dodge
+        // reaction could be rolled (adding to the stack) but never cleared or decremented.
+        html.find('.effect-remove').click(ev => {
+            let e = $(ev.currentTarget).parents("label.mgt2e-effect");
+            if (e && e.data("statusId")) {
+                const statusId = e.data("statusId");
+                console.log(statusId);
+                this._clearStatus(this.actor, statusId);
+            } else {
+                const t = $(ev.currentTarget).parents(".effectPill");
+                void this._removeEffect(t.data("effectId"));
+            }
+        });
+        html.find('.effect-plus').click(ev => {
+            let e = $(ev.currentTarget).parents();
+            const statusId = e.data("statusId");
+            this._modifyStatus(this.actor, statusId, +1);
+        });
+        html.find('.effect-minus').click(ev => {
+            let e = $(ev.currentTarget).parents();
+            const statusId = e.data("statusId");
+            this._modifyStatus(this.actor, statusId, -1);
+        });
+        html.find('.addEffectSelect').click(ev => {
+            const status = $(ev.currentTarget).val();
+            if (CONFIG.MGT2.STATUS_EFFECTS[status]) {
+                let value = true;
+                if (CONFIG.MGT2.STATUS_EFFECTS[status].value !== undefined) {
+                    value = CONFIG.MGT2.STATUS_EFFECTS[status].value;
+                }
+                this.actor.addStatusEffect(status, value);
+
+            }
+        });
+
         html.find('.addItemSelect').click(ev => {
             const value = $(ev.currentTarget).val();
             this._createEquipmentItem(value);
