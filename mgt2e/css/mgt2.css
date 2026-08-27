@@ -4922,6 +4922,19 @@ ol.actor-items li.item-status- {
   display: block;
 }
 
+/* The Vehicle sheet's Description tab uses .field-label as a standalone section header for
+   otherwise-empty fields (Control Systems, Autopilot, Communications...) rather than the dense
+   per-item labels .field-label is styled for above - the plain eyebrow-text treatment reads as
+   orphaned floating text there. Give it a proper header-bar look instead, scoped to just this tab
+   so the small eyebrow treatment elsewhere (item lists, other v2-brass sheets) is untouched. */
+.mgt2e-v2-brass section[data-tab="description"] .field-label {
+  background: var(--svc-brass-dim);
+  color: var(--svc-parchment) !important;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 3px 3px 0 0;
+}
+
 .mgt2e-v2-brass .pill-container {
   background-color: var(--svc-panel-inset) !important;
   border: 1px solid var(--svc-brass-shadow);
