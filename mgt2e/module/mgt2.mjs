@@ -431,7 +431,7 @@ Hooks.once('init', async function() {
 //  ActiveEffects.registerSheet("mgt2e-piggy", MgT2EffectSheet, { makeDefault: true });
 
     // Sockets
-    game.socket.on("system.mgt2e", (data) => {
+    game.socket.on(`system.${game.system.id}`, (data) => {
         if (game.user.uuid === data.userId) {
             if (data.type === "showSwarm") {
                 showSwarmHandler(data);

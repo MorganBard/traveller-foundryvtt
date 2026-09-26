@@ -308,7 +308,7 @@ Tools.applyDamageToTokens = async function(baseDamage, damageOptions) {
                 damageOptions: damageOptions,
                 currentPlayerId: game.users.current.uuid
             }
-            game.socket.emit("system.mgt2e", data);
+            game.socket.emit(`system.${game.system.id}`, data);
             // Can't wait on another client's dialog, so count this as done
             // from our side once it's been handed off.
             onApplied();
@@ -334,7 +334,7 @@ Tools.applyDamageToTokens = async function(baseDamage, damageOptions) {
                     damageOptions: damageOptions,
                     currentPlayerId: game.users.current.uuid
                 }
-                game.socket.emit("system.mgt2e", data);
+                game.socket.emit(`system.${game.system.id}`, data);
 
                 ui.notifications.info(game.i18n.format("MGT2.Info.ActorOwnerFound", {
                     "actor": token.document.name,

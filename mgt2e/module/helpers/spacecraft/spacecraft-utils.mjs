@@ -516,7 +516,7 @@ export async function buyCargoDialog(worldActor, shipActor, item) {
             if (worldActor.permission > 2) {
                 await tradeBuyFreightHandler(data);
             } else {
-                game.socket.emit("system.mgt2e", data);
+                game.socket.emit(`system.${game.system.id}`, data);
             }
         }
         return transferCargo;
@@ -558,7 +558,7 @@ export async function sellCargoDialog(shipActor, worldActor, item) {
         if (game.user.isGM) {
             await tradeSellFreightHandler(data);
         } else {
-            game.socket.emit("system.mgt2e", data);
+            game.socket.emit(`system.${game.system.id}`, data);
         }
     } else if (item.system.cargo.speculative) {
         console.log("Sell speculative cargo");
@@ -656,7 +656,7 @@ export async function launchMissiles(shipActor, weaponItem, options) {
             swarmData: actorData,
             userId: game.user.uuid
         }
-        game.socket.emit("system.mgt2e", data);
+        game.socket.emit(`system.${game.system.id}`, data);
     }
 }
 
@@ -679,7 +679,7 @@ export async function launchSwarmHandler(data) {
     actorData.name = await getNextSwarmName(actorData.name);
 
     let swarm = await Actor.implementation.create(actorData);
-    game.socket.emit("system.mgt2e", {
+    game.socket.emit(`system.${game.system.id}`, {
         type: "showSwarm",
         userId: data.userId,
         actorId: swarm.uuid

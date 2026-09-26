@@ -1,5 +1,12 @@
 # Release Notes
 
+# 0.23.1.0-beta (BardMorgan beta build)
+
+* Fix cross-client damage requests silently failing after the Piggy system rename.
+  The target owner now receives the damage allocation dialog.
+* Use the active system socket channel for damage, trade, and swarm requests.
+* Includes the Creature-sheet Dodge/Reaction control fix.
+
 # 0.23.0 (BardMorgan custom build)
 
 * Full naval combat system: Range Band positioning (house-rule and RAW models), sensors/

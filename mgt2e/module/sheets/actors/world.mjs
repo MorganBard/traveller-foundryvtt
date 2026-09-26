@@ -514,7 +514,7 @@ export class MgT2WorldActorSheet extends MgT2ActorSheet {
                 if (this.actor.permission > 2) {
                     await tradeDisembarkPassengerHandler(data);
                 } else {
-                    game.socket.emit("system.mgt2e", data);
+                    game.socket.emit(`system.${game.system.id}`, data);
                 }
             }
         }
@@ -551,7 +551,7 @@ export class MgT2WorldActorSheet extends MgT2ActorSheet {
             if (this.actor.permission > 2) {
                 await worldDropBrokerHandler(data);
             } else {
-                game.socket.emit("system.mgt2e", data);
+                game.socket.emit(`system.${game.system.id}`, data);
             }
             return;
         }

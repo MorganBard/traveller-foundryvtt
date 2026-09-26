@@ -629,7 +629,7 @@ export class MgT2Actor extends Actor {
           let alternativePlayer = this.findActorOwner();
           if (alternativePlayer) {
               console.log(alternativePlayer);
-              game.socket.emit("system.mgt2e", {
+              game.socket.emit(`system.${game.system.id}`, {
                   type: "applyDamageToPerson",
                   userId: alternativePlayer.uuid,
                   actorId: this.uuid,
@@ -651,7 +651,7 @@ export class MgT2Actor extends Actor {
           let alternativePlayer = this.findActorOwner();
           if (alternativePlayer && alternativePlayer.uuid !== game.users.current.uuid) {
               console.log(alternativePlayer);
-              game.socket.emit("system.mgt2e", {
+              game.socket.emit(`system.${game.system.id}`, {
                   type: "applyDamageToPerson",
                   userId: alternativePlayer.uuid,
                   actorId: this.uuid,

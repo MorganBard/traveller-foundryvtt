@@ -128,7 +128,7 @@ export class MgT2BuyCargoApp extends HandlebarsApplicationMixin(ApplicationV2) {
             if (this.worldActor.permission > 2) {
                 await tradeBuyGoodsHandler(data);
             } else {
-                game.socket.emit("system.mgt2e", data);
+                game.socket.emit(`system.${game.system.id}`, data);
             }
         }
 

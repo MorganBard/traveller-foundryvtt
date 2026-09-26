@@ -117,7 +117,7 @@ export class MgT2EmbarkPassengerApp extends HandlebarsApplicationMixin(Applicati
             if (this.worldActor.permission > 2) {
                 await tradeEmbarkPassengerHandler(data);
             } else {
-                game.socket.emit("system.mgt2e", data);
+                game.socket.emit(`system.${game.system.id}`, data);
             }
         }
 
